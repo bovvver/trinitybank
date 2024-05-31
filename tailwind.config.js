@@ -3,7 +3,7 @@ import forms from "@tailwindcss/forms";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: 'class',
+    darkMode: "class",
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
@@ -53,6 +53,10 @@ export default {
                 "surface-800": "rgb(var(--surface-800))",
                 "surface-900": "rgb(var(--surface-900))",
                 "surface-950": "rgb(var(--surface-950))",
+            },
+            backgroundImage: {
+                "welcome-background":
+                    "url('/resources/assets/welcome-background.png')",
             },
         },
     },
