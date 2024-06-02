@@ -1,20 +1,31 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
+import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
+import { Link } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
+
+defineProps<{
+    title: string;
+}>();
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
+    <Head :title="title" />
+    <div class="wrapper">
+        <div class="content">
+            <Link :href="route('index')">
+                <ApplicationLogo :size="120" />
             </Link>
-        </div>
-
-        <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg"
-        >
             <slot />
         </div>
     </div>
 </template>
+
+<style scoped>
+.wrapper {
+    @apply min-h-screen flex flex-col justify-center items-center pt-6 bg-welcome-background bg-cover bg-center;
+}
+
+.content {
+    @apply flex flex-col items-center justify-center w-full -translate-y-[15%];
+}
+</style>

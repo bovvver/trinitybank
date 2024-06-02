@@ -1,105 +1,132 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref, computed } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import GuestLayout from "@js/Layouts/GuestLayout.vue";
+import Link from "@js/Components/atoms/Link.vue";
+import Card from "@js/Components/atoms/Card.vue";
+import Steps from "primevue/steps";
+import Button from "primevue/button";
+import { RegistrationForm } from "@js/types/interfaces";
+import BasicInfoForm from "@js/Components/organisms/BasicInfoForm.vue";
+import PersonalDataForm from "@js/Components/organisms/PersonalDataForm.vue";
+import BankingProductSelection from "@js/Components/organisms/BankingProductSelection.vue";
+import BankingProduct from "@js/enums/BankingProduct";
+import SlideTransition from "@js/Components/atoms/SlideTransition.vue";
 
-const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+const loading = ref(false);
+const currentStep = ref(0);
+
+const items = ref([
+    { label: "Basic informations" },
+    { label: "Personal Data" },
+    { label: "Selecting a Banking Product" },
+]);
+
+const form: RegistrationForm = useForm({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    ssn_number: "",
+    phone: "",
+    city: "",
+    zip_code: "",
+    street: "",
+    house_number: "",
+    banking_product: BankingProduct.Personal,
 });
 
+const stepsComponents = [
+    BasicInfoForm,
+    PersonalDataForm,
+    BankingProductSelection,
+];
+
+const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
+
 const submit = () => {
-    form.post(route('register'), {
+    loading.value = true;
+
+    form.post(route("register"), {
         onFinish: () => {
-            form.reset('password', 'password_confirmation');
+            loading.value = false;
+            form.reset("password", "confirm_password");
         },
     });
+};
+
+const nextStep = () => {
+    if (currentStep.value < stepsComponents.length - 1) {
+        currentStep.value++;
+    } else {
+        submit();
+    }
+};
+
+const prevStep = () => {
+    if (currentStep.value > 0) {
+        currentStep.value--;
+    }
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Register" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
+    <GuestLayout title="Create an account">
+        <Card>
+            <template #title>Create an account</template>
+            <template #subtitle>
+                <Steps
+                    v-model:activeStep="currentStep"
+                    :model="items"
+                    class="steps"
                 />
+            </template>
+            <template #content>
+                <form @submit.prevent="nextStep">
+                    <SlideTransition name="slide-fade" mode="out-in">
+                        <component
+                            :is="currentStepComponent"
+                            :form="form"
+                            :key="currentStep"
+                        />
+                    </SlideTransition>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+                    <div class="flex items-center justify-end mt-4">
+                        <Link
+                            :route="route('login')"
+                            content="Already registered?"
+                            :link="true"
+                        />
+                        <Button
+                            v-if="currentStep != 0"
+                            class="ms-4"
+                            label="Back"
+                            @click="prevStep"
+                        />
+                        <Button
+                            class="ms-4"
+                            type="submit"
+                            :label="
+                                currentStep === items.length - 1
+                                    ? 'Submit'
+                                    : 'Next'
+                            "
+                            :loading="loading"
+                        />
+                    </div>
+                </form>
+            </template>
+        </Card>
     </GuestLayout>
 </template>
+
+<style scoped>
+.input {
+    @apply mt-1 block w-full;
+}
+
+.input:hover {
+    @apply border-primary;
+}
+</style>
