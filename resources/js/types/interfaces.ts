@@ -18,6 +18,6 @@ export type RegistrationForm = InertiaForm<{
 
 export type CardLoginForm = InertiaForm<{
     card_number: string;
-    cvv_number: string;
+    cvv_number: number;
     expiry_date: string;
 }>;

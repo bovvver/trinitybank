@@ -19,6 +19,7 @@ defineProps<{
                 placeholder="999-99-9999"
                 required
                 class="input"
+                :invalid="!!form.errors.ssn_number"
             />
             <small v-if="form.errors.ssn_number" class="text-red-600">{{
                 form.errors.ssn_number
@@ -33,6 +34,7 @@ defineProps<{
                 placeholder="(999) 999-9999"
                 required
                 class="input mt-4"
+                :invalid="!!form.errors.phone"
             />
             <small v-if="form.errors.phone" class="text-red-600">{{
                 form.errors.phone
@@ -57,6 +59,7 @@ defineProps<{
                     placeholder="99999-9999"
                     required
                     class="input w-full"
+                    :invalid="!!form.errors.zip_code"
                 />
                 <small v-if="form.errors.zip_code" class="text-red-600">{{
                     form.errors.zip_code

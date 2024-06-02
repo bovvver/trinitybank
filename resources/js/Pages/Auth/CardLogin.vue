@@ -17,7 +17,7 @@ defineProps<{
 
 const form = useForm({
     card_number: "",
-    cvv_number: "",
+    cvv_number: 0,
     expiry_date: "",
 });
 
@@ -27,12 +27,24 @@ const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
 const submit = () => {
     loading.value = true;
 
-    form.post(route("login"), {
-        onFinish: () => {
-            loading.value = false;
-            // form.reset("password");
-        },
-    });
+    if (form.cvv_number < 100 || form.cvv_number > 999) {
+        loading.value = false;
+        form.errors.cvv_number =
+            "Wrong value. Please provide tree digits number.";
+    } else if (form.expiry_date == "") {
+        loading.value = false;
+        form.errors.cvv_number = "";
+        form.errors.expiry_date = "Field cannot be empty.";
+    } else {
+        form.post(route("login"), {
+            onFinish: () => {
+                loading.value = false;
+                form.errors.cvv_number = "";
+                form.errors.expiry_date = "";
+                // form.reset("password");
+            },
+        });
+    }
 };
 
 const nextStep = () => {

@@ -17,8 +17,9 @@ defineProps<{
                 inputId="cvv_number"
                 :min="100"
                 :max="999"
-                class="mt-1 block w-full"
                 required
+                class="mt-1 block w-full"
+                :invalid="!!form.errors.cvv_number"
             />
             <small v-if="form.errors.cvv_number" class="text-red-600">{{
                 form.errors.cvv_number
@@ -27,11 +28,12 @@ defineProps<{
         <div class="mt-4">
             <label for="expiry_date">Expiry Date</label>
             <Calendar
-                v-model="form.errors.expiry_date"
+                v-model="form.expiry_date"
                 view="month"
                 dateFormat="mm/y"
-                class="mt-1 block w-full"
                 required
+                class="mt-1 block w-full"
+                :invalid="!!form.errors.expiry_date"
             />
             <small v-if="form.errors.expiry_date" class="text-red-600">{{
                 form.errors.expiry_date

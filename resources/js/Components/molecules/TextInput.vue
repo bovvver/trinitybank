@@ -38,6 +38,7 @@ const sanitizeName = (name: string) => {
             :autocomplete="autocomplete"
             @input="updateValue"
             class="input"
+            :invalid="!!modelError"
         />
         <small v-if="modelError" class="text-red-600">{{ modelError }}</small>
     </div>

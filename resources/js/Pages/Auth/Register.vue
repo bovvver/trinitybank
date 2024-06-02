@@ -48,8 +48,6 @@ const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
 const submit = () => {
     loading.value = true;
 
-    console.log(form);
-
     form.post(route("register"), {
         onFinish: () => {
             loading.value = false;
