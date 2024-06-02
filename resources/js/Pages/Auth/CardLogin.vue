@@ -1,59 +1,36 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
 import GuestLayout from "@js/Layouts/GuestLayout.vue";
-import Link from "@js/Components/atoms/Link.vue";
+import { useForm } from "@inertiajs/vue3";
 import Card from "@js/Components/atoms/Card.vue";
-import Steps from "primevue/steps";
 import Button from "primevue/button";
-import { RegistrationForm } from "@js/types/interfaces";
-import BasicInfoForm from "@js/Components/organisms/BasicInfoForm.vue";
-import PersonalDataForm from "@js/Components/organisms/PersonalDataForm.vue";
-import BankingProductSelection from "@js/Components/organisms/BankingProductSelection.vue";
-import BankingProduct from "@js/enums/BankingProduct";
+import { computed, ref } from "vue";
+import CardLoginNumbers from "@js/Components/molecules/CardLoginNumbers.vue";
+import CardLoginForm from "@js/Components/molecules/CardLoginForm.vue";
 import SlideTransition from "@js/Components/atoms/SlideTransition.vue";
 
 const loading = ref(false);
 const currentStep = ref(0);
 
-const items = ref([
-    { label: "Basic informations" },
-    { label: "Personal Data" },
-    { label: "Selecting a Banking Product" },
-]);
+defineProps<{
+    status?: string;
+}>();
 
-const form: RegistrationForm = useForm({
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-    ssn_number: "",
-    phone: "",
-    city: "",
-    zip_code: "",
-    street: "",
-    house_number: "",
-    banking_product: BankingProduct.Personal,
+const form = useForm({
+    card_number: "",
+    cvv_number: "",
+    expiry_date: "",
 });
 
-const stepsComponents = [
-    BasicInfoForm,
-    PersonalDataForm,
-    BankingProductSelection,
-];
-
+const stepsComponents = [CardLoginNumbers, CardLoginForm];
 const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
 
 const submit = () => {
     loading.value = true;
 
-    console.log(form);
-
-    form.post(route("register"), {
+    form.post(route("login"), {
         onFinish: () => {
             loading.value = false;
-            form.reset("password", "confirm_password");
+            // form.reset("password");
         },
     });
 };
@@ -74,32 +51,23 @@ const prevStep = () => {
 </script>
 
 <template>
-    <GuestLayout title="Create an account">
+    <GuestLayout title="Log in">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
         <Card>
-            <template #title>Create an account</template>
-            <template #subtitle>
-                <Steps
-                    v-model:activeStep="currentStep"
-                    :model="items"
-                    class="steps"
-                />
-            </template>
+            <template #title>Log In</template>
             <template #content>
                 <form @submit.prevent="nextStep">
-                    <SlideTransition name="slide-fade" mode="out-in">
+                    <SlideTransition>
                         <component
                             :is="currentStepComponent"
-                            :form="form"
                             :key="currentStep"
+                            :form="form"
                         />
                     </SlideTransition>
 
                     <div class="flex items-center justify-end mt-4">
-                        <Link
-                            :route="route('login')"
-                            content="Already registered?"
-                            :link="true"
-                        />
                         <Button
                             v-if="currentStep != 0"
                             class="ms-4"
@@ -110,7 +78,7 @@ const prevStep = () => {
                             class="ms-4"
                             type="submit"
                             :label="
-                                currentStep === items.length - 1
+                                currentStep === stepsComponents.length - 1
                                     ? 'Submit'
                                     : 'Next'
                             "

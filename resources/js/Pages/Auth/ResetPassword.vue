@@ -4,6 +4,9 @@ import { useForm } from "@inertiajs/vue3";
 import Card from "@js/Components/atoms/Card.vue";
 import Button from "primevue/button";
 import TextInput from "@js/Components/molecules/TextInput.vue";
+import { ref } from "vue";
+
+const loading = ref(false);
 
 const props = defineProps<{
     email: string;
@@ -18,8 +21,11 @@ const form = useForm({
 });
 
 const submit = () => {
+    loading.value = true;
+
     form.post(route("password.store"), {
         onFinish: () => {
+            loading.value = false;
             form.reset("password", "confirm_password");
         },
     });
@@ -63,12 +69,10 @@ const submit = () => {
 
                     <div class="flex items-center justify-end mt-4">
                         <Button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
                             type="submit"
-                        >
-                            Reset Password
-                        </Button>
+                            label="Reset Password"
+                            :loading="loading"
+                        />
                     </div>
                 </form>
             </template>

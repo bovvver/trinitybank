@@ -3,18 +3,16 @@ import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 import { Head } from "@inertiajs/vue3";
 
-const props = defineProps<{
+defineProps<{
     title: string;
 }>();
-
-const { title } = props;
 </script>
 
 <template>
     <Head :title="title" />
     <div class="wrapper">
         <div class="content">
-            <Link href="/">
+            <Link :href="route('index')">
                 <ApplicationLogo :size="120" />
             </Link>
             <slot />

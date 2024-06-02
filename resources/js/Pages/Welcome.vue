@@ -17,14 +17,13 @@ import Link from "@js/Components/atoms/Link.vue";
                     />
                     <Link
                         content="Login with card details"
-                        route="/"
+                        :route="route('login', { type: 'card' })"
                     />
                     <Link
                         content="Create an account"
                         :route="route('register')"
                         severity="secondary"
                     />
-
                 </div>
             </template>
         </Card>

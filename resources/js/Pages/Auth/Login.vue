@@ -6,6 +6,9 @@ import Card from "@js/Components/atoms/Card.vue";
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
 import TextInput from "@js/Components/molecules/TextInput.vue";
+import { ref } from "vue";
+
+const loading = ref(false);
 
 defineProps<{
     canResetPassword?: boolean;
@@ -19,13 +22,14 @@ const form = useForm({
 });
 
 const submit = () => {
+    loading.value = true;
+
     form.post(route("login"), {
         onFinish: () => {
+            loading.value = false;
             form.reset("password");
         },
     });
-
-    console.log(form);
 };
 </script>
 
@@ -80,12 +84,10 @@ const submit = () => {
                         />
                         <Button
                             class="ms-4"
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
                             type="submit"
-                        >
-                            Log in
-                        </Button>
+                            label="Log in"
+                            :loading="loading"
+                        />
                     </div>
                 </form>
             </template>

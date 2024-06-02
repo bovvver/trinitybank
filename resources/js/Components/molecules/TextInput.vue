@@ -28,7 +28,7 @@ const sanitizeName = (name: string) => {
 
 <template>
     <div>
-        <label :for="name" class="capitalized">{{ sanitizeName(name) }}</label>
+        <label :for="name">{{ sanitizeName(name) }}</label>
         <InputText
             :id="name"
             :type="type"
@@ -50,9 +50,5 @@ const sanitizeName = (name: string) => {
 
 .input:hover {
     @apply border-primary;
-}
-
-.capitalized {
-    @apply capitalize;
 }
 </style>

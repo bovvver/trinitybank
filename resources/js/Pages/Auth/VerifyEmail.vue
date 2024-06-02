@@ -5,6 +5,9 @@ import { useForm } from "@inertiajs/vue3";
 import Card from "@js/Components/atoms/Card.vue";
 import Button from "primevue/button";
 import Link from "@js/Components/atoms/Link.vue";
+import { ref } from "vue";
+
+const loading = ref(false);
 
 const props = defineProps<{
     status?: string;
@@ -13,7 +16,12 @@ const props = defineProps<{
 const form = useForm({});
 
 const submit = () => {
-    form.post(route("verification.send"));
+    loading.value = true;
+    form.post(route("verification.send"), {
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 
 const verificationLinkSent = computed(
@@ -40,12 +48,10 @@ const verificationLinkSent = computed(
                 <form @submit.prevent="submit">
                     <div class="mt-4 flex items-center justify-between">
                         <Button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
                             type="submit"
-                        >
-                            Resend Verification Email
-                        </Button>
+                            label="Resend Verification Email"
+                            :loading="loading"
+                        />
 
                         <Link
                             method="post"

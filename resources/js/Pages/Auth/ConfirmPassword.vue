@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import GuestLayout from "@js/Layouts/GuestLayout.vue";
-import TextInput from "@js/Components/TextInput.vue";
+import TextInput from "@js/Components/molecules/TextInput.vue";
 import { useForm } from "@inertiajs/vue3";
 import Card from "@js/Components/atoms/Card.vue";
 import Button from "primevue/button";
+import { ref } from "vue";
+
+const loading = ref(false);
 
 const form = useForm({
     password: "",
 });
 
 const submit = () => {
+    loading.value = true;
+
     form.post(route("password.confirm"), {
         onFinish: () => {
+            loading.value = false;
             form.reset();
         },
     });
@@ -39,12 +45,10 @@ const submit = () => {
                     <div class="flex justify-end mt-4">
                         <Button
                             class="ms-4"
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
                             type="submit"
-                        >
-                            Confirm
-                        </Button>
+                            label="Confirm"
+                            :loading="loading"
+                        />
                     </div>
                 </form>
             </template>

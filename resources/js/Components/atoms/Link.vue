@@ -12,9 +12,13 @@ defineProps<{
 
 <template>
     <Link :href="route">
-        <Button :link="link" :class="{ link: link }" :severity="severity" class="w-full">{{
-            content
-        }}</Button>
+        <Button
+            :link="link"
+            :class="{ link: link }"
+            :severity="severity"
+            class="w-full"
+            :label="content"
+        />
     </Link>
 </template>
 
