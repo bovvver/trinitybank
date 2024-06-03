@@ -1,6 +1,7 @@
 enum BankingProduct {
-    Personal = "Personal Account",
-    Company = "Company Account",
+    Personal = "Personal",
+    Company = "Company",
 }
 
 export default BankingProduct;
+        
