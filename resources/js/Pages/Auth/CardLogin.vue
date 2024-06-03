@@ -27,10 +27,12 @@ const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
 const submit = () => {
     loading.value = true;
 
-    if (form.cvv_number < 100 || form.cvv_number > 999) {
+    console.log(form.expiry_date);
+
+    if (form.cvv_number < 1000 || form.cvv_number > 9999) {
         loading.value = false;
         form.errors.cvv_number =
-            "Wrong value. Please provide tree digits number.";
+            "Wrong value. Please provide four digits number.";
     } else if (form.expiry_date == "") {
         loading.value = false;
         form.errors.cvv_number = "";
