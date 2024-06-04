@@ -15,12 +15,13 @@ class Account extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'card_number',
         'cvv_number',
         'expiry_date',
         'balance',
         'currency',
-        'account_type',
+        'banking_product',
     ];
 
     /**

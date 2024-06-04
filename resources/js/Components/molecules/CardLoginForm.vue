@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputNumber from "primevue/inputnumber";
-import { CardLoginForm } from "@js/types/interfaces";
+import { CardLoginForm } from "@js/types/types";
 import Calendar from "primevue/calendar";
 
 defineProps<{
@@ -15,8 +15,8 @@ defineProps<{
             <InputNumber
                 v-model="form.cvv_number"
                 inputId="cvv_number"
-                :min="1000"
-                :max="9999"
+                :min="100"
+                :max="999"
                 required
                 class="mt-1 block w-full"
                 :invalid="!!form.errors.cvv_number"

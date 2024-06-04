@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputOtp from "primevue/inputotp";
-import { CardLoginForm } from "@js/types/interfaces";
+import { CardLoginForm } from "@js/types/types";
 
 defineProps<{
     form: CardLoginForm;

@@ -54,8 +54,8 @@ defineProps<{
         <TextInput
             name="confirm_password"
             type="password"
-            v-model="form.confirm_password"
-            :modelError="form.errors.confirm_password"
+            v-model="form.password_confirmation"
+            :modelError="form.errors.password_confirmation"
             :required="true"
             autocomplete="new-password"
             class="mt-4"

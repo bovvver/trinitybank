@@ -6,18 +6,12 @@ export type RegistrationForm = InertiaForm<{
     surname: string;
     email: string;
     password: string;
-    confirm_password: string;
+    password_confirmation: string;
     ssn_number: string;
-    phone: string;
+    phone_number: string;
     city: string;
     zip_code: string;
     street: string;
     house_number: string;
     banking_product: BankingProduct;
-}>;
-
-export type CardLoginForm = InertiaForm<{
-    card_number: string;
-    cvv_number: number;
-    expiry_date: string;
 }>;

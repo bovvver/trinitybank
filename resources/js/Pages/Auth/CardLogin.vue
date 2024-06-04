@@ -29,7 +29,7 @@ const submit = () => {
 
     console.log(form.expiry_date);
 
-    if (form.cvv_number < 1000 || form.cvv_number > 9999) {
+    if (form.cvv_number < 100 || form.cvv_number > 999) {
         loading.value = false;
         form.errors.cvv_number =
             "Wrong value. Please provide four digits number.";

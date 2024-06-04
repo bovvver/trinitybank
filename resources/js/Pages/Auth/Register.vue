@@ -12,6 +12,7 @@ import PersonalDataForm from "@js/Components/organisms/PersonalDataForm.vue";
 import BankingProductSelection from "@js/Components/organisms/BankingProductSelection.vue";
 import BankingProduct from "@js/enums/BankingProduct";
 import SlideTransition from "@js/Components/atoms/SlideTransition.vue";
+import { UserDataErrors } from "@js/types/types";
 
 const loading = ref(false);
 const currentStep = ref(0);
@@ -27,9 +28,9 @@ const form: RegistrationForm = useForm({
     surname: "",
     email: "",
     password: "",
-    confirm_password: "",
+    password_confirmation: "",
     ssn_number: "",
-    phone: "",
+    phone_number: "",
     city: "",
     zip_code: "",
     street: "",
@@ -48,15 +49,30 @@ const currentStepComponent = computed(() => stepsComponents[currentStep.value]);
 const submit = () => {
     loading.value = true;
 
-    console.log(form);
-
     form.post(route("register"), {
         onFinish: () => {
+            showError();
             loading.value = false;
-            // form.reset("password", "confirm_password");
         },
     });
 };
+
+const showError = () => {
+    const errors: UserDataErrors = form.errors;
+    const errorGroups = [
+        ['name', 'surname', 'password', 'password_confirmation', 'email'],
+        ['ssn_number', 'phone_number', 'city', 'zip_code', 'street', 'house_number'],
+        ['banking_product']
+    ];
+
+    for(let i = 0; i < errorGroups.length; i++) {
+        if(errorGroups[i].some(key => errors[key as keyof typeof errors])) {
+            currentStep.value = i;
+            break;
+        }
+    }
+}
+
 
 const nextStep = () => {
     if (currentStep.value < stepsComponents.length - 1) {

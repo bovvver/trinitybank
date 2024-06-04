@@ -19,11 +19,11 @@ class AccountFactory extends Factory
     {
         return [
             'card_number' => fake()->creditCardNumber(),
-            'cvv_number' => fake()->numberBetween(1000, 9999),
+            'cvv_number' => fake()->numberBetween(100, 999),
             'expiry_date' => fake()->creditCardExpirationDate(),
             'balance' => fake()->randomFloat(2, 0, 30000),
             'currency' => fake()->currencyCode(),
-            'account_type' => fake()->randomElement(['Personal', 'Company']),
+            'banking_product' => fake()->randomElement(['Personal', 'Company']),
         ];
     }
 
