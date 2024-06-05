@@ -29,8 +29,8 @@ class RegisteredUserController extends Controller
     public function store(Request $request, AccountCreationService $accountService): RedirectResponse
     {
         $accountService->basicInfoValidation($request);
-        $accountService->bankProductSelectionValidation($request);
         $accountService->personalInfoValidation($request);
+        $accountService->bankProductSelectionValidation($request);
 
         $user = $accountService->createUserWithAccount($request);
 

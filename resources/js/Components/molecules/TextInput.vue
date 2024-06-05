@@ -9,6 +9,7 @@ defineProps<{
     required?: boolean;
     autofocus?: boolean;
     autocomplete?: string;
+    label?: string;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
@@ -28,7 +29,7 @@ const sanitizeName = (name: string) => {
 
 <template>
     <div>
-        <label :for="name">{{ sanitizeName(name) }}</label>
+        <label :for="name">{{ label ?? sanitizeName(name) }}</label>
         <InputText
             :id="name"
             :type="type"
