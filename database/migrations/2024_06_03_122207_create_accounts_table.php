@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->date('expiry_date');
             $table->decimal('balance');
             $table->string('currency', 3);
-            $table->enum('account_type', ['Personal', 'Company']);
+            $table->enum('banking_product', ['Personal', 'Company']);
             $table->timestamps();
         });
     }

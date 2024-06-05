@@ -29,15 +29,15 @@ defineProps<{
             <label for="phone">Phone</label>
             <InputMask
                 id="phone"
-                v-model="form.phone"
+                v-model="form.phone_number"
                 mask="(999) 999-9999"
                 placeholder="(999) 999-9999"
                 required
                 class="input mt-4"
-                :invalid="!!form.errors.phone"
+                :invalid="!!form.errors.phone_number"
             />
-            <small v-if="form.errors.phone" class="text-red-600">{{
-                form.errors.phone
+            <small v-if="form.errors.phone_number" class="text-red-600">{{
+                form.errors.phone_number
             }}</small>
         </div>
 

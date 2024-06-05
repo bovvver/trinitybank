@@ -12,12 +12,8 @@ import Link from "@js/Components/atoms/Link.vue";
             <template #content>
                 <div class="flex flex-col gap-y-3">
                     <Link
-                        content="Login with username"
+                        content="Login with email / SSN number"
                         :route="route('login')"
-                    />
-                    <Link
-                        content="Login with card details"
-                        :route="route('login', { type: 'card' })"
                     />
                     <Link
                         content="Create an account"
