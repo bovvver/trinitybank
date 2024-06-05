@@ -35,11 +35,13 @@ const submit = () => {
 
 <template>
     <GuestLayout title="Log in">
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
         <Card>
             <template #title>Log In</template>
+            <template #subtitle>
+                <div v-if="status" class="font-medium text-green-600">
+                    {{ status }}
+                </div>
+            </template>
             <template #content>
                 <form @submit.prevent="submit">
                     <TextInput

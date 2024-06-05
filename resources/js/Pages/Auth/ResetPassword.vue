@@ -17,7 +17,7 @@ const form = useForm({
     token: props.token,
     email: props.email,
     password: "",
-    confirm_password: "",
+    password_confirmation: "",
 });
 
 const submit = () => {
@@ -26,7 +26,7 @@ const submit = () => {
     form.post(route("password.store"), {
         onFinish: () => {
             loading.value = false;
-            form.reset("password", "confirm_password");
+            form.reset("password", "password_confirmation");
         },
     });
 };
@@ -35,6 +35,7 @@ const submit = () => {
 <template>
     <GuestLayout title="Reset Password">
         <Card>
+            <template #title>Reset Your Password</template>
             <template #content>
                 <form @submit.prevent="submit">
                     <TextInput
@@ -60,8 +61,8 @@ const submit = () => {
                     <TextInput
                         name="confirm_password"
                         type="password"
-                        v-model="form.confirm_password"
-                        :modelError="form.errors.confirm_password"
+                        v-model="form.password_confirmation"
+                        :modelError="form.errors.password_confirmation"
                         :required="true"
                         autocomplete="new-password"
                         class="mt-4"
