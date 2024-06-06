@@ -60,19 +60,25 @@ const submit = () => {
 const showError = () => {
     const errors: UserDataErrors = form.errors;
     const errorGroups = [
-        ['name', 'surname', 'password', 'password_confirmation', 'email'],
-        ['ssn_number', 'phone_number', 'city', 'zip_code', 'street', 'house_number'],
-        ['banking_product']
+        ["name", "surname", "password", "password_confirmation", "email"],
+        [
+            "ssn_number",
+            "phone_number",
+            "city",
+            "zip_code",
+            "street",
+            "house_number",
+        ],
+        ["banking_product"],
     ];
 
-    for(let i = 0; i < errorGroups.length; i++) {
-        if(errorGroups[i].some(key => errors[key as keyof typeof errors])) {
+    for (let i = 0; i < errorGroups.length; i++) {
+        if (errorGroups[i].some((key) => errors[key as keyof typeof errors])) {
             currentStep.value = i;
             break;
         }
     }
-}
-
+};
 
 const nextStep = () => {
     if (currentStep.value < stepsComponents.length - 1) {

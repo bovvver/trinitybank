@@ -88,7 +88,7 @@ const submit = () => {
                         <Button
                             class="ms-4"
                             type="submit"
-                            label="Log in"
+                            label="Login"
                             :loading="loading"
                         />
                     </div>

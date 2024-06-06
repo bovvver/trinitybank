@@ -2,11 +2,11 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use App\Models\User;
 use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use App\Rules\StrongPassword;
 
 class AccountCreationService
 {
@@ -48,7 +48,7 @@ class AccountCreationService
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', StrongPassword::default()],
         ]);
     }
     public function personalInfoValidation(Request $request)
