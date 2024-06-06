@@ -2,31 +2,19 @@
 import { Head } from "@inertiajs/vue3";
 import MobileGuestLayout from "@js/Layouts/MobileGuestLayout.vue";
 import DesktopGuestLayout from "@js/Layouts/DesktopGuestLayout.vue";
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed } from "vue";
+import useWindowWidth from "@js/hooks/useScreenWidth";
 
 defineProps<{
     title: string;
 }>();
 
-const width = ref(window.innerWidth);
+const width = useWindowWidth();
 
-const updateWidth = () => {
-    width.value = window.innerWidth;
-};
-
-onMounted(() => {
-    window.addEventListener("resize", updateWidth);
-});
-
-onUnmounted(() => {
-    window.removeEventListener("resize", updateWidth);
-});
-
-const currentLayout = computed(()=> {
-    if(width.value >= 1024) return DesktopGuestLayout;
+const currentLayout = computed(() => {
+    if (width.value >= 1024) return DesktopGuestLayout;
     return MobileGuestLayout;
-})
-
+});
 </script>
 
 <template>

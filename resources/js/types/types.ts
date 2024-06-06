@@ -23,3 +23,19 @@ export type UserDataErrors = Partial<
         string
     >
 >;
+
+export type MenuItem = {
+    name: string;
+    icon: string;
+};
+
+export type SubItem = {
+    name: string;
+};
+
+export type MenuItems = {
+    account: SubItem[];
+    loans: SubItem[];
+    stats: SubItem[];
+    logout: SubItem[];
+};
