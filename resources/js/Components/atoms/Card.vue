@@ -14,6 +14,6 @@ import Card from "primevue/card";
 
 <style scoped>
 .card {
-    @apply w-4/5 bg-white bg-opacity-70 md:w-1/2 lg:w-1/3;
+    @apply w-4/5 bg-white bg-opacity-70 md:w-3/4 lg:w-4/5;
 }
 </style>

@@ -25,9 +25,3 @@ import Link from "@js/Components/atoms/Link.vue";
         </Card>
     </GuestLayout>
 </template>
-
-<style scoped>
-.card {
-    @apply w-4/5 bg-white bg-opacity-70 md:w-1/2 lg:w-1/3;
-}
-</style>

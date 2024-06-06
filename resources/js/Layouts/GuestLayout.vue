@@ -1,31 +1,37 @@
 <script setup lang="ts">
-import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
-import { Link } from "@inertiajs/vue3";
 import { Head } from "@inertiajs/vue3";
+import MobileGuestLayout from "@js/Layouts/MobileGuestLayout.vue";
+import DesktopGuestLayout from "@js/Layouts/DesktopGuestLayout.vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 defineProps<{
     title: string;
 }>();
+
+const width = ref(window.innerWidth);
+
+const updateWidth = () => {
+    width.value = window.innerWidth;
+};
+
+onMounted(() => {
+    window.addEventListener("resize", updateWidth);
+});
+
+onUnmounted(() => {
+    window.removeEventListener("resize", updateWidth);
+});
+
+const currentLayout = computed(()=> {
+    if(width.value >= 1024) return DesktopGuestLayout;
+    return MobileGuestLayout;
+})
+
 </script>
 
 <template>
     <Head :title="title" />
-    <div class="wrapper">
-        <div class="content">
-            <Link :href="route('index')">
-                <ApplicationLogo :size="120" />
-            </Link>
-            <slot />
-        </div>
-    </div>
+    <component :is="currentLayout">
+        <slot />
+    </component>
 </template>
-
-<style scoped>
-.wrapper {
-    @apply min-h-screen flex flex-col justify-center items-center pt-6 bg-welcome-background bg-cover bg-center;
-}
-
-.content {
-    @apply flex flex-col items-center justify-center w-full -translate-y-[15%];
-}
-</style>

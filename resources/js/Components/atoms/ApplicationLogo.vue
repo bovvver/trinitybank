@@ -2,6 +2,7 @@
 
 defineProps<{
     size?: number;
+    color?: string;
 }>();
 </script>
 
@@ -10,7 +11,7 @@ defineProps<{
 :width="size" :height="size" viewBox="0 0 1080.000000 1080.000000"
 preserveAspectRatio="xMidYMid meet">
 <g transform="translate(0.000000,1080.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
+:fill="color ?? '#000'" stroke="none">
 <path d="M5150 9824 c-421 -38 -700 -94 -983 -195 -583 -209 -978 -550 -1067
 -922 -25 -103 -25 -133 -2 -139 9 -3 527 -324 1151 -713 624 -390 1140 -708
 1145 -708 6 0 523 320 1149 712 626 391 1143 711 1149 711 16 0 1 113 -28 200

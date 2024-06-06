@@ -4,7 +4,7 @@ import { useForm } from "@inertiajs/vue3";
 import Card from "@js/Components/atoms/Card.vue";
 import Button from "primevue/button";
 import TextInput from "@js/Components/molecules/TextInput.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const loading = ref(false);
 
