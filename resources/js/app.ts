@@ -8,6 +8,11 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import PrimeVue from "primevue/config";
 import Ripple from "primevue/ripple";
 import CustomPreset from "../css/presets/customPreset/customPreset";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faPiggyBank);
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -26,6 +31,7 @@ createInertiaApp({
         ),
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
+            .component("font-awesome-icon", FontAwesomeIcon)
             .use(plugin)
             .use(ZiggyVue)
             .use(PrimeVue, primeVueOptions)

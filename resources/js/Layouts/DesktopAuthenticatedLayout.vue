@@ -103,7 +103,7 @@ const items = ref([
 
 <style scoped>
 .wrapper {
-    @apply min-h-screen;
+    @apply min-h-screen flex;
 }
 
 .logo {

@@ -91,12 +91,13 @@ const selectItem = (item: keyof MenuItems) => {
                 {{ subItem.name }}
             </a>
         </div>
+        <slot />
     </div>
 </template>
 
 <style scoped>
 .wrapper {
-    @apply h-screen relative;
+    @apply h-screen relative overflow-hidden;
 }
 
 .nav {
