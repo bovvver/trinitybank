@@ -19,7 +19,7 @@ const handleMouseUp = () => {
 
 <template>
     <div
-        class="wrapper"
+        class="credit-card"
         :class="{ grabbing: isGrabbing }"
         @mousedown="handleMouseDown"
         @mouseup="handleMouseUp"
@@ -31,36 +31,36 @@ const handleMouseUp = () => {
             :icon="['fas', 'piggy-bank']"
             class="absolute text-black right-0 pr-6 text-2xl"
         />
-        <p class="cardNumber">{{ cardNumber }}</p>
-        <p class="balanceHeader">Balance</p>
-        <p class="balance">$ {{ balance }}</p>
-        <button class="button">Transfer</button>
+        <p class="credit-card__number">{{ cardNumber }}</p>
+        <p class="credit-card__header">Balance</p>
+        <p class="credit-card__balance">$ {{ balance }}</p>
+        <button class="credit-card__button">Transfer</button>
     </div>
 </template>
 
-<style scoped>
-.wrapper {
+<style scoped lang="scss">
+.credit-card {
     @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-wave-background 
     shadow-lg shadow-gray-600 cursor-grab;
-}
 
-.wrapper.grabbing {
-    cursor: grabbing;
-}
+    &.grabbing {
+        @apply cursor-grabbing;
+    }
 
-.cardNumber {
-    @apply absolute left-0 pl-6;
-}
+    &__number {
+        @apply absolute left-0 pl-6;
+    }
 
-.balanceHeader {
-    @apply absolute font-bold text-lg top-[30%] left-0 pl-6;
-}
+    &__header {
+        @apply absolute font-bold text-lg top-[30%] left-0 pl-6;
+    }
 
-.balance {
-    @apply absolute font-bold text-3xl top-[39%] left-0 pl-6;
-}
+    &__balance {
+        @apply absolute font-bold text-3xl top-[39%] left-0 pl-6;
+    }
 
-.button {
-    @apply absolute bottom-0 right-0 bg-white text-primary px-4 py-1 rounded font-bold mr-6 mb-6 shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+    &__button {
+        @apply absolute bottom-0 right-0 bg-white text-primary px-4 py-1 rounded font-bold mr-6 mb-6 shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+    }
 }
 </style>

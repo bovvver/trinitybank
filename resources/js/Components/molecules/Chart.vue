@@ -46,8 +46,8 @@ const series = ref([
 </script>
 
 <template>
-    <div class="wrapper">
-        <h2 class="stats">Statistics</h2>
+    <div class="chart">
+        <h2 class="chart__title">Statistics</h2>
         <ApexChart
             type="bar"
             :height="230"
@@ -57,12 +57,12 @@ const series = ref([
     </div>
 </template>
 
-<style scoped>
-.wrapper {
+<style scoped lang="scss">
+.chart {
     @apply p-3 bg-surface-100 rounded-md max-h-[350px];
-}
 
-.stats {
-    @apply font-bold text-xl pl-6;
+    &__title {
+        @apply font-bold text-xl pl-6;
+    }
 }
 </style>

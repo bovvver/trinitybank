@@ -5,7 +5,7 @@ import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import Avatar from "primevue/avatar";
 
 const ptStyles = ref({
-    root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen",
+    root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen min-w-[320px]",
     submenuHeader: "bg-neutral-950 py-3 px-3 font-bold text-primary uppercase",
     content:
         "overflow-hidden flex items-center hover:bg-neutral-900 rounded-md cursor-pointer transition",
@@ -68,10 +68,10 @@ const items = ref([
 </script>
 
 <template>
-    <div class="wrapper">
+    <div class="layout-wrapper">
         <Menu :model="items" :pt="ptStyles">
             <template #start>
-                <div class="logo">
+                <div class="layout-wrapper__logo">
                     <ApplicationLogo :size="130" color="#fff" />
                 </div>
             </template>
@@ -101,12 +101,12 @@ const items = ref([
     </div>
 </template>
 
-<style scoped>
-.wrapper {
+<style scoped lang="scss">
+.layout-wrapper {
     @apply min-h-screen flex;
-}
 
-.logo {
-    @apply flex flex-col justify-center items-center py-10;
+    &__logo {
+        @apply flex flex-col justify-center items-center py-10;
+    }
 }
 </style>

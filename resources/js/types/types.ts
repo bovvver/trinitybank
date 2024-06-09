@@ -37,5 +37,5 @@ export type MenuItems = {
     account: SubItem[];
     loans: SubItem[];
     stats: SubItem[];
-    logout: SubItem[];
+    profile: SubItem[];
 };
