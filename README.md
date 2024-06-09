@@ -1,5 +1,6 @@
 ### 🚧 WORK IN PROGRESS 🚧
 ![Screenshot_1826](https://github.com/bovvver/trinitybank/assets/85307370/bef76005-e8f2-43c9-86fb-37002c3900a7)
+![Screenshot_1842](https://github.com/bovvver/trinitybank/assets/85307370/ff35c0fd-9999-4973-8763-9b9025bd1fcb)
 
 <div  align="center">
     <a  href="https://github.com/bovvver/trinitybank">
