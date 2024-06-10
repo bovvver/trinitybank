@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Menu from "primevue/menu";
 import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import Avatar from "primevue/avatar";
+import { Link } from "@inertiajs/vue3";
 
 const ptStyles = ref({
     root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen min-w-[320px]",
@@ -20,14 +21,17 @@ const items = ref([
             {
                 label: "History",
                 icon: "pi pi-history",
+                route: "dashboard"
             },
             {
                 label: "Cards",
                 icon: "pi pi-credit-card",
+                route: "dashboard"
             },
             {
                 label: "Transfer",
                 icon: "pi pi-arrow-right-arrow-left",
+                route: "dashboard"
             },
         ],
     },
@@ -37,14 +41,17 @@ const items = ref([
             {
                 label: "Current Loans",
                 icon: "pi pi-ticket",
+                route: "dashboard"
             },
             {
                 label: "Apply for Loan",
                 icon: "pi pi-briefcase",
+                route: "dashboard"
             },
             {
                 label: "Loan Calculators",
                 icon: "pi pi-calculator",
+                route: "dashboard"
             },
         ],
     },
@@ -54,6 +61,7 @@ const items = ref([
             {
                 label: "Details",
                 icon: "pi pi-chart-bar",
+                route: "dashboard"
             },
         ],
     },
@@ -63,6 +71,7 @@ const items = ref([
     {
         label: "Logout",
         icon: "pi pi-sign-out",
+        route: "logout",
     },
 ]);
 </script>
@@ -79,10 +88,10 @@ const items = ref([
                 <span>{{ item.label }}</span>
             </template>
             <template #item="{ item, props }">
-                <a class="w-full text-white" v-ripple v-bind="props.action">
+                <Link as="button" :href="route(item.route)" method="post" class="w-full text-white" v-ripple v-bind="props.action">
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
-                </a>
+                </Link>
             </template>
             <template #end>
                 <button v-ripple class="flex items-center w-full p-2">
@@ -103,7 +112,7 @@ const items = ref([
 
 <style scoped lang="scss">
 .layout-wrapper {
-    @apply min-h-screen flex;
+    @apply min-h-screen flex max-h-[100vh] h-[100vh] overflow-hidden;
 
     &__logo {
         @apply flex flex-col justify-center items-center py-10;

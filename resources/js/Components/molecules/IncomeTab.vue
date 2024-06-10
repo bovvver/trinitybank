@@ -12,6 +12,6 @@ import IncomeCell from "@js/Components/atoms/IncomeCell.vue";
 
 <style scoped>
 .income_tab {
-    @apply pt-2 flex flex-col gap-2;
+    @apply pt-2 flex flex-col gap-2 min-w-[160px];
 }
 </style>

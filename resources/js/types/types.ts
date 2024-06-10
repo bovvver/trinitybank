@@ -31,6 +31,7 @@ export type MenuItem = {
 
 export type SubItem = {
     name: string;
+    route: string;
 };
 
 export type MenuItems = {

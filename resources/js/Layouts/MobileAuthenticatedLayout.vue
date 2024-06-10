@@ -3,6 +3,7 @@ import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import { ref } from "vue";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import { MenuItem, MenuItems } from "@js/types/types";
+import { Link } from "@inertiajs/vue3";
 
 const width = useWindowWidth();
 
@@ -32,36 +33,45 @@ const unfoldedItems = ref<MenuItems>({
     account: [
         {
             name: "History",
+            route: "dashboard",
         },
         {
             name: "Cards",
+            route: "dashboard",
         },
         {
             name: "Transfer",
+            route: "dashboard",
         },
     ],
     loans: [
         {
             name: "Current Loans",
+            route: "dashboard",
         },
         {
             name: "Apply for Loan",
+            route: "dashboard",
         },
         {
             name: "Loan Calculators",
+            route: "dashboard",
         },
     ],
     stats: [
         {
             name: "Details",
+            route: "dashboard",
         },
     ],
     profile: [
         {
             name: "Profile",
+            route: "dashboard",
         },
         {
             name: "Logout",
+            route: "logout",
         },
     ],
 });
@@ -90,13 +100,16 @@ const selectItem = (item: keyof MenuItems) => {
             </button>
         </div>
         <div class="mobile-authenticated-layout__unfolded-nav" :class="{ unfolded: selectedItem }">
-            <a
+            <Link
+                :href="route(subItem.route)"
+                as="button"
+                method="post"
                 v-if="selectedItem"
                 v-for="subItem in unfoldedItems[selectedItem]"
                 :key="subItem.name"
             >
                 {{ subItem.name }}
-            </a>
+            </Link>
         </div>
         <slot />
     </div>
@@ -121,7 +134,7 @@ const selectItem = (item: keyof MenuItems) => {
     &__unfolded-nav {
         @apply absolute bottom-0 inset-x-1/2 w-11/12 md:w-4/5 h-[150px] flex p-4 justify-evenly items-start bg-neutral-900 transition-transform rounded-t-3xl -translate-x-1/2 translate-y-full;
 
-        a {
+        button {
             @apply text-white font-bold cursor-pointer uppercase hover:bg-neutral-800 transition p-2 rounded text-center text-sm sm:text-base;
         }
     }

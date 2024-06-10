@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import Chart from "../molecules/Chart.vue";
-import IncomeTab from "../molecules/IncomeTab.vue";
+import Chart from "@js/Components/molecules/Chart.vue";
+import PieChart from "@js/Components/molecules/PieChart.vue";
+import IncomeTab from "@js/Components/molecules/IncomeTab.vue";
 </script>
 
 <template>
     <div class="secondary-wrapper">
         <Chart />
-        <div>
+        <div class="secondary-wrapper__stats">
             <IncomeTab />
+            <PieChart class="secondary-wrapper__stats-chart" />
         </div>
     </div>
 </template>
 
-<style scoped>
-    .secondary-wrapper {
-        @apply w-full m-6;
+<style scoped lang="scss">
+.secondary-wrapper {
+    @apply w-full m-6;
+
+    &__stats {
+        @apply flex justify-center items-start;
+
+        &-chart {
+            @apply w-full;
+        }
     }
+}
 </style>

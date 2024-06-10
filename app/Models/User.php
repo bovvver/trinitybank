@@ -21,7 +21,6 @@ class User extends Authenticatable // implements MustVerifyEmail // PRODUCTION O
         'surname',
         'email',
         'password',
-        'ssn_number',
         'phone_number',
         'city',
         'zip_code',
