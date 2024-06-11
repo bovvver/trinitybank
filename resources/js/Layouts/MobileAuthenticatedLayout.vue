@@ -4,6 +4,7 @@ import { ref } from "vue";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import { MenuItem, MenuItems } from "@js/types/types";
 import { Link } from "@inertiajs/vue3";
+import Method from "@js/enums/HttpMethods";
 
 const width = useWindowWidth();
 
@@ -41,7 +42,7 @@ const unfoldedItems = ref<MenuItems>({
         },
         {
             name: "Transfer",
-            route: "dashboard",
+            route: "transfer",
         },
     ],
     loans: [
@@ -72,6 +73,7 @@ const unfoldedItems = ref<MenuItems>({
         {
             name: "Logout",
             route: "logout",
+            method: Method.POST,
         },
     ],
 });
@@ -99,11 +101,14 @@ const selectItem = (item: keyof MenuItems) => {
                 <span :class="item.icon" />
             </button>
         </div>
-        <div class="mobile-authenticated-layout__unfolded-nav" :class="{ unfolded: selectedItem }">
+        <div
+            class="mobile-authenticated-layout__unfolded-nav"
+            :class="{ unfolded: selectedItem }"
+        >
             <Link
                 :href="route(subItem.route)"
                 as="button"
-                method="post"
+                :method="subItem.method ?? Method.GET"
                 v-if="selectedItem"
                 v-for="subItem in unfoldedItems[selectedItem]"
                 :key="subItem.name"

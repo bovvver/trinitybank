@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transfer;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TransferController extends Controller
 {
@@ -12,7 +13,7 @@ class TransferController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('TransferForm');
     }
 
     /**

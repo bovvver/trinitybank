@@ -6,6 +6,11 @@ import "@egjs/vue3-flicking/dist/flicking.css";
 import Favourites from "@js/Components/molecules/Favourites.vue";
 import LatestTransfers from "@js/Components/organisms/LatestTransfers.vue";
 import { ref } from "vue";
+import { Transfer } from "@js/types/types";
+
+defineProps<{
+    transfers?: Transfer[];
+}>();
 
 const cards = ref([
     {
@@ -32,7 +37,7 @@ const cards = ref([
             />
         </Slider>
         <Favourites />
-        <LatestTransfers />
+        <LatestTransfers :transfers="transfers ?? []"/>
     </div>
 </template>
 

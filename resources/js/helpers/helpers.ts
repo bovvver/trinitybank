@@ -1,3 +1,5 @@
+import { Currency,  } from "@js/enums/Currency";
+
 // DATE HELPERS
 
 export const formatDate = (date: Date) => {
@@ -23,7 +25,10 @@ export const getDateDaysAgo = (days: number) => {
 
 // MONEY HELPERS
 
-export const displayCorrectAmount = (amount: number) => {
-    if (amount >= 0) return `$${amount}`;
-    return `-$${amount.toString().substring(1)}`;
+export const displayCorrectAmount = (
+    amount: number,
+    isSender: boolean
+) => {
+    if (isSender) return `-${amount}`;
+    return `$${amount}`;
 };

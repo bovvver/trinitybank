@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import Avatar from "primevue/avatar";
 import { formatDate, displayCorrectAmount } from "@js/helpers/helpers";
+import { Currency } from "@js/enums/Currency";
 
 defineProps<{
     name: string;
-    description: string;
-    amount: number;
-    date: Date;
+    message: string;
+    amount: string;
+    currency: keyof typeof Currency;
+    date: string;
+    isSender: boolean;
 }>();
 </script>
 
@@ -15,14 +18,15 @@ defineProps<{
         <Avatar size="large" :label="name.charAt(0)" shape="circle" />
         <div>
             <p class="transfer-cell__name">{{ name }}</p>
-            <p class="transfer-cell__description">{{ description }}</p>
+            <p class="transfer-cell__description">{{ message }}</p>
             <p
                 class="transfer-cell__amount"
-                :class="{ positive: amount >= 0, negative: amount < 0 }"
+                :class="{ positive: !isSender, negative: isSender }"
             >
-                {{ displayCorrectAmount(amount) }}
+                {{ displayCorrectAmount(parseFloat(amount), isSender) }}
+                <span class="transfer-cell__currency">{{ currency }}</span>
             </p>
-            <p class="transfer-cell__date">{{ formatDate(date) }}</p>
+            <p class="transfer-cell__date">{{ formatDate(new Date(date)) }}</p>
         </div>
 
         <div class="transfer-cell__separator" />
@@ -51,6 +55,10 @@ defineProps<{
 
     &__separator {
         @apply absolute bottom-0 left-[50%] w-4/5 bg-gray-300 h-[1px] -translate-x-[50%];
+    }
+
+    &__currency {
+        @apply text-sm;
     }
 }
 

@@ -4,6 +4,7 @@ import Menu from "primevue/menu";
 import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import Avatar from "primevue/avatar";
 import { Link } from "@inertiajs/vue3";
+import Method from "@js/enums/HttpMethods";
 
 const ptStyles = ref({
     root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen min-w-[320px]",
@@ -21,17 +22,17 @@ const items = ref([
             {
                 label: "History",
                 icon: "pi pi-history",
-                route: "dashboard"
+                route: "dashboard",
             },
             {
                 label: "Cards",
                 icon: "pi pi-credit-card",
-                route: "dashboard"
+                route: "dashboard",
             },
             {
                 label: "Transfer",
                 icon: "pi pi-arrow-right-arrow-left",
-                route: "dashboard"
+                route: "transfer",
             },
         ],
     },
@@ -41,17 +42,17 @@ const items = ref([
             {
                 label: "Current Loans",
                 icon: "pi pi-ticket",
-                route: "dashboard"
+                route: "dashboard",
             },
             {
                 label: "Apply for Loan",
                 icon: "pi pi-briefcase",
-                route: "dashboard"
+                route: "dashboard",
             },
             {
                 label: "Loan Calculators",
                 icon: "pi pi-calculator",
-                route: "dashboard"
+                route: "dashboard",
             },
         ],
     },
@@ -61,7 +62,7 @@ const items = ref([
             {
                 label: "Details",
                 icon: "pi pi-chart-bar",
-                route: "dashboard"
+                route: "dashboard",
             },
         ],
     },
@@ -72,6 +73,7 @@ const items = ref([
         label: "Logout",
         icon: "pi pi-sign-out",
         route: "logout",
+        method: Method.POST,
     },
 ]);
 </script>
@@ -88,7 +90,14 @@ const items = ref([
                 <span>{{ item.label }}</span>
             </template>
             <template #item="{ item, props }">
-                <Link as="button" :href="route(item.route)" method="post" class="w-full text-white" v-ripple v-bind="props.action">
+                <Link
+                    as="button"
+                    :href="route(item.route)"
+                    :method="item.method ?? Method.GET"
+                    class="w-full text-white"
+                    v-ripple
+                    v-bind="props.action"
+                >
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
                 </Link>

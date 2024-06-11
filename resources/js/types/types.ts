@@ -1,4 +1,6 @@
 import { InertiaForm } from "@inertiajs/vue3";
+import { Currency } from "@js/enums/Currency";
+import Method from "@js/enums/HttpMethods";
 
 export type CardLoginForm = InertiaForm<{
     card_number: string;
@@ -32,6 +34,7 @@ export type MenuItem = {
 export type SubItem = {
     name: string;
     route: string;
+    method?: Method;
 };
 
 export type MenuItems = {
@@ -40,3 +43,16 @@ export type MenuItems = {
     stats: SubItem[];
     profile: SubItem[];
 };
+
+export interface Transfer {
+    message: string;
+    amount: string;
+    currency: keyof typeof Currency;
+    transactionDate: string;
+    fullName: string;
+    isSender: boolean;
+}
+
+export interface PageProps {
+    transfers: Transfer[];
+}

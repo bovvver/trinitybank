@@ -40,7 +40,7 @@ const handleMouseUp = () => {
 
 <style scoped lang="scss">
 .credit-card {
-    @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-wave-background 
+    @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-blue
     shadow-lg shadow-gray-600 cursor-grab;
 
     &.grabbing {

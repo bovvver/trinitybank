@@ -35,10 +35,10 @@ createInertiaApp({
         ),
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
-            .component("font-awesome-icon", FontAwesomeIcon)
             .use(plugin)
             .use(ZiggyVue)
             .use(PrimeVue, primeVueOptions)
+            .component("font-awesome-icon", FontAwesomeIcon)
             .directive("ripple", Ripple)
             .mount(el);
     },
