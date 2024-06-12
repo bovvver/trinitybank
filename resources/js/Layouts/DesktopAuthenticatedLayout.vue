@@ -3,9 +3,11 @@ import { ref } from "vue";
 import Menu from "primevue/menu";
 import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import Avatar from "primevue/avatar";
+import { Link } from "@inertiajs/vue3";
+import Method from "@js/enums/HttpMethods";
 
 const ptStyles = ref({
-    root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen",
+    root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen min-w-[320px]",
     submenuHeader: "bg-neutral-950 py-3 px-3 font-bold text-primary uppercase",
     content:
         "overflow-hidden flex items-center hover:bg-neutral-900 rounded-md cursor-pointer transition",
@@ -20,14 +22,17 @@ const items = ref([
             {
                 label: "History",
                 icon: "pi pi-history",
+                route: "dashboard",
             },
             {
                 label: "Cards",
                 icon: "pi pi-credit-card",
+                route: "dashboard",
             },
             {
                 label: "Transfer",
                 icon: "pi pi-arrow-right-arrow-left",
+                route: "transfer",
             },
         ],
     },
@@ -37,14 +42,17 @@ const items = ref([
             {
                 label: "Current Loans",
                 icon: "pi pi-ticket",
+                route: "dashboard",
             },
             {
                 label: "Apply for Loan",
                 icon: "pi pi-briefcase",
+                route: "dashboard",
             },
             {
                 label: "Loan Calculators",
                 icon: "pi pi-calculator",
+                route: "dashboard",
             },
         ],
     },
@@ -54,6 +62,7 @@ const items = ref([
             {
                 label: "Details",
                 icon: "pi pi-chart-bar",
+                route: "dashboard",
             },
         ],
     },
@@ -63,15 +72,17 @@ const items = ref([
     {
         label: "Logout",
         icon: "pi pi-sign-out",
+        route: "logout",
+        method: Method.POST,
     },
 ]);
 </script>
 
 <template>
-    <div class="wrapper">
+    <div class="layout-wrapper">
         <Menu :model="items" :pt="ptStyles">
             <template #start>
-                <div class="logo">
+                <div class="layout-wrapper__logo">
                     <ApplicationLogo :size="130" color="#fff" />
                 </div>
             </template>
@@ -79,20 +90,29 @@ const items = ref([
                 <span>{{ item.label }}</span>
             </template>
             <template #item="{ item, props }">
-                <a class="w-full text-white" v-ripple v-bind="props.action">
+                <Link
+                    as="button"
+                    :href="route(item.route)"
+                    :method="item.method ?? Method.GET"
+                    class="w-full text-white"
+                    v-ripple
+                    v-bind="props.action"
+                >
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
-                </a>
+                </Link>
             </template>
             <template #end>
                 <button v-ripple class="flex items-center w-full p-2">
                     <Avatar
-                        image="https://ichef.bbci.co.uk/images/ic/1200x675/p08rkqxl.jpg"
+                        :label="$page.props.auth.user.name.charAt(0)"
                         class="mr-2"
                         shape="circle"
                     />
                     <span>
-                        <span class="font-bold">Bob Builder</span>
+                        <span class="font-bold">{{
+                            $page.props.auth.user.name
+                        }}</span>
                     </span>
                 </button>
             </template>
@@ -101,12 +121,12 @@ const items = ref([
     </div>
 </template>
 
-<style scoped>
-.wrapper {
-    @apply min-h-screen flex;
-}
+<style scoped lang="scss">
+.layout-wrapper {
+    @apply min-h-screen flex max-h-[100vh] h-[100vh] overflow-hidden;
 
-.logo {
-    @apply flex flex-col justify-center items-center py-10;
+    &__logo {
+        @apply flex flex-col justify-center items-center py-10;
+    }
 }
 </style>

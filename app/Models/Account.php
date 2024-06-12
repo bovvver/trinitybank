@@ -17,7 +17,6 @@ class Account extends Model
     protected $fillable = [
         'user_id',
         'card_number',
-        'cvv_number',
         'expiry_date',
         'balance',
         'currency',
@@ -31,12 +30,28 @@ class Account extends Model
      */
     protected $hidden = [
         'card_number',
-        'cvv_number',
         'expiry_date',
     ];
 
-    public function accounts()
+    protected function casts(): array
+    {
+        return [
+            'card_number' => 'hashed',
+        ];
+    }
+
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function sentTransfers()
+    {
+        return $this->hasMany(Transfer::class, 'sender_id');
+    }
+
+    public function receivedTransfers()
+    {
+        return $this->hasMany(Transfer::class, 'receiver_id');
     }
 }

@@ -1,6 +1,29 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { DashboardStats } from "@js/types/types";
+import { onMounted, ref } from "vue";
 import VueApexCharts from "vue3-apexcharts";
+
+const props = defineProps<{
+    statistics?: DashboardStats[];
+}>();
+
+const spends = ref<number[]>([]);
+const incomes = ref<number[]>([]);
+const labels = ref<string[]>([]);
+
+const prepareChart = () => {
+    if (!props.statistics) return;
+
+    spends.value = props.statistics.map((el) =>
+        typeof el.spends === "string" ? parseFloat(el.spends) : el.spends
+    );
+    incomes.value = props.statistics.map((el) =>
+        typeof el.incomes === "string" ? parseFloat(el.incomes) : el.incomes
+    );
+    labels.value = props.statistics.map((el) => el.month);
+};
+
+onMounted(() => prepareChart());
 
 const ApexChart = VueApexCharts;
 
@@ -27,27 +50,27 @@ const chartOptions = ref({
         intersect: false,
     },
     xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        categories: labels,
     },
 });
 
 const series = ref([
     {
         name: "Income",
-        data: [4400, 5500, 4100, 6400, 2200, 4300],
+        data: incomes,
         color: "#3b82f6",
     },
     {
         name: "Spent",
-        data: [5300, 3200, 3300, 5200, 1300, 4400],
+        data: spends,
         color: "#101010",
     },
 ]);
 </script>
 
 <template>
-    <div class="wrapper">
-        <h2 class="stats">Statistics</h2>
+    <div class="chart">
+        <h2 class="chart__title">Statistics</h2>
         <ApexChart
             type="bar"
             :height="230"
@@ -57,12 +80,12 @@ const series = ref([
     </div>
 </template>
 
-<style scoped>
-.wrapper {
+<style scoped lang="scss">
+.chart {
     @apply p-3 bg-surface-100 rounded-md max-h-[350px];
-}
 
-.stats {
-    @apply font-bold text-xl pl-6;
+    &__title {
+        @apply font-bold text-xl pl-6;
+    }
 }
 </style>

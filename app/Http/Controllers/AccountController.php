@@ -2,18 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FavouritesResource;
+use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Services\TransferService;
+use DB;
+use Inertia\Inertia;
 
 class AccountController extends Controller
 {
+    protected $transferService;
+
+    public function __construct(TransferService $transferService)
+    {
+        $this->transferService = $transferService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $accounts = auth()->user()->accounts;
+        $firstId = $accounts->first()->id;
+
+        $lastTransfers = $this->transferService->getLastTransfers($firstId);
+        $favouriteAccounts = $this->transferService->getFavouriteAccounts($firstId);
+        $incomes = $this->transferService->getIncome($firstId);
+        $spendsByCategories = $this->transferService->getSpendsPerCategory($firstId);
+        $statistics = $this->transferService->getStatistics($firstId);
+
+        return Inertia::render('Dashboard', [
+            'transfers' => TransferResource::collection($lastTransfers),
+            'favourites' => FavouritesResource::collection($favouriteAccounts),
+            'incomes' => $incomes,
+            'spendsByCategories' => $spendsByCategories,
+            'statistics' => $statistics
+        ]);
     }
 
     /**
