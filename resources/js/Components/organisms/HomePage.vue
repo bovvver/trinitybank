@@ -37,7 +37,7 @@ const cards = ref([
                 class="mx-6"
             />
         </Slider>
-        <Favourites />
+        <Favourites :favourites="favourites ?? []"/>
         <LatestTransfers :transfers="transfers ?? []" />
     </div>
 </template>

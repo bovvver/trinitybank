@@ -2,9 +2,11 @@
 import { FavouriteAccount } from "@js/types/types";
 import Avatar from "primevue/avatar";
 
-defineProps<{
-    favourites?: FavouriteAccount[];
+const props = defineProps<{
+    favourites: FavouriteAccount[];
 }>();
+
+console.log(props.favourites);
 </script>
 
 <template>

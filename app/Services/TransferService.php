@@ -92,4 +92,37 @@ class TransferService
             ->selectRaw($selectRaw, $bindings)
             ->first();
     }
+
+    public function getStatistics($accountId)
+    {
+        $months = [];
+        for ($i = 0; $i < 6; $i++)
+            $months[] = now()->subMonths($i)->format('F');
+
+        $months = array_reverse($months);
+
+        $results = DB::table('Transfers')
+            ->selectRaw(
+                "MONTHNAME(created_at) as month,
+                SUM(CASE WHEN sender_id = ? THEN amount ELSE 0 END) as spends,
+                SUM(CASE WHEN receiver_id = ? THEN amount ELSE 0 END) as incomes",
+                [$accountId, $accountId]
+            )
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->keyBy('month');
+
+        $statistics = [];
+        foreach ($months as $month) {
+            $statistics[] = [
+                'month' => $month,
+                'spends' => isset($results[$month]) ? $results[$month]->spends : 0,
+                'incomes' => isset($results[$month]) ? $results[$month]->incomes : 0,
+            ];
+        }
+
+        return $statistics;
+    }
 }

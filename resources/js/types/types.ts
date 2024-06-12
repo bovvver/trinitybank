@@ -50,7 +50,7 @@ export interface Transfer {
     currency: keyof typeof Currency;
     transactionDate: string;
     fullName: string;
-    isSender: boolean;
+    isSender: number;
 }
 
 export interface FavouriteAccount {
@@ -71,9 +71,16 @@ export interface SpendsByCategories {
     investments?: string;
 }
 
+export interface DashboardStats {
+    month: string;
+    spends: string | number;
+    incomes: string | number;
+}
+
 export interface PageProps {
     transfers: Transfer[];
     favourites: FavouriteAccount[];
     incomes: Income;
     spendsByCategories: SpendsByCategories;
+    statistics: DashboardStats[];
 }

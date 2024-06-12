@@ -31,12 +31,14 @@ class AccountController extends Controller
         $favouriteAccounts = $this->transferService->getFavouriteAccounts($firstId);
         $incomes = $this->transferService->getIncome($firstId);
         $spendsByCategories = $this->transferService->getSpendsPerCategory($firstId);
+        $statistics = $this->transferService->getStatistics($firstId);
 
         return Inertia::render('Dashboard', [
             'transfers' => TransferResource::collection($lastTransfers),
             'favourites' => FavouritesResource::collection($favouriteAccounts),
             'incomes' => $incomes,
-            'spendsByCategories' => $spendsByCategories
+            'spendsByCategories' => $spendsByCategories,
+            'statistics' => $statistics
         ]);
     }
 

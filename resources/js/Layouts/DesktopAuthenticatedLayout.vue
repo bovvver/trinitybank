@@ -105,12 +105,14 @@ const items = ref([
             <template #end>
                 <button v-ripple class="flex items-center w-full p-2">
                     <Avatar
-                        image="https://ichef.bbci.co.uk/images/ic/1200x675/p08rkqxl.jpg"
+                        :label="$page.props.auth.user.name.charAt(0)"
                         class="mr-2"
                         shape="circle"
                     />
                     <span>
-                        <span class="font-bold">Bob Builder</span>
+                        <span class="font-bold">{{
+                            $page.props.auth.user.name
+                        }}</span>
                     </span>
                 </button>
             </template>

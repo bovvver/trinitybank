@@ -25,7 +25,7 @@ export const getDateDaysAgo = (days: number) => {
 
 export const displayCorrectAmount = (
     amount: number,
-    isSender: boolean
+    isSender: number
 ) => {
     if (isSender) return `-${amount}`;
     return `${amount}`;

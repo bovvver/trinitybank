@@ -9,7 +9,7 @@ defineProps<{
     amount: string;
     currency: keyof typeof Currency;
     date: string;
-    isSender: boolean;
+    isSender: number;
 }>();
 </script>
 
