@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Services\TransferService;
 use DB;
 use Inertia\Inertia;
 
 class AccountController extends Controller
 {
+    protected $transferService;
+
+    public function __construct(TransferService $transferService)
+    {
+        $this->transferService = $transferService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -19,40 +27,16 @@ class AccountController extends Controller
         $accounts = auth()->user()->accounts;
         $firstId = $accounts->first()->id;
 
-        $sentTransfers = DB::table('transfers')
-            ->select(
-                'transfers.message',
-                'transfers.amount',
-                'transfers.currency',
-                'transfers.created_at as transaction_date',
-                'users.name',
-                'users.surname',
-                DB::raw('1 as is_sender')
-            )
-            ->join('users', 'transfers.receiver_id', '=', 'users.id')
-            ->where('transfers.sender_id', '=', $firstId);
-
-        $receivedTransfers = DB::table('transfers')
-            ->select(
-                'transfers.message',
-                'transfers.amount',
-                'transfers.currency',
-                'transfers.created_at as transaction_date',
-                'users.name',
-                'users.surname',
-                DB::raw('0 as is_sender')
-            )
-            ->join('users', 'transfers.sender_id', '=', 'users.id')
-            ->where('transfers.receiver_id', '=', $firstId);
-
-        $lastTransfers = $sentTransfers
-            ->union($receivedTransfers)
-            ->orderBy('transaction_date', 'desc')
-            ->limit(4)
-            ->get();
+        $lastTransfers = $this->transferService->getLastTransfers($firstId);
+        $favouriteAccounts = $this->transferService->getFavouriteAccounts($firstId);
+        $incomes = $this->transferService->getIncome($firstId);
+        $spendsByCategories = $this->transferService->getSpendsPerCategory($firstId);
 
         return Inertia::render('Dashboard', [
-            'transfers' => TransferResource::collection($lastTransfers)
+            'transfers' => TransferResource::collection($lastTransfers),
+            'favourites' => FavouritesResource::collection($favouriteAccounts),
+            'incomes' => $incomes,
+            'spendsByCategories' => $spendsByCategories
         ]);
     }
 

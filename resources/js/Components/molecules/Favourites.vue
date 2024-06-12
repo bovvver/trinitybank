@@ -1,13 +1,21 @@
 <script setup lang="ts">
+import { FavouriteAccount } from "@js/types/types";
 import Avatar from "primevue/avatar";
+
+defineProps<{
+    favourites?: FavouriteAccount[];
+}>();
 </script>
 
 <template>
     <div class="favourites">
-        <Avatar label="A" class="favourites__avatar" size="xlarge" shape="circle" />
-        <Avatar label="G" class="favourites__avatar" size="xlarge" shape="circle" />
-        <Avatar label="F" class="favourites__avatar" size="xlarge" shape="circle" />
-        <Avatar label="P" class="favourites__avatar" size="xlarge" shape="circle" />
+        <Avatar
+            v-for="favourite in favourites"
+            :label="favourite.fullName.charAt(0)"
+            class="favourites__avatar"
+            size="xlarge"
+            shape="circle"
+        />
     </div>
 </template>
 

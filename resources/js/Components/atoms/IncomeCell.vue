@@ -3,17 +3,18 @@ import { displayCorrectAmount } from "@js/helpers/helpers";
 
 defineProps<{
     title: string;
-    amount: number;
     icon: string;
+    isPositive: boolean;
+    amount?: string;
 }>();
 </script>
 
 <template>
     <div
         class="cell-wrapper"
-        :class="{ positive: amount >= 0, negative: amount < 0 }"
+        :class="{ positive: isPositive, negative: !isPositive }"
     >
-        <p class="cell-wrapper__amount">{{ displayCorrectAmount(amount) }}</p>
+        <p class="cell-wrapper__amount">{{ displayCorrectAmount(parseFloat(amount ?? "0"), !isPositive) }}</p>
         <p class="cell-wrapper__title">{{ title }}</p>
         <font-awesome-icon :icon="['fas', icon]" class="cell-wrapper__icon" />
     </div>

@@ -53,6 +53,27 @@ export interface Transfer {
     isSender: boolean;
 }
 
+export interface FavouriteAccount {
+    fullName: string;
+}
+
+export interface Income {
+    todayIncome: string;
+    monthIncome: string;
+    monthSpend: string;
+}
+
+export interface SpendsByCategories {
+    education?: string;
+    food?: string;
+    hygiene?: string;
+    transport?: string;
+    investments?: string;
+}
+
 export interface PageProps {
     transfers: Transfer[];
+    favourites: FavouriteAccount[];
+    incomes: Income;
+    spendsByCategories: SpendsByCategories;
 }

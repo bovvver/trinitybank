@@ -1,5 +1,3 @@
-import { Currency,  } from "@js/enums/Currency";
-
 // DATE HELPERS
 
 export const formatDate = (date: Date) => {
@@ -11,7 +9,7 @@ export const formatDate = (date: Date) => {
 
     if (minutesDiff <= 1) return "A moment ago";
     else if (minutesDiff < 60) return `${minutesDiff} minutes ago`;
-    else if (hoursDiff < 24) return `${hoursDiff} hours ago`;
+    else if (hoursDiff < 24) return `${hoursDiff} hour(s) ago`;
     else if (daysDiff == 1) return "Yesterday";
     else if (daysDiff < 7) return `${daysDiff} days ago`;
     else return date.toDateString().split(" ").slice(1).join(" ");
@@ -30,5 +28,5 @@ export const displayCorrectAmount = (
     isSender: boolean
 ) => {
     if (isSender) return `-${amount}`;
-    return `$${amount}`;
+    return `${amount}`;
 };

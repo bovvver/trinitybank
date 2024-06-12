@@ -2,14 +2,20 @@
 import Chart from "@js/Components/molecules/Chart.vue";
 import PieChart from "@js/Components/molecules/PieChart.vue";
 import IncomeTab from "@js/Components/molecules/IncomeTab.vue";
+import { Income, SpendsByCategories } from "@js/types/types";
+
+defineProps<{
+    incomes?: Income;
+    spendsByCategories?: SpendsByCategories;
+}>();
 </script>
 
 <template>
     <div class="secondary-wrapper">
         <Chart />
         <div class="secondary-wrapper__stats">
-            <IncomeTab />
-            <PieChart class="secondary-wrapper__stats-chart" />
+            <IncomeTab :incomes="incomes"/>
+            <PieChart class="secondary-wrapper__stats-chart" :spends="spendsByCategories" />
         </div>
     </div>
 </template>

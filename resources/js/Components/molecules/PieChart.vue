@@ -1,16 +1,37 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { SpendsByCategories } from "@js/types/types";
+import { ref, onMounted } from "vue";
 import VueApexCharts from "vue3-apexcharts";
+
+const props = defineProps<{
+    spends?: SpendsByCategories;
+}>();
+
+const spendsValues = ref<number[]>([]);
+const spendsLabels = ref<string[]>([]);
+
+const createSpendsArray = (spends: SpendsByCategories) => {
+    for (const [key, value] of Object.entries(spends)) {
+        if (value != "0.00") {
+            spendsLabels.value.push(key);
+            spendsValues.value.push(parseFloat(value));
+        }
+    }
+};
+
+onMounted(() => {
+    if (props.spends) createSpendsArray(props.spends);
+});
 
 const ApexChart = VueApexCharts;
 
-const series = ref([42, 47, 52, 58, 65]);
+const series = ref(spendsValues);
 const chartOptions = ref({
     chart: {
         width: 380,
         type: "polarArea",
     },
-    labels: ["Education", "Food", "Hygiene", "Transport", "Investments"],
+    labels: spendsLabels,
     fill: {
         opacity: 1,
     },

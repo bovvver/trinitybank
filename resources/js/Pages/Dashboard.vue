@@ -7,14 +7,19 @@ import SecondaryHomePage from "@js/Components/organisms/SecondaryHomePage.vue";
 import { usePage } from "@inertiajs/vue3";
 import { PageProps } from "@js/types/types";
 
-const { transfers } = usePage().props as Partial<PageProps>;
+const { transfers, favourites, incomes, spendsByCategories } = usePage()
+    .props as Partial<PageProps>;
 
 const width = useWindowWidth();
 </script>
 
 <template>
     <AuthenticatedLayout title="Dashboard">
-        <HomePage :transfers="transfers" />
-        <SecondaryHomePage v-if="width >= 1024" />
+        <HomePage :transfers="transfers" :favourites="favourites" />
+        <SecondaryHomePage
+            v-if="width >= 1024"
+            :incomes="incomes"
+            :spendsByCategories="spendsByCategories"
+        />
     </AuthenticatedLayout>
 </template>

@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import IncomeCell from "@js/Components/atoms/IncomeCell.vue";
+import { Income } from "@js/types/types";
+
+defineProps<{
+    incomes?: Income;
+}>();
 </script>
 
 <template>
     <div class="income_tab">
-        <IncomeCell title="Daily income" :amount="5000" icon="arrow-trend-up" />
-        <IncomeCell title="Monthly income" :amount="6243" icon="arrow-trend-up" />
-        <IncomeCell title="Monthly spent" :amount="-3300" icon="arrow-trend-down" />
+        <IncomeCell title="Daily income" :amount="incomes?.todayIncome" icon="arrow-trend-up" :isPositive="true" />
+        <IncomeCell
+            title="Monthly income"
+            :amount="incomes?.monthIncome"
+            icon="arrow-trend-up"
+            :isPositive="true"
+        />
+        <IncomeCell
+            title="Monthly spent"
+            :amount="incomes?.monthSpend"
+            icon="arrow-trend-down"
+            :isPositive="false"
+        />
     </div>
 </template>
 
