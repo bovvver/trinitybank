@@ -5,40 +5,46 @@ import Slider from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
 import Favourites from "@js/Components/molecules/Favourites.vue";
 import LatestTransfers from "@js/Components/organisms/LatestTransfers.vue";
-import { ref } from "vue";
-import { Transfer, FavouriteAccount, Income, SpendsByCategories } from "@js/types/types";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue";
+import Flicking from "@egjs/vue3-flicking";
 
-defineProps<{
-    transfers?: Transfer[];
-    favourites?: FavouriteAccount[];
-}>();
+const dashboardStore = useDashboardStore();
+const { creditCards } = storeToRefs(dashboardStore);
 
-const cards = ref([
-    {
-        cardNumber: "**** 3385",
-        balance: 9773.84,
-    },
-    {
-        cardNumber: "**** 4532",
-        balance: 7456.53,
-    },
-]);
+const flickingRef = ref<Flicking | null>(null);
+
+const onReady = () => {
+    if (flickingRef.value) {
+        flickingRef.value.on("changed", onSlideChanged);
+    }
+};
+
+const onSlideChanged = (e: any) => {
+    dashboardStore.changeStore(e.index);
+};
+
+onMounted(() => {
+    onReady();
+});
 </script>
 
 <template>
     <div class="home-wrapper">
         <SectionHeader value="Home" class="mx-6" />
-        <Slider :options="{ renderOnlyVisible: true }" class="py-6">
+        <Slider ref="flickingRef" class="py-6">
             <CreditCard
-                v-for="(card, idx) in cards"
-                :key="idx"
-                :cardNumber="card.cardNumber"
+                v-for="card in creditCards"
+                :key="card.cardLastDigits"
+                :cardNumber="card.cardLastDigits"
                 :balance="card.balance"
+                :currency="card.currency"
                 class="mx-6"
             />
         </Slider>
-        <Favourites :favourites="favourites ?? []"/>
-        <LatestTransfers :transfers="transfers ?? []" />
+        <Favourites />
+        <LatestTransfers />
     </div>
 </template>
 

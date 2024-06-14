@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import IncomeCell from "@js/Components/atoms/IncomeCell.vue";
-import { Income } from "@js/types/types";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 
-defineProps<{
-    incomes?: Income;
-}>();
+const dashboardStore = useDashboardStore();
+const { incomes } = storeToRefs(dashboardStore);
 </script>
 
 <template>
     <div class="income_tab">
-        <IncomeCell title="Daily income" :amount="incomes?.todayIncome" icon="arrow-trend-up" :isPositive="true" />
+        <IncomeCell
+            title="Daily income"
+            :amount="incomes?.todayIncome"
+            icon="arrow-trend-up"
+            :isPositive="true"
+        />
         <IncomeCell
             title="Monthly income"
             :amount="incomes?.monthIncome"

@@ -1,29 +1,33 @@
 <script setup lang="ts">
-import { DashboardStats } from "@js/types/types";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 
-const props = defineProps<{
-    statistics?: DashboardStats[];
-}>();
+const dashboardStore = useDashboardStore();
+const { statistics } = storeToRefs(dashboardStore);
 
 const spends = ref<number[]>([]);
 const incomes = ref<number[]>([]);
 const labels = ref<string[]>([]);
 
 const prepareChart = () => {
-    if (!props.statistics) return;
+    if (!statistics.value) return;
 
-    spends.value = props.statistics.map((el) =>
+    spends.value = statistics.value.map((el) =>
         typeof el.spends === "string" ? parseFloat(el.spends) : el.spends
     );
-    incomes.value = props.statistics.map((el) =>
+    incomes.value = statistics.value.map((el) =>
         typeof el.incomes === "string" ? parseFloat(el.incomes) : el.incomes
     );
-    labels.value = props.statistics.map((el) => el.month);
+    labels.value = statistics.value.map((el) => el.month);
 };
 
-onMounted(() => prepareChart());
+onMounted(() => {
+    watch(statistics, () => {
+        prepareChart();
+    }, { immediate: true });
+});
 
 const ApexChart = VueApexCharts;
 

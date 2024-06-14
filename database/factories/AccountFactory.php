@@ -16,8 +16,11 @@ class AccountFactory extends Factory
      */
     public function definition(): array
     {
+        $cardNumber = fake()->creditCardNumber();
+
         return [
-            'card_number' => fake()->creditCardNumber(),
+            'card_number' => $cardNumber,
+            'card_last_digits' => substr($cardNumber, -4),
             'expiry_date' => fake()->creditCardExpirationDate(),
             'balance' => fake()->randomFloat(2, 0, 30000),
             'currency' => fake()->currencyCode(),

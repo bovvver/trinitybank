@@ -17,6 +17,7 @@ class Account extends Model
     protected $fillable = [
         'user_id',
         'card_number',
+        'card_last_digits',
         'expiry_date',
         'balance',
         'currency',

@@ -33,7 +33,6 @@ class TransferService
         $sentTransfers = $this->getTransfersQuery($accountId, $receiver, $sender, 1);
         $receivedTransfers = $this->getTransfersQuery($accountId, $sender, $receiver, 0);
 
-
         return $sentTransfers
             ->union($receivedTransfers)
             ->orderBy('transaction_date', 'desc')
@@ -75,7 +74,9 @@ class TransferService
             'food' => TransferCategories::FOOD,
             'hygiene' => TransferCategories::HYGIENE,
             'transport' => TransferCategories::TRANSPORT,
+            'work' => TransferCategories::WORK,
             'investments' => TransferCategories::INVESTMENTS,
+            'others' => TransferCategories::OTHERS,
         ];
 
         $selectRaw = '';
@@ -122,7 +123,14 @@ class TransferService
                 'incomes' => isset($results[$month]) ? $results[$month]->incomes : 0,
             ];
         }
-
         return $statistics;
+    }
+
+    public function getCreditCards($userId)
+    {
+        return DB::table('Accounts')
+            ->select('card_last_digits', 'balance', 'currency')
+            ->where('user_id', $userId)
+            ->get();
     }
 }

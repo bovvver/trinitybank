@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import TransferCell from "@js/Components/molecules/TransferCell.vue";
-import { Transfer } from "@js/types/types";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 
-defineProps<{
-    transfers: Transfer[];
-}>();
+const dashboardStore = useDashboardStore();
+const { transfers } = storeToRefs(dashboardStore);
 </script>
 
 <template>

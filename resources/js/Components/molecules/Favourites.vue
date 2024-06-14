@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { FavouriteAccount } from "@js/types/types";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 import Avatar from "primevue/avatar";
 
-const props = defineProps<{
-    favourites: FavouriteAccount[];
-}>();
-
-console.log(props.favourites);
+const dashboardStore = useDashboardStore();
+const { favourites } = storeToRefs(dashboardStore);
 </script>
 
 <template>

@@ -3,7 +3,8 @@ import { ref } from "vue";
 
 defineProps<{
     cardNumber: string;
-    balance: number;
+    balance: string;
+    currency: string;
 }>();
 
 const isGrabbing = ref(false);
@@ -31,9 +32,12 @@ const handleMouseUp = () => {
             :icon="['fas', 'piggy-bank']"
             class="absolute text-black right-0 pr-6 text-2xl"
         />
-        <p class="credit-card__number">{{ cardNumber }}</p>
+        <p class="credit-card__number">**** {{ cardNumber }}</p>
         <p class="credit-card__header">Balance</p>
-        <p class="credit-card__balance">$ {{ balance }}</p>
+        <p class="credit-card__balance">
+            <span class="credit-card__balance-currency">{{ currency }}</span>
+            {{ balance }}
+        </p>
         <button class="credit-card__button">Transfer</button>
     </div>
 </template>
@@ -57,6 +61,10 @@ const handleMouseUp = () => {
 
     &__balance {
         @apply absolute font-bold text-3xl top-[39%] left-0 pl-6;
+
+        &-currency {
+            @apply text-sm;
+        }
     }
 
     &__button {

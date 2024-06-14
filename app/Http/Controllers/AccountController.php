@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CreditCardResource;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Services\TransferService;
-use DB;
 use Inertia\Inertia;
 
 class AccountController extends Controller
@@ -25,20 +25,24 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = auth()->user()->accounts;
-        $firstId = $accounts->first()->id;
 
-        $lastTransfers = $this->transferService->getLastTransfers($firstId);
-        $favouriteAccounts = $this->transferService->getFavouriteAccounts($firstId);
-        $incomes = $this->transferService->getIncome($firstId);
-        $spendsByCategories = $this->transferService->getSpendsPerCategory($firstId);
-        $statistics = $this->transferService->getStatistics($firstId);
+        $data = $accounts->map(function ($account) {
+            return [
+                'id' => $account->id,
+                'cardNumber' => $account->card_last_digits,
+                'transfers' => TransferResource::collection($this->transferService->getLastTransfers($account->id))->resolve(),
+                'favourites' => FavouritesResource::collection($this->transferService->getFavouriteAccounts($account->id))->resolve(),
+                'incomes' => $this->transferService->getIncome($account->id),
+                'spendsByCategories' => $this->transferService->getSpendsPerCategory($account->id),
+                'statistics' => $this->transferService->getStatistics($account->id),
+            ];
+        });
+
+        $cards = $this->transferService->getCreditCards(auth()->user()->id);
 
         return Inertia::render('Dashboard', [
-            'transfers' => TransferResource::collection($lastTransfers),
-            'favourites' => FavouritesResource::collection($favouriteAccounts),
-            'incomes' => $incomes,
-            'spendsByCategories' => $spendsByCategories,
-            'statistics' => $statistics
+            'accountsData' => $data,
+            'cards' => CreditCardResource::collection($cards)
         ]);
     }
 
