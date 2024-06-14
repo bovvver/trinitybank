@@ -8,5 +8,7 @@ enum TransferCategories : string
     case FOOD = "Food";
     case HYGIENE = "Hygiene";
     case TRANSPORT = "Transport";
+    case WORK = "Work";
     case INVESTMENTS = "Investments";
+    case OTHERS = "Others";
 }

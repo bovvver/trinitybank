@@ -44,7 +44,7 @@ export type MenuItems = {
     profile: SubItem[];
 };
 
-export interface Transfer {
+export interface DashboardTransfers {
     message: string;
     amount: string;
     currency: keyof typeof Currency;
@@ -53,11 +53,11 @@ export interface Transfer {
     isSender: number;
 }
 
-export interface FavouriteAccount {
+export interface DashboardFavourites {
     fullName: string;
 }
 
-export interface Income {
+export interface DashboardIncome {
     todayIncome: string;
     monthIncome: string;
     monthSpend: string;
@@ -68,7 +68,9 @@ export interface SpendsByCategories {
     food?: string;
     hygiene?: string;
     transport?: string;
+    work?: string;
     investments?: string;
+    others?: string;
 }
 
 export interface DashboardStats {
@@ -77,10 +79,22 @@ export interface DashboardStats {
     incomes: string | number;
 }
 
-export interface PageProps {
-    transfers: Transfer[];
-    favourites: FavouriteAccount[];
-    incomes: Income;
+export interface DashboardCards {
+    cardLastDigits: string;
+    balance: string;
+    currency: string;
+}
+
+export interface DashboardData {
+    cardNumber: string;
+    transfers: DashboardTransfers[];
+    favourites: DashboardFavourites[];
+    incomes: DashboardIncome;
     spendsByCategories: SpendsByCategories;
     statistics: DashboardStats[];
+}
+
+export interface PageProps {
+    accountsData: DashboardData[];
+    cards: DashboardCards[];
 }

@@ -1,26 +1,43 @@
 <script setup lang="ts">
 import { SpendsByCategories } from "@js/types/types";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 
-const props = defineProps<{
-    spends?: SpendsByCategories;
-}>();
+const dashboardStore = useDashboardStore();
+const { spendsByCategories } = storeToRefs(dashboardStore);
 
 const spendsValues = ref<number[]>([]);
 const spendsLabels = ref<string[]>([]);
 
 const createSpendsArray = (spends: SpendsByCategories) => {
+    spendsValues.value = [];
+    spendsLabels.value = [];
+
     for (const [key, value] of Object.entries(spends)) {
         if (value != "0.00") {
-            spendsLabels.value.push(key);
+            spendsLabels.value.push(
+                key.charAt(0).toUpperCase() + key.substring(1)
+            );
             spendsValues.value.push(parseFloat(value));
         }
     }
 };
 
 onMounted(() => {
-    if (props.spends) createSpendsArray(props.spends);
+    if (spendsByCategories.value) {
+        createSpendsArray(spendsByCategories.value);
+    }
+    watch(
+        spendsByCategories,
+        (newSpends) => {
+            if (newSpends) {
+                createSpendsArray(newSpends);
+            }
+        },
+        { immediate: true }
+    );
 });
 
 const ApexChart = VueApexCharts;

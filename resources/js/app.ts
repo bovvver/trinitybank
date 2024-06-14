@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
 import { faArrowTrendUp } from "@fortawesome/free-solid-svg-icons";
 import { faArrowTrendDown } from "@fortawesome/free-solid-svg-icons";
+import { createPinia } from 'pinia'
 
 library.add(faPiggyBank);
 library.add(faArrowTrendUp);
@@ -26,6 +27,8 @@ const primeVueOptions = {
     pt: CustomPreset,
 };
 
+const pinia = createPinia()
+
 createInertiaApp({
     title: (title) => `${title} | ${appName}`,
     resolve: (name) =>
@@ -38,6 +41,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(PrimeVue, primeVueOptions)
+            .use(pinia)
             .component("font-awesome-icon", FontAwesomeIcon)
             .directive("ripple", Ripple)
             .mount(el);

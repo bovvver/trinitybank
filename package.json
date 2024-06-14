@@ -26,6 +26,7 @@
         "@fortawesome/free-solid-svg-icons": "^6.5.2",
         "@fortawesome/vue-fontawesome": "^3.0.8",
         "apexcharts": "^3.49.1",
+        "pinia": "^2.1.7",
         "primeicons": "^7.0.0",
         "primevue": "^3.52.0",
         "vue3-apexcharts": "^1.5.3"
