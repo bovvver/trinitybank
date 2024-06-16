@@ -9,7 +9,7 @@ defineProps<{
     amount: string;
     currency: keyof typeof Currency;
     date: string;
-    isSender: number;
+    isSender: boolean;
 }>();
 </script>
 
@@ -23,7 +23,7 @@ defineProps<{
                 class="transfer-cell__amount"
                 :class="{ positive: !isSender, negative: isSender }"
             >
-                {{ displayCorrectAmount(parseFloat(amount), isSender) }}
+                {{ displayCorrectAmount(parseFloat(amount), !isSender) }}
                 <span class="transfer-cell__currency">{{ currency }}</span>
             </p>
             <p class="transfer-cell__date">{{ formatDate(new Date(date)) }}</p>

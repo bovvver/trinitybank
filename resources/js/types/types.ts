@@ -50,7 +50,7 @@ export interface DashboardTransfers {
     currency: keyof typeof Currency;
     transactionDate: string;
     fullName: string;
-    isSender: number;
+    isSender: boolean;
 }
 
 export interface DashboardFavourites {
