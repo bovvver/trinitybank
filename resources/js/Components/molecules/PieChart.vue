@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SpendsByCategories } from "@js/types/types";
+import { SpendsByCategories } from "@js/types/interfaces";
 import { ref, onMounted, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useDashboardStore } from "@js/stores/dashboard";

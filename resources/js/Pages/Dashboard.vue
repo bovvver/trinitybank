@@ -5,7 +5,7 @@ import useWindowWidth from "@js/hooks/useScreenWidth";
 import HomePage from "@js/Components/organisms/HomePage.vue";
 import SecondaryHomePage from "@js/Components/organisms/SecondaryHomePage.vue";
 import { usePage } from "@inertiajs/vue3";
-import { PageProps } from "@js/types/types";
+import { PageProps } from "@js/types/interfaces";
 import { useDashboardStore } from "@js/stores/dashboard";
 import { onMounted } from "vue";
 

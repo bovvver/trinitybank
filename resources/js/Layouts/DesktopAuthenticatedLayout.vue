@@ -22,7 +22,7 @@ const items = ref([
             {
                 label: "History",
                 icon: "pi pi-history",
-                route: "dashboard",
+                route: "history",
             },
             {
                 label: "Cards",
@@ -83,7 +83,9 @@ const items = ref([
         <Menu :model="items" :pt="ptStyles">
             <template #start>
                 <div class="layout-wrapper__logo">
-                    <ApplicationLogo :size="130" color="#fff" />
+                    <Link :href="route('dashboard')">
+                        <ApplicationLogo :size="130" color="#fff" />
+                    </Link>
                 </div>
             </template>
             <template #submenuheader="{ item }">

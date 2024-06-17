@@ -6,7 +6,7 @@ import {
     DashboardStats,
     DashboardCards,
     DashboardData,
-} from "@js/types/types";
+} from "@js/types/interfaces";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -40,6 +40,6 @@ export const useDashboardStore = defineStore("dashboardStore", () => {
         statistics,
         creditCards,
         accountsData,
-        changeStore
+        changeStore,
     };
 });

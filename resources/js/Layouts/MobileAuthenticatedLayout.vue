@@ -34,7 +34,7 @@ const unfoldedItems = ref<MenuItems>({
     account: [
         {
             name: "History",
-            route: "dashboard",
+            route: "history",
         },
         {
             name: "Cards",

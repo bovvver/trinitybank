@@ -1,5 +1,4 @@
 import { InertiaForm } from "@inertiajs/vue3";
-import { Currency } from "@js/enums/Currency";
 import Method from "@js/enums/HttpMethods";
 
 export type CardLoginForm = InertiaForm<{
@@ -43,58 +42,3 @@ export type MenuItems = {
     stats: SubItem[];
     profile: SubItem[];
 };
-
-export interface DashboardTransfers {
-    message: string;
-    amount: string;
-    currency: keyof typeof Currency;
-    transactionDate: string;
-    fullName: string;
-    isSender: boolean;
-}
-
-export interface DashboardFavourites {
-    fullName: string;
-}
-
-export interface DashboardIncome {
-    todayIncome: string;
-    monthIncome: string;
-    monthSpend: string;
-}
-
-export interface SpendsByCategories {
-    education?: string;
-    food?: string;
-    hygiene?: string;
-    transport?: string;
-    work?: string;
-    investments?: string;
-    others?: string;
-}
-
-export interface DashboardStats {
-    month: string;
-    spends: string | number;
-    incomes: string | number;
-}
-
-export interface DashboardCards {
-    cardLastDigits: string;
-    balance: string;
-    currency: string;
-}
-
-export interface DashboardData {
-    cardNumber: string;
-    transfers: DashboardTransfers[];
-    favourites: DashboardFavourites[];
-    incomes: DashboardIncome;
-    spendsByCategories: SpendsByCategories;
-    statistics: DashboardStats[];
-}
-
-export interface PageProps {
-    accountsData: DashboardData[];
-    cards: DashboardCards[];
-}
