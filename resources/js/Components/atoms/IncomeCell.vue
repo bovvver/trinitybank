@@ -14,7 +14,7 @@ defineProps<{
         class="cell-wrapper"
         :class="{ positive: isPositive, negative: !isPositive }"
     >
-        <p class="cell-wrapper__amount">{{ displayCorrectAmount(parseFloat(amount ?? "0"), !isPositive) }}</p>
+        <p class="cell-wrapper__amount">{{ displayCorrectAmount(parseFloat(amount ?? "0"), isPositive) }}</p>
         <p class="cell-wrapper__title">{{ title }}</p>
         <font-awesome-icon :icon="['fas', icon]" class="cell-wrapper__icon" />
     </div>

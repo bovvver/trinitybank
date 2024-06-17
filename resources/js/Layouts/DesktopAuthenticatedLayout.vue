@@ -7,7 +7,7 @@ import { Link } from "@inertiajs/vue3";
 import Method from "@js/enums/HttpMethods";
 
 const ptStyles = ref({
-    root: "relative bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen min-w-[320px]",
+    root: "sticky bottom-0 top-0 left-0 bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen w-[20%] ",
     submenuHeader: "bg-neutral-950 py-3 px-3 font-bold text-primary uppercase",
     content:
         "overflow-hidden flex items-center hover:bg-neutral-900 rounded-md cursor-pointer transition",
@@ -22,7 +22,7 @@ const items = ref([
             {
                 label: "History",
                 icon: "pi pi-history",
-                route: "dashboard",
+                route: "history",
             },
             {
                 label: "Cards",
@@ -83,7 +83,9 @@ const items = ref([
         <Menu :model="items" :pt="ptStyles">
             <template #start>
                 <div class="layout-wrapper__logo">
-                    <ApplicationLogo :size="130" color="#fff" />
+                    <Link :href="route('dashboard')">
+                        <ApplicationLogo :size="130" color="#fff" />
+                    </Link>
                 </div>
             </template>
             <template #submenuheader="{ item }">
@@ -123,7 +125,7 @@ const items = ref([
 
 <style scoped lang="scss">
 .layout-wrapper {
-    @apply min-h-screen flex max-h-[100vh] h-[100vh] overflow-hidden;
+    @apply flex;
 
     &__logo {
         @apply flex flex-col justify-center items-center py-10;

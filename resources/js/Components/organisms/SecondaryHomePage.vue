@@ -16,10 +16,10 @@ import IncomeTab from "@js/Components/molecules/IncomeTab.vue";
 
 <style scoped lang="scss">
 .secondary-wrapper {
-    @apply w-full m-6;
+    @apply w-full m-6 lg:max-w-[40%] xl:max-w-[50%];
 
     &__stats {
-        @apply flex justify-center items-start;
+        @apply flex justify-center items-start h-max;
 
         &-chart {
             @apply w-full;

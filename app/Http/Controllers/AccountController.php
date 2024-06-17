@@ -46,6 +46,11 @@ class AccountController extends Controller
         ]);
     }
 
+    public function history()
+    {
+        return Inertia::render('History');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
