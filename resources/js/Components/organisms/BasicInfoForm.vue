@@ -12,7 +12,6 @@ defineProps<{
         <div class="flex flex-row gap-3">
             <TextInput
                 name="name"
-                type="input"
                 v-model="form.name"
                 :modelError="form.errors.name"
                 :required="true"
@@ -22,7 +21,6 @@ defineProps<{
             />
             <TextInput
                 name="surname"
-                type="input"
                 v-model="form.surname"
                 :modelError="form.errors.surname"
                 :required="true"
