@@ -3,8 +3,8 @@ import InputText from "primevue/inputtext";
 
 defineProps<{
     name: string;
-    type: string;
     modelValue: string;
+    type?: string;
     modelError?: string;
     required?: boolean;
     autofocus?: boolean;
@@ -32,7 +32,7 @@ const sanitizeName = (name: string) => {
         <label :for="name">{{ label ?? sanitizeName(name) }}</label>
         <InputText
             :id="name"
-            :type="type"
+            :type="type ?? 'input'"
             :value="modelValue"
             :required="required"
             :autofocus="autofocus"

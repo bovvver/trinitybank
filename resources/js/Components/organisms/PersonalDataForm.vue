@@ -44,7 +44,6 @@ defineProps<{
         <div class="flex flex-row gap-3 mt-4">
             <TextInput
                 name="city"
-                type="input"
                 v-model="form.city"
                 :modelError="form.errors.city"
                 :required="true"
@@ -69,7 +68,6 @@ defineProps<{
         <div class="flex flex-row gap-3 mt-4">
             <TextInput
                 name="street"
-                type="input"
                 v-model="form.street"
                 :modelError="form.errors.street"
                 :required="true"
@@ -77,7 +75,6 @@ defineProps<{
             />
             <TextInput
                 name="house_number"
-                type="input"
                 v-model="form.house_number"
                 :modelError="form.errors.house_number"
                 :required="true"

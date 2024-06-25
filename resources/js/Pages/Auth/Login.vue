@@ -46,7 +46,6 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <TextInput
                         name="username"
-                        type="input"
                         v-model="form.username"
                         :modelError="form.errors.username"
                         :required="true"
