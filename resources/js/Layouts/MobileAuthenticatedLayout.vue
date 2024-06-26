@@ -38,7 +38,7 @@ const unfoldedItems = ref<MenuItems>({
         },
         {
             name: "Cards",
-            route: "dashboard",
+            route: "cards",
         },
         {
             name: "Transfer",

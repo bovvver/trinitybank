@@ -122,7 +122,7 @@ const submit = () => {
                         />
                     </TransferInput>
 
-                    <Button type="submit" label="SEND" />
+                    <Button type="submit" label="Send" />
                 </form>
             </div>
             <TransferInfo v-if="width >= 768" class="transfer-page__info" />
@@ -139,7 +139,7 @@ const submit = () => {
     }
 
     &__form {
-        @apply m-3 mt-10 flex flex-col gap-4;
+        @apply m-3 mx-8 mt-10 flex flex-col gap-4;
     }
 
     &__info {

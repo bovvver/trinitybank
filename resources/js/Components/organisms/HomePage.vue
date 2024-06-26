@@ -38,6 +38,7 @@ onMounted(() => {
                 :cardNumber="card.cardLastDigits"
                 :balance="card.balance"
                 :currency="card.currency"
+                :grabable="true"
                 class="mx-6"
             />
         </Slider>

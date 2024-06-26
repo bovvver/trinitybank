@@ -51,6 +51,11 @@ class AccountController extends Controller
         return Inertia::render('History');
     }
 
+    public function cards()
+    {
+        return Inertia::render('CardsManager');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

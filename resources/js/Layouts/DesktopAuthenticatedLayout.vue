@@ -27,7 +27,7 @@ const items = ref([
             {
                 label: "Cards",
                 icon: "pi pi-credit-card",
-                route: "dashboard",
+                route: "cards",
             },
             {
                 label: "Transfer",

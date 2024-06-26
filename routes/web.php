@@ -16,6 +16,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [AccountController::class, 'index'])->name('dashboard');
     Route::get('/history', [AccountController::class, 'history'])->name('history');
+    Route::get('/cards', [AccountController::class, 'cards'])->name('cards');
     Route::get('/transfer', [TransferController::class, 'index'])->name('transfer');
 
 });
