@@ -84,3 +84,17 @@ export interface TransferDetails {
     category: Categories;
     status: TransferStatus;
 }
+
+export interface NewCardDetails {
+    currency: string | null;
+    banking_product: BankingProduct;
+}
+
+export interface TransferFormOptions {
+    name: string;
+}
+
+export interface NewCardDropdownOptions {
+    name: string,
+    value: string,
+}

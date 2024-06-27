@@ -18,14 +18,6 @@ import Card from "./Card.vue";
                     only the intended recipient can access it.
                 </p>
                 <p>
-                    Use strong, unique passwords and enable two-factor
-                    authentication (2FA) for an extra layer of security. Avoid
-                    easily guessable passwords and instead, use a mix of
-                    letters, numbers, and special characters. 2FA requires not
-                    just your password but also a second form of identification,
-                    like a text message code.
-                </p>
-                <p>
                     Regularly monitor your accounts to spot unauthorized
                     activities quickly. Setting up account alerts can help you
                     stay informed about any changes or transactions, adding an
