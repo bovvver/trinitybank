@@ -1,6 +1,9 @@
 ### 🚧 WORK IN PROGRESS 🚧
 ![Screenshot_1826](https://github.com/bovvver/trinitybank/assets/85307370/bef76005-e8f2-43c9-86fb-37002c3900a7)
 ![Screenshot_1842](https://github.com/bovvver/trinitybank/assets/85307370/ff35c0fd-9999-4973-8763-9b9025bd1fcb)
+![Screenshot_1900](https://github.com/bovvver/trinitybank/assets/85307370/31f46b55-6b37-49f8-8f3c-648216027aab)
+![Screenshot_1901](https://github.com/bovvver/trinitybank/assets/85307370/c84351c3-2604-47af-9cdd-63bdb8a5b29c)
+![Screenshot_1902](https://github.com/bovvver/trinitybank/assets/85307370/e8377f7a-15c3-4088-b692-834b736159b1)
 
 <div  align="center">
     <a  href="https://github.com/bovvver/trinitybank">
