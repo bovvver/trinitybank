@@ -105,7 +105,7 @@ const items = ref([
                 </Link>
             </template>
             <template #end>
-                <button v-ripple class="flex items-center w-full p-2">
+                <Link :href="route('profile')" v-ripple class="flex items-center w-full p-2" as="button">
                     <Avatar
                         :label="$page.props.auth.user.name.charAt(0)"
                         class="mr-2"
@@ -116,7 +116,7 @@ const items = ref([
                             $page.props.auth.user.name
                         }}</span>
                     </span>
-                </button>
+                </Link>
             </template>
         </Menu>
         <slot />

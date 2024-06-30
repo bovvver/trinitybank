@@ -136,7 +136,7 @@ const updateVisible = (value: boolean) => {
             </div>
         </template>
         <template #empty>No transfers found.</template>
-        <Column field="target" header="Target" sortable></Column>
+        <Column field="target" header="To/From" sortable></Column>
         <Column #body="slotProps" field="cardNumber" header="Card number">
             {{ `**** ${slotProps.data.cardNumber}` }}
         </Column>

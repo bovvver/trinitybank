@@ -56,6 +56,11 @@ class AccountController extends Controller
         return Inertia::render('CardsManager');
     }
 
+    public function profile()
+    {
+        return Inertia::render('Profile');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

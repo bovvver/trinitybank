@@ -98,3 +98,11 @@ export interface NewCardDropdownOptions {
     name: string,
     value: string,
 }
+
+export interface ProfileDataOption {
+    key: string;
+    value: string | number;
+    hidden: boolean;
+    isVisible: boolean;
+    editable?: boolean;
+}

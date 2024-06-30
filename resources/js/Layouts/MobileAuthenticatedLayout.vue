@@ -68,7 +68,7 @@ const unfoldedItems = ref<MenuItems>({
     profile: [
         {
             name: "Profile",
-            route: "dashboard",
+            route: "profile",
         },
         {
             name: "Logout",

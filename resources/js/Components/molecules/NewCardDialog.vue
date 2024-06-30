@@ -20,12 +20,14 @@ const form = useForm<NewCardDetails>({
     banking_product: BankingProduct.Personal,
 });
 
-const emit = defineEmits(["update:visible", "close"]);
+const emit = defineEmits(["update:visible"]);
 
-const currencyOptions: NewCardDropdownOptions[] = Object.entries(Currency).map(([name, sign]) => ({
-    name: `${name} (${sign})`,
-    value: name,
-}));
+const currencyOptions: NewCardDropdownOptions[] = Object.entries(Currency).map(
+    ([name, sign]) => ({
+        name: `${name} (${sign})`,
+        value: name,
+    })
+);
 
 const updateVisible = (value: boolean) => {
     emit("update:visible", value);
@@ -92,13 +94,13 @@ const submit = () => {
                 <Button
                     type="button"
                     label="Cancel"
-                    @click="emit('close')"
+                    @click="emit('update:visible')"
                     severity="secondary"
                 />
                 <Button
                     type="submit"
                     label="Send"
-                    @click="emit('close')"
+                    @click="emit('update:visible')"
                     :disabled="selectedCurrency == null"
                 />
             </div>
