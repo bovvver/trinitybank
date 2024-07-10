@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import AuthenticatedLayout from "@js/Layouts/AuthenticatedLayout.vue";
 import Avatar from "primevue/avatar";
-import Card from "@js/Components/atoms/Card.vue";
 import ProfileDataList from "@js/Components/molecules/ProfileDataList.vue";
 import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
 import UpdateContactDialog from "@js/Components/molecules/UpdateContactDialog.vue";
 import { ProfileDataOption } from "@js/types/interfaces";
 import { formatDate } from "@js/helpers/helpers";
-import Divider from "primevue/divider";
 import { ref } from "vue";
 
 const dialogVisible = ref(false);
@@ -80,45 +78,32 @@ const updateVisible = (_value: boolean) => {
     <AuthenticatedLayout title="Profile">
         <div class="w-[100%] flex flex-col">
             <SectionHeader value="Profile" />
-            <div class="w-[100%] flex items-center justify-center">
-                <Card class="profile">
-                    <template #title>
-                        <div class="profile__header">
-                            <div class="relative overflow-hidden">
-                                <Avatar
-                                    label="J"
-                                    size="xlarge"
-                                    shape="circle"
-                                    class="profile__avatar"
-                                />
-                                <button
-                                    class="profile__edit-button pi pi-pencil"
-                                />
-                            </div>
-                            <p class="profile__name">John <span>Doe</span></p>
-                        </div>
-                    </template>
-                    <template #content>
-                        <div class="flex flex-row justify-evenly">
-                            <ProfileDataList
-                                title="Personal data"
-                                :items="personalData"
-                            />
-                            <Divider layout="vertical" />
-                            <ProfileDataList
-                                title="Contact"
-                                :items="contactData"
-                                :dialogVisible="dialogVisible"
-                                @openDialog="dialogVisible = true"
-                            />
-                            <Divider layout="vertical" />
-                            <ProfileDataList
-                                title="Statistics"
-                                :items="statsData"
-                            />
-                        </div>
-                    </template>
-                </Card>
+            <div class="profile">
+                <div class="profile__header">
+                    <div class="relative overflow-hidden">
+                        <Avatar
+                            label="J"
+                            size="xlarge"
+                            shape="circle"
+                            class="profile__avatar"
+                        />
+                        <button class="profile__edit-button pi pi-pencil" />
+                    </div>
+                    <p class="profile__name">John <span>Doe</span></p>
+                </div>
+                <div class="flex flex-row gap-10 my-2 md:ml-[10em]">
+                    <ProfileDataList
+                        title="Personal data"
+                        :items="personalData"
+                    />
+                    <ProfileDataList
+                        title="Contact"
+                        :items="contactData"
+                        :dialogVisible="dialogVisible"
+                        @openDialog="dialogVisible = true"
+                    />
+                    <ProfileDataList title="Statistics" :items="statsData" />
+                </div>
             </div>
         </div>
         <UpdateContactDialog
@@ -130,7 +115,7 @@ const updateVisible = (_value: boolean) => {
 
 <style scoped lang="scss">
 .profile {
-    @apply w-[90%] md:w-[80%] mt-3;
+    @apply w-[100%] flex flex-col p-10 text-neutral-800;
 
     &__header {
         @apply flex items-center gap-4;

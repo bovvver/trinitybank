@@ -8,6 +8,7 @@ const props = defineProps<{
     grabable?: boolean;
     large?: boolean;
     button?: string;
+    secondButton?: string;
 }>();
 
 const isGrabbing = ref(false);
@@ -41,7 +42,10 @@ const handleMouseUp = () => {
             <span class="credit-card__balance-currency">{{ currency }}</span>
             {{ balance }}
         </p>
-        <button class="credit-card__button">{{ button ?? "Transfer" }}</button>
+        <div class="credit-card__buttons">
+            <button>{{ button ?? "Transfer" }}</button>
+            <button v-if="secondButton">{{ secondButton }}</button>
+        </div>
     </div>
 </template>
 
@@ -78,8 +82,12 @@ const handleMouseUp = () => {
         }
     }
 
-    &__button {
-        @apply absolute bottom-0 right-0 bg-white text-primary px-4 py-1 rounded font-bold mr-6 mb-6 shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+    &__buttons {
+        @apply absolute bottom-0 right-0 mr-6 mb-6 flex flex-row-reverse gap-2;
+
+        button {
+            @apply bg-white text-primary px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+        }
     }
 }
 </style>

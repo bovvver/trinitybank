@@ -21,9 +21,12 @@ const closeDialog = (isSubmitted: boolean) => {
 };
 
 const submit = () => {
-    form.post(route(""), {
-        onFinish: () => {},
-    });
+    console.log(form);
+
+    // form.post(route(""), {
+    //     onFinish: () => {},
+    // });
+    closeDialog(true);
 };
 </script>
 
@@ -50,6 +53,7 @@ const submit = () => {
                     >Phone number</label
                 >
                 <InputText
+                    v-model="form.phone_number"
                     id="phoneNumber"
                     class="flex-auto"
                     autocomplete="off"
@@ -57,7 +61,13 @@ const submit = () => {
             </div>
             <div class="flex items-center gap-3 mb-2">
                 <label for="email" class="font-semibold w-[6rem]">Email</label>
-                <InputText id="email" class="flex-auto" autocomplete="off" />
+                <InputText
+                    v-model="form.email"
+                    type="email"
+                    id="email"
+                    class="flex-auto"
+                    autocomplete="off"
+                />
             </div>
             <template #footer>
                 <Button
@@ -66,12 +76,7 @@ const submit = () => {
                     @click="closeDialog(false)"
                     autofocus
                 />
-                <Button
-                    label="Save"
-                    type="submit"
-                    @click="closeDialog(true)"
-                    autofocus
-                />
+                <Button label="Save" type="submit" autofocus />
             </template>
         </Dialog>
     </form>

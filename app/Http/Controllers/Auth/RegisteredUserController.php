@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\SessionService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,8 @@ class RegisteredUserController extends Controller
         $accountService->bankProductSelectionValidation($request);
 
         $user = $accountService->createUserWithAccount($request);
+
+        SessionService::setDefaultAccount($request);
 
         event(new Registered($user));
 

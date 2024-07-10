@@ -61,6 +61,7 @@ export interface DashboardCards {
 }
 
 export interface DashboardData {
+    id: number;
     cardNumber: string;
     transfers: DashboardTransfers[];
     favourites: DashboardFavourites[];
@@ -69,9 +70,13 @@ export interface DashboardData {
     statistics: DashboardStats[];
 }
 
-export interface PageProps {
+export interface DashboardProps {
     accountsData: DashboardData[];
     cards: DashboardCards[];
+}
+
+export interface HistoryProps {
+    history: DashboardData[];
 }
 
 export interface TransferDetails {
@@ -95,8 +100,8 @@ export interface TransferFormOptions {
 }
 
 export interface NewCardDropdownOptions {
-    name: string,
-    value: string,
+    name: string;
+    value: string;
 }
 
 export interface ProfileDataOption {

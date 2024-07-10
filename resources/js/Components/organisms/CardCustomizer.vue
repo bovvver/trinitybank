@@ -13,6 +13,7 @@ const width = useWindowWidth();
             currency="XXX"
             :large="width >= 1024"
             button="Disable"
+            secondButton="Change currency"
         />
         <div class="flex gap-2">
             <button class="card-customizer__button blue-card" />

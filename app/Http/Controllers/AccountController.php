@@ -8,16 +8,17 @@ use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
-use App\Services\TransferService;
+use App\Services\ProfileDataService;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    protected $transferService;
+    private $profileDataService;
 
-    public function __construct(TransferService $transferService)
+    public function __construct(ProfileDataService $profileDataService)
     {
-        $this->transferService = $transferService;
+        $this->profileDataService = $profileDataService;
     }
     /**
      * Display a listing of the resource.
@@ -30,15 +31,15 @@ class AccountController extends Controller
             return [
                 'id' => $account->id,
                 'cardNumber' => $account->card_last_digits,
-                'transfers' => TransferResource::collection($this->transferService->getLastTransfers($account->id))->resolve(),
-                'favourites' => FavouritesResource::collection($this->transferService->getFavouriteAccounts($account->id))->resolve(),
-                'incomes' => $this->transferService->getIncome($account->id),
-                'spendsByCategories' => $this->transferService->getSpendsPerCategory($account->id),
-                'statistics' => $this->transferService->getStatistics($account->id),
+                'transfers' => TransferResource::collection($this->profileDataService->getLastTransfers($account->id))->resolve(),
+                'favourites' => FavouritesResource::collection($this->profileDataService->getFavouriteAccounts($account->id))->resolve(),
+                'incomes' => $this->profileDataService->getIncome($account->id),
+                'spendsByCategories' => $this->profileDataService->getSpendsPerCategory($account->id),
+                'statistics' => $this->profileDataService->getStatistics($account->id),
             ];
         });
 
-        $cards = $this->transferService->getCreditCards(auth()->user()->id);
+        $cards = $this->profileDataService->getCreditCards(auth()->user()->id);
 
         return Inertia::render('Dashboard', [
             'accountsData' => $data,
@@ -46,9 +47,13 @@ class AccountController extends Controller
         ]);
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        return Inertia::render('History');
+        $selectedAccount = $request->session()->get("selectedAccount");
+
+        return Inertia::render('History', [
+            'history' => $this->profileDataService->getTransfersHistory($selectedAccount)
+        ]);
     }
 
     public function cards()
