@@ -15,15 +15,18 @@ class TransferResource extends JsonResource
     public function toArray(Request $request): array
     {
         $isSender = true;
-        if($this->is_sender == 0) $isSender = false;
+        if ($this->is_sender == 0)
+            $isSender = false;
 
         return [
             "message" => $this->message,
             "amount" => $this->amount,
             "currency" => $this->currency,
             "transactionDate" => $this->transaction_date,
-            "fullName" => $this->name . " " . $this->surname,
+            "fullName" => "{$this->name} {$this->surname}",
             "isSender" => $isSender,
+            "category" => $this->category,
+            "cardNumber" => $this->card_last_digits,
         ];
     }
 }

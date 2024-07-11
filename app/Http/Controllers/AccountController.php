@@ -23,7 +23,7 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $accounts = auth()->user()->accounts;
 
@@ -40,19 +40,22 @@ class AccountController extends Controller
         });
 
         $cards = $this->profileDataService->getCreditCards(auth()->user()->id);
+        $selectedCard = $request->session()->get("selectedAccount");
 
         return Inertia::render('Dashboard', [
             'accountsData' => $data,
-            'cards' => CreditCardResource::collection($cards)
+            'cards' => CreditCardResource::collection($cards),
+            'selectedCard' => $selectedCard
         ]);
     }
 
     public function history(Request $request)
     {
         $selectedAccount = $request->session()->get("selectedAccount");
+        $history = $this->profileDataService->getTransfersHistory($selectedAccount);
 
         return Inertia::render('History', [
-            'history' => $this->profileDataService->getTransfersHistory($selectedAccount)
+            'history' => TransferResource::collection($history)
         ]);
     }
 

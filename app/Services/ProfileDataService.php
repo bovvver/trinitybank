@@ -16,6 +16,8 @@ class ProfileDataService
                 'transfers.amount',
                 'transfers.currency',
                 'transfers.created_at as transaction_date',
+                'transfers.category',
+                'accounts.card_last_digits',
                 'users.name',
                 'users.surname',
                 DB::raw("$isSender as is_sender")

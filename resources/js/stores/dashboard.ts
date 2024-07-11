@@ -1,5 +1,5 @@
 import {
-    DashboardTransfers,
+    TransferData,
     DashboardFavourites,
     DashboardIncome,
     SpendsByCategories,
@@ -13,7 +13,7 @@ import { ref } from "vue";
 export const useDashboardStore = defineStore("dashboardStore", () => {
     const cardId = ref<number | null>();
     const selectedCard = ref<string>("");
-    const transfers = ref<DashboardTransfers[]>([]);
+    const transfers = ref<TransferData[]>([]);
     const favourites = ref<DashboardFavourites[]>([]);
     const incomes = ref<DashboardIncome>();
     const spendsByCategories = ref<SpendsByCategories>();

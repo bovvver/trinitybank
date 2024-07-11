@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Paginator from "primevue/paginator";
 import TransferStatus from "@js/enums/TransferStatus";
 import DataTable, { DataTableRowClickEvent } from "primevue/datatable";
 import Column from "primevue/column";
@@ -11,52 +12,21 @@ import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import TransferDetailsDialog from "@js/Components/molecules/TransferDetailsDialog.vue";
 import Categories from "@js/enums/Categories";
+import { router, usePage } from "@inertiajs/vue3";
+import { HistoryProps } from "@js/types/interfaces";
 
 defineProps<{
-    rows: number;
     class?: string;
 }>();
 
-const getYesterdayDate = (days: number) => {
-    // TODO: FOR REMOVAL IN LATER STAGES OF DEVLOPMENT
-    const date = new Date();
-    date.setDate(date.getDate() - days);
-    return date;
-};
+const { history } = usePage().props as Partial<HistoryProps>;
+
+const historyRef = reactive(history ? history.data : []);
+const totalRecords = history ? history.meta.total : 0;
+const rowsPerPage = 10;
 
 const dt = ref();
-const products = ref<TransferDetails[]>([
-    {
-        target: "John Travolta",
-        cardNumber: "1234",
-        description: "Here you go",
-        amount: "1020.00",
-        currency: "USD",
-        date: new Date(),
-        category: Categories.INVESTMENTS,
-        status: TransferStatus.SEND,
-    },
-    {
-        target: "Mary Smith",
-        cardNumber: "8821",
-        description: "Im returning your money",
-        amount: "500.00",
-        currency: "EUR",
-        date: getYesterdayDate(1),
-        category: Categories.WORK,
-        status: TransferStatus.RECEIVED,
-    },
-    {
-        target: "Bob Builder",
-        cardNumber: "7728",
-        description: "I like cars",
-        amount: "5200.00",
-        currency: "EUR",
-        date: getYesterdayDate(10),
-        category: Categories.TRANSPORT,
-        status: TransferStatus.RECEIVED,
-    },
-]);
+const first = ref(0);
 
 const searchFilter = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -69,24 +39,20 @@ const searchFilter = ref({
 });
 
 const selectedRow = reactive<TransferDetails>({
-    target: "",
+    fullName: "",
     cardNumber: "",
-    description: "",
+    message: "",
     amount: "",
     currency: "",
-    date: "",
+    transactionDate: "",
     category: Categories.OTHERS,
-    status: TransferStatus.SEND,
+    isSender: false,
 });
 const visible = ref(false);
 
-const getSeverity = (transfer: TransferDetails) => {
-    switch (transfer.status) {
-        case TransferStatus.RECEIVED:
-            return "success";
-        case TransferStatus.SEND:
-            return "warning";
-    }
+const getSeverity = (isSender: boolean) => {
+    if (isSender) return "warning";
+    return "success";
 };
 
 const exportCSV = (_e: MouseEvent) => {
@@ -94,7 +60,7 @@ const exportCSV = (_e: MouseEvent) => {
 };
 
 const onRowSelect = (e: DataTableRowClickEvent) => {
-    e.data.date = formatDate(e.data.date);
+    e.data.transactionDate = formatDate(new Date(e.data.transactionDate));
     Object.assign(selectedRow, e.data);
     visible.value = true;
 };
@@ -102,16 +68,20 @@ const onRowSelect = (e: DataTableRowClickEvent) => {
 const updateVisible = (value: boolean) => {
     visible.value = value;
 };
+
+const handlePageChange = (event: { page: number }) => {
+    const newPage = event.page + 1;
+    router.get(route('history', { page: newPage }), {});
+}
 </script>
 
 <template>
     <DataTable
         stripedRows
-        paginator
         removableSort
         ref="dt"
-        :rows="rows"
-        :value="products"
+        :rows="rowsPerPage"
+        :value="historyRef"
         v-model:filters="searchFilter"
         selectionMode="single"
         tableStyle="min-width: 42rem"
@@ -136,22 +106,38 @@ const updateVisible = (value: boolean) => {
             </div>
         </template>
         <template #empty>No transfers found.</template>
-        <Column field="target" header="To/From" sortable></Column>
+        <Column field="fullName" header="To/From" sortable></Column>
         <Column #body="slotProps" field="cardNumber" header="Card number">
             {{ `**** ${slotProps.data.cardNumber}` }}
         </Column>
         <Column field="amount" header="Amount" sortable></Column>
         <Column field="currency" header="Currency" sortable></Column>
-        <Column #body="slotProps" field="date" header="Date" sortable>
-            {{ formatDate(slotProps.data.date) }}
+        <Column
+            #body="slotProps"
+            field="transactionDate"
+            header="Date"
+            sortable
+        >
+            {{ formatDate(new Date(slotProps.data.transactionDate)) }}
         </Column>
-        <Column #body="slotProps" field="status" header="Status" sortable>
+        <Column #body="slotProps" field="isSender" header="Status" sortable>
             <Tag
-                :value="slotProps.data.status"
-                :severity="getSeverity(slotProps.data)"
+                :value="
+                    slotProps.data.isSender
+                        ? TransferStatus.SEND
+                        : TransferStatus.RECEIVED
+                "
+                :severity="getSeverity(slotProps.data.isSender)"
             />
         </Column>
     </DataTable>
+    <Paginator
+        v-model:first="first"
+        :rows="rowsPerPage"
+        :totalRecords="totalRecords"
+        @page="handlePageChange"
+    />
+
     <TransferDetailsDialog
         :visible="visible"
         :data="selectedRow"

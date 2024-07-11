@@ -4,8 +4,9 @@ import Button from "primevue/button";
 import TransferDetailsDialogCell from "@js/Components/atoms/TransferDetailsDialogCell.vue";
 import { TransferDetails } from "@js/types/interfaces";
 import { formatDate } from "@js/helpers/helpers";
+import Categories from "@js/enums/Categories";
 
-defineProps<{
+const props = defineProps<{
     data: TransferDetails;
     visible: boolean;
 }>();
@@ -20,6 +21,11 @@ const confirmDateType = (date: string | Date) => {
     if(date instanceof Date) return formatDate(date);
     return date;
 }
+
+const getStatus = () => {
+    if(props.data.isSender) return "SEND";
+    return "RECEIVED";
+}
 </script>
 
 <template>
@@ -30,14 +36,14 @@ const confirmDateType = (date: string | Date) => {
         header="Transfer Details"
         class="w-[20rem]"
     >
-        <TransferDetailsDialogCell title="Target" :content="data.target" />
+        <TransferDetailsDialogCell title="Target" :content="data.fullName" />
         <TransferDetailsDialogCell title="Card number" :content="`**** ${data.cardNumber}`" />
-        <TransferDetailsDialogCell title="Description" :content="data.description" />
+        <TransferDetailsDialogCell title="Description" :content="data.message" />
         <TransferDetailsDialogCell title="Amount" :content="data.amount" />
         <TransferDetailsDialogCell title="Currency" :content="data.currency" />
-        <TransferDetailsDialogCell title="Date" :content="confirmDateType(data.date)" />
+        <TransferDetailsDialogCell title="Date" :content="confirmDateType(data.transactionDate)" />
         <TransferDetailsDialogCell title="Category" :content="data.category" />
-        <TransferDetailsDialogCell title="Status" :content="data.status" />
+        <TransferDetailsDialogCell title="Status" :content="getStatus()" />
         <div class="dialog-button">
             <Button type="button" label="OK" @click="emit('close')" />
         </div>

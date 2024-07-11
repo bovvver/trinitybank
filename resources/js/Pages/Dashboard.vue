@@ -9,7 +9,7 @@ import { DashboardProps } from "@js/types/interfaces";
 import { useDashboardStore } from "@js/stores/dashboard";
 import { onMounted } from "vue";
 
-const { accountsData, cards } = usePage().props as Partial<DashboardProps>;
+const { accountsData, cards, selectedCard } = usePage().props as Partial<DashboardProps>;
 
 const dashboardStore = useDashboardStore();
 
@@ -29,7 +29,7 @@ const width = useWindowWidth();
 
 <template>
     <AuthenticatedLayout title="Dashboard">
-        <HomePage />
+        <HomePage :selectedCard="selectedCard" />
         <SecondaryHomePage v-if="width >= 1024" />
     </AuthenticatedLayout>
 </template>
