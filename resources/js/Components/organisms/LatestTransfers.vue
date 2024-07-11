@@ -2,6 +2,7 @@
 import TransferCell from "@js/Components/molecules/TransferCell.vue";
 import { useDashboardStore } from "@js/stores/dashboard";
 import { storeToRefs } from "pinia";
+import { Link } from "@inertiajs/vue3";
 
 const dashboardStore = useDashboardStore();
 const { transfers } = storeToRefs(dashboardStore);
@@ -18,7 +19,9 @@ const { transfers } = storeToRefs(dashboardStore);
             :date="transfer.transactionDate"
             :isSender="transfer.isSender"
         />
-        <button class="transfers-wrapper__button">More transfers</button>
+        <Link :href="route('history')">
+            <button class="transfers-wrapper__button">More transfers</button>
+        </Link>
     </div>
 </template>
 

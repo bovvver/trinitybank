@@ -38,7 +38,7 @@ const unfoldedItems = ref<MenuItems>({
         },
         {
             name: "Cards",
-            route: "dashboard",
+            route: "cards",
         },
         {
             name: "Transfer",
@@ -68,7 +68,7 @@ const unfoldedItems = ref<MenuItems>({
     profile: [
         {
             name: "Profile",
-            route: "dashboard",
+            route: "profile",
         },
         {
             name: "Logout",

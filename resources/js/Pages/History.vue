@@ -8,7 +8,7 @@ import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
     <AuthenticatedLayout title="History">
         <div class="history-wrapper">
             <SectionHeader value="History" />
-            <TransfersTable :rows="7" class="py-3" />
+            <TransfersTable class="py-3" />
         </div>
     </AuthenticatedLayout>
 </template>

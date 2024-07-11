@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-defineProps<{
+const props = defineProps<{
     cardNumber: string;
     balance: string;
     currency: string;
+    grabable?: boolean;
+    large?: boolean;
+    button?: string;
+    secondButton?: string;
 }>();
 
 const isGrabbing = ref(false);
 
 const handleMouseDown = () => {
-    isGrabbing.value = true;
+    if (props.grabable) isGrabbing.value = true;
 };
 
 const handleMouseUp = () => {
-    isGrabbing.value = false;
+    if (props.grabable) isGrabbing.value = false;
 };
 </script>
 
 <template>
     <div
         class="credit-card"
-        :class="{ grabbing: isGrabbing }"
+        :class="{ grabbing: isGrabbing, grabable: grabable, large: large }"
         @mousedown="handleMouseDown"
         @mouseup="handleMouseUp"
         @mouseleave="handleMouseUp"
@@ -38,17 +42,28 @@ const handleMouseUp = () => {
             <span class="credit-card__balance-currency">{{ currency }}</span>
             {{ balance }}
         </p>
-        <button class="credit-card__button">Transfer</button>
+        <div class="credit-card__buttons">
+            <button>{{ button ?? "Transfer" }}</button>
+            <button v-if="secondButton">{{ secondButton }}</button>
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 .credit-card {
-    @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-blue
-    shadow-lg shadow-gray-600 cursor-grab;
+    @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-blue
+    shadow-lg shadow-gray-600;
 
     &.grabbing {
         @apply cursor-grabbing;
+    }
+
+    &.grabable {
+        @apply cursor-grab;
+    }
+
+    &.large {
+        @apply min-h-[400px] w-[700px];
     }
 
     &__number {
@@ -67,8 +82,12 @@ const handleMouseUp = () => {
         }
     }
 
-    &__button {
-        @apply absolute bottom-0 right-0 bg-white text-primary px-4 py-1 rounded font-bold mr-6 mb-6 shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+    &__buttons {
+        @apply absolute bottom-0 right-0 mr-6 mb-6 flex flex-row-reverse gap-2;
+
+        button {
+            @apply bg-white text-primary px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+        }
     }
 }
 </style>

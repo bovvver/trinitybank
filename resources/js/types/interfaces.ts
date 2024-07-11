@@ -1,8 +1,6 @@
 import { InertiaForm } from "@inertiajs/vue3";
 import BankingProduct from "@js/enums/BankingProduct";
-import Categories from "@js/enums/Categories";
 import { Currency } from "@js/enums/Currency";
-import TransferStatus from "@js/enums/TransferStatus";
 
 export type RegistrationForm = InertiaForm<{
     name: string;
@@ -23,13 +21,15 @@ export interface DashboardFavourites {
     fullName: string;
 }
 
-export interface DashboardTransfers {
+export interface TransferData {
     message: string;
     amount: string;
     currency: keyof typeof Currency;
     transactionDate: string;
     fullName: string;
     isSender: boolean;
+    category: string;
+    cardNumber: string;
 }
 
 export interface DashboardIncome {
@@ -61,26 +61,66 @@ export interface DashboardCards {
 }
 
 export interface DashboardData {
+    id: number;
     cardNumber: string;
-    transfers: DashboardTransfers[];
+    transfers: TransferData[];
     favourites: DashboardFavourites[];
     incomes: DashboardIncome;
     spendsByCategories: SpendsByCategories;
     statistics: DashboardStats[];
 }
 
-export interface PageProps {
+export interface DashboardProps {
     accountsData: DashboardData[];
     cards: DashboardCards[];
+    selectedCard: number;
+}
+
+export interface HistoryProps {
+    history: HistoryTransfer;
 }
 
 export interface TransferDetails {
-    target: string;
+    fullName: string;
     cardNumber: string;
-    description: string;
+    message: string;
     amount: string;
     currency: string;
-    date: string | Date;
-    category: Categories;
-    status: TransferStatus;
+    transactionDate: string | Date;
+    category: string;
+    isSender: boolean;
+}
+
+export interface NewCardDetails {
+    currency: string | null;
+    banking_product: BankingProduct;
+}
+
+export interface TransferFormOptions {
+    name: string;
+}
+
+export interface NewCardDropdownOptions {
+    name: string;
+    value: string;
+}
+
+export interface ProfileDataOption {
+    key: string;
+    value: string | number;
+    hidden: boolean;
+    isVisible: boolean;
+    editable?: boolean;
+}
+
+export interface HistoryTransfer {
+    data: TransferData[];
+    meta: {
+        current_page: number;
+        total: number;
+        from?: number;
+        last_page?: number;
+        per_page?: number;
+        to?: number;
+    };
 }

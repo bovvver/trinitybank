@@ -4,7 +4,7 @@ import Card from "primevue/card";
 
 <template>
     <Card class="card">
-        <template #title class="title"><slot name="title" /></template>
+        <template #title><slot name="title" /></template>
         <template #subtitle><slot name="subtitle" /></template>
         <template #content>
             <slot name="content" />

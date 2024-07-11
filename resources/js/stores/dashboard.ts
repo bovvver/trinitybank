@@ -1,5 +1,5 @@
 import {
-    DashboardTransfers,
+    TransferData,
     DashboardFavourites,
     DashboardIncome,
     SpendsByCategories,
@@ -11,8 +11,9 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useDashboardStore = defineStore("dashboardStore", () => {
+    const cardId = ref<number | null>();
     const selectedCard = ref<string>("");
-    const transfers = ref<DashboardTransfers[]>([]);
+    const transfers = ref<TransferData[]>([]);
     const favourites = ref<DashboardFavourites[]>([]);
     const incomes = ref<DashboardIncome>();
     const spendsByCategories = ref<SpendsByCategories>();
@@ -23,6 +24,7 @@ export const useDashboardStore = defineStore("dashboardStore", () => {
     const changeStore = (id: number = 0) => {
         if (!accountsData.value) return;
 
+        cardId.value = accountsData.value[id].id;
         selectedCard.value = accountsData.value[id].cardNumber;
         transfers.value = accountsData.value[id].transfers;
         favourites.value = accountsData.value[id].favourites;
@@ -32,6 +34,7 @@ export const useDashboardStore = defineStore("dashboardStore", () => {
     };
 
     return {
+        cardId,
         selectedCard,
         transfers,
         favourites,

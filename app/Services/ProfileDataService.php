@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Enums\TransferCategories;
 
-class TransferService
+class ProfileDataService
 {
     private function getTransfersQuery($accountId, $from, $to, $isSender)
     {
@@ -16,6 +16,8 @@ class TransferService
                 'transfers.amount',
                 'transfers.currency',
                 'transfers.created_at as transaction_date',
+                'transfers.category',
+                'accounts.card_last_digits',
                 'users.name',
                 'users.surname',
                 DB::raw("$isSender as is_sender")
@@ -132,5 +134,19 @@ class TransferService
             ->select('card_last_digits', 'balance', 'currency')
             ->where('user_id', $userId)
             ->get();
+    }
+
+    public function getTransfersHistory($accountId)
+    {
+        $receiver = "receiver_id";
+        $sender = "sender_id";
+
+        $sentTransfers = $this->getTransfersQuery($accountId, $receiver, $sender, 1);
+        $receivedTransfers = $this->getTransfersQuery($accountId, $sender, $receiver, 0);
+
+        return $sentTransfers
+            ->union($receivedTransfers)
+            ->orderBy('transaction_date', 'desc')
+            ->paginate(10);
     }
 }
