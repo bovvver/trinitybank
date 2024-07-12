@@ -3,7 +3,7 @@ import Dropdown, { DropdownChangeEvent } from "primevue/dropdown";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
-    modelValue: string;
+    modelValue: string | null;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);

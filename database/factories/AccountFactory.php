@@ -21,6 +21,7 @@ class AccountFactory extends Factory
         return [
             'card_number' => $cardNumber,
             'card_last_digits' => substr($cardNumber, -4),
+            'account_number' => substr(str_pad(fake()->bankAccountNumber(), 11, '0', STR_PAD_LEFT), 0, 11),
             'expiry_date' => fake()->creditCardExpirationDate(),
             'balance' => fake()->randomFloat(2, 0, 30000),
             'currency' => fake()->currencyCode(),

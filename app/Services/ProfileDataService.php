@@ -17,7 +17,7 @@ class ProfileDataService
                 'transfers.currency',
                 'transfers.created_at as transaction_date',
                 'transfers.category',
-                'accounts.card_last_digits',
+                'accounts.account_number',
                 'users.name',
                 'users.surname',
                 DB::raw("$isSender as is_sender")
@@ -48,11 +48,12 @@ class ProfileDataService
             ->select(
                 DB::raw('COUNT(transfers.receiver_id) as receiver_count'),
                 'users.name',
-                'users.surname'
+                'users.surname',
+                'accounts.account_number',
             )
             ->join('accounts', 'transfers.receiver_id', '=', 'accounts.id')
             ->join('users', 'accounts.user_id', '=', 'users.id')
-            ->groupBy('users.name', 'users.surname')
+            ->groupBy('users.name', 'users.surname', 'accounts.account_number')
             ->where('transfers.sender_id', $accountId)
             ->whereDate('transfers.created_at', '>=', Carbon::now()->subMonth())
             ->orderBy('receiver_count', 'desc')
@@ -131,7 +132,7 @@ class ProfileDataService
     public function getCreditCards($userId)
     {
         return DB::table('Accounts')
-            ->select('card_last_digits', 'balance', 'currency')
+            ->select('account_number', 'card_last_digits', 'balance', 'currency')
             ->where('user_id', $userId)
             ->get();
     }

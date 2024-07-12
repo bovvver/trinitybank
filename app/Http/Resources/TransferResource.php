@@ -26,7 +26,7 @@ class TransferResource extends JsonResource
             "fullName" => "{$this->name} {$this->surname}",
             "isSender" => $isSender,
             "category" => $this->category,
-            "cardNumber" => $this->card_last_digits,
+            "accountNumber" => $this->account_number,
         ];
     }
 }

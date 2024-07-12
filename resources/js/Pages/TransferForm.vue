@@ -9,23 +9,21 @@ import Calendar from "primevue/calendar";
 import Dropdown from "primevue/dropdown";
 import TransferInput from "@js/Components/molecules/TransferInput.vue";
 import TransferInfo from "@js/Components/atoms/TransferInfo.vue";
-import { Ref, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import Avatar from "primevue/avatar";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
 import CardListDropdown from "@js/Components/organisms/CardListDropdown.vue";
-import { TransferFormOptions } from "@js/types/interfaces";
+import { DashboardFavourites } from "@js/types/interfaces";
+import { useDashboardStore } from "@js/stores/dashboard";
+import { storeToRefs } from "pinia";
 
-const options = ref<TransferFormOptions[]>([
-    { name: "John Doe" },
-    { name: "Emily Smith" },
-    { name: "Jacob Muller" },
-    { name: "Walt Disney" },
-]);
+const dashboardStore = useDashboardStore();
+const { favourites } = storeToRefs(dashboardStore);
 
 const selectedCard = ref(null);
 
-const selectedReceiver = ref<TransferFormOptions | string>("");
+const selectedReceiver = ref<DashboardFavourites | string>("");
 
 const width = useWindowWidth();
 
@@ -38,21 +36,25 @@ const form = useForm({
     date: "",
 });
 
-watch(
-    () => selectedReceiver.value, (newValue) => {
-        if (typeof newValue === 'string') form.receiver = newValue;
-        else if (newValue && typeof newValue === 'object' && 'name' in newValue) {
-            form.receiver = newValue.name;
+watch(() => selectedReceiver.value, (newValue) => {
+        if (typeof newValue === "string") form.receiver = newValue;
+        else if (newValue && typeof newValue === "object") {
+            form.receiver = newValue.fullName;
+            form.account_number = newValue.accountNumber;
         }
     }
 );
 
-const displayReceiverAvatar = (receiver: { name: string } | string) => {
-    if (typeof receiver === 'string') return receiver.charAt(0);
-    else if (receiver && typeof receiver === 'object' && 'name' in receiver) 
-        return receiver.name.charAt(0);
+const receiverAvatar = computed(() => {
+    if (typeof selectedReceiver.value === "string")
+        return selectedReceiver.value.charAt(0);
+    else if (
+        selectedReceiver.value &&
+        typeof selectedReceiver.value === "object"
+    )
+        return selectedReceiver.value.fullName.charAt(0);
     return "";
-}
+});
 
 const submit = () => {
     form.post(route(""), {
@@ -80,7 +82,7 @@ const submit = () => {
                                     class="transfer-page__avatar"
                                 />
                                 <Avatar
-                                    :label="displayReceiverAvatar(selectedReceiver)"
+                                    :label="receiverAvatar"
                                     shape="circle"
                                     size="xlarge"
                                     class="transfer-page__avatar"
@@ -99,8 +101,8 @@ const submit = () => {
                                 >
                                     <Dropdown
                                         v-model="selectedReceiver"
-                                        :options="options"
-                                        optionLabel="name"
+                                        :options="favourites"
+                                        optionLabel="fullName"
                                         required
                                         autofocus
                                         filter
@@ -112,12 +114,18 @@ const submit = () => {
                                                 class="flex items-center"
                                             >
                                                 <Avatar
-                                                    :label="slotProps.value.name.charAt(0) ?? ''"
+                                                    :label="
+                                                        slotProps.value.fullName.charAt(
+                                                            0
+                                                        ) ?? ''
+                                                    "
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
                                                 <div>
-                                                    {{ slotProps.value.name }}
+                                                    {{
+                                                        slotProps.value.fullName
+                                                    }}
                                                 </div>
                                             </div>
                                             <span v-else>
@@ -128,12 +136,19 @@ const submit = () => {
                                         <template #option="slotProps">
                                             <div class="flex items-center">
                                                 <Avatar
-                                                    :label="slotProps.option.name.charAt(0) ?? ''"
+                                                    :label="
+                                                        slotProps.option.fullName.charAt(
+                                                            0
+                                                        ) ?? ''
+                                                    "
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
                                                 <div>
-                                                    {{ slotProps.option.name }}
+                                                    {{
+                                                        slotProps.option
+                                                            .fullName
+                                                    }}
                                                 </div>
                                             </div>
                                         </template>
@@ -156,8 +171,8 @@ const submit = () => {
                                     <InputMask
                                         id="account_number"
                                         v-model="form.account_number"
-                                        mask="9999-9999-9999-9999"
-                                        placeholder="9999-9999-9999-9999"
+                                        mask="999999999"
+                                        placeholder="999999999"
                                         required
                                         :invalid="!!form.errors.account_number"
                                     />

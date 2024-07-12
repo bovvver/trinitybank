@@ -34,12 +34,12 @@ class RegisteredUserController extends Controller
         $accountService->bankProductSelectionValidation($request);
 
         $user = $accountService->createUserWithAccount($request);
-
-        SessionService::setDefaultAccount($request);
-
+        
         event(new Registered($user));
-
+        
         Auth::login($user);
+        
+        SessionService::setDefaultAccount($request);
 
         return redirect(route('dashboard', absolute: false));
     }

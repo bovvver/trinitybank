@@ -27,11 +27,14 @@ class AccountCreationService
             'house_number' => $request->house_number,
         ]);
 
+        $cardNumber = $this->generateUniqueNumber(13, 'card_number', true);
+
         Account::create([
             'user_id' => $user->id,
             'banking_product' => $request->banking_product,
-            'card_number' => $this->generateCreditCardNumber(),
-            'cvv_number' => rand(100, 999),
+            'card_number' => $cardNumber,
+            'card_last_digits' => substr($cardNumber, -4),
+            'account_number' => $this->generateUniqueNumber(11, 'account_number'),
             'expiry_date' => Carbon::now()->addYears(3),
             'balance' => 0,
             'currency' => 'USD',
@@ -72,20 +75,25 @@ class AccountCreationService
 
     // GENERATORS
 
-    public function generateCreditCardNumber($length = 16)
+    private function generateUniqueNumber($length, $field, $isCardNumber = false)
     {
-        $iin = '411111';
+        $number = $isCardNumber ? '33' : '';
 
-        while (strlen($iin) < ($length - 1)) {
-            $iin .= mt_rand(0, 9);
-        }
+        do {
+            $newNumber = $number;
+            for ($i = 0; $i < $length; $i++) {
+                $newNumber .= mt_rand(0, 9);
+            }
+            if ($isCardNumber)
+                $newNumber .= $this->calculateLuhnCheckDigit($newNumber);
 
-        $iin .= $this->calculateLuhnCheckDigit($iin);
+            $exists = Account::where($field, $newNumber)->exists();
+        } while ($exists);
 
-        return $iin;
+        return $newNumber;
     }
 
-    public function calculateLuhnCheckDigit($number)
+    private function calculateLuhnCheckDigit($number)
     {
         $sum = 0;
         $length = strlen($number);

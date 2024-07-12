@@ -22,6 +22,7 @@ class Account extends Model
         'balance',
         'currency',
         'banking_product',
+        'account_number'
     ];
 
     /**
