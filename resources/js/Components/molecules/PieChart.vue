@@ -8,11 +8,11 @@ import { storeToRefs } from "pinia";
 const dashboardStore = useDashboardStore();
 const { spendsByCategories } = storeToRefs(dashboardStore);
 
-const spendsValues = ref<number[]>([]);
 const spendsLabels = ref<string[]>([]);
+const series = ref<number[]>([]);
 
 const createSpendsArray = (spends: SpendsByCategories) => {
-    spendsValues.value = [];
+    series.value = [];
     spendsLabels.value = [];
 
     for (const [key, value] of Object.entries(spends)) {
@@ -20,7 +20,7 @@ const createSpendsArray = (spends: SpendsByCategories) => {
             spendsLabels.value.push(
                 key.charAt(0).toUpperCase() + key.substring(1)
             );
-            spendsValues.value.push(parseFloat(value));
+            series.value.push(parseFloat(value));
         }
     }
 };
@@ -42,7 +42,6 @@ onMounted(() => {
 
 const ApexChart = VueApexCharts;
 
-const series = ref(spendsValues);
 const chartOptions = ref({
     chart: {
         width: 380,

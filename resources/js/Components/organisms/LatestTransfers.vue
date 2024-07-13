@@ -3,9 +3,13 @@ import TransferCell from "@js/Components/molecules/TransferCell.vue";
 import { useDashboardStore } from "@js/stores/dashboard";
 import { storeToRefs } from "pinia";
 import { Link } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const dashboardStore = useDashboardStore();
 const { transfers } = storeToRefs(dashboardStore);
+const transfersButtonMessage = computed(()=> {
+    return transfers.value.length === 0 ? "No transfers recently" : "More transfers";
+})
 </script>
 
 <template>
@@ -20,7 +24,7 @@ const { transfers } = storeToRefs(dashboardStore);
             :isSender="transfer.isSender"
         />
         <Link :href="route('history')">
-            <button class="transfers-wrapper__button">More transfers</button>
+            <button class="transfers-wrapper__button">{{ transfersButtonMessage }}</button>
         </Link>
     </div>
 </template>

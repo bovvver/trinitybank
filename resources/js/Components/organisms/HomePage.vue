@@ -21,7 +21,10 @@ const { creditCards, accountsData } = storeToRefs(dashboardStore);
 const flickingRef = ref<Flicking | null>(null);
 
 const onReady = () => {
-    if (flickingRef.value) flickingRef.value.on("changed", onSlideChanged);
+    if (flickingRef.value) {
+        flickingRef.value.align = "center";
+        flickingRef.value.on("changed", onSlideChanged);
+    }
 };
 
 const onSlideChanged = (e: ChangedEvent) => {

@@ -15,7 +15,8 @@ class FavouritesResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "fullName" => $this->name . " " . $this->surname,
+            "fullName" => "{$this->name} {$this->surname}",
+            "accountNumber" => $this->account_number
         ];
     }
 }

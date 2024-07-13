@@ -31,7 +31,7 @@ const first = ref(0);
 const searchFilter = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     target: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    cardNumber: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    accountNumber: { value: null, matchMode: FilterMatchMode.CONTAINS },
     amount: { value: null, matchMode: FilterMatchMode.CONTAINS },
     currency: { value: null, matchMode: FilterMatchMode.CONTAINS },
     date: { value: null, matchMode: FilterMatchMode.DATE_IS },
@@ -40,7 +40,7 @@ const searchFilter = ref({
 
 const selectedRow = reactive<TransferDetails>({
     fullName: "",
-    cardNumber: "",
+    accountNumber: "",
     message: "",
     amount: "",
     currency: "",
@@ -107,8 +107,8 @@ const handlePageChange = (event: { page: number }) => {
         </template>
         <template #empty>No transfers found.</template>
         <Column field="fullName" header="To/From" sortable></Column>
-        <Column #body="slotProps" field="cardNumber" header="Card number">
-            {{ `**** ${slotProps.data.cardNumber}` }}
+        <Column #body="slotProps" field="accountNumber" header="Account">
+            {{ slotProps.data.accountNumber }}
         </Column>
         <Column field="amount" header="Amount" sortable></Column>
         <Column field="currency" header="Currency" sortable></Column>

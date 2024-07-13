@@ -4,7 +4,6 @@ import Button from "primevue/button";
 import TransferDetailsDialogCell from "@js/Components/atoms/TransferDetailsDialogCell.vue";
 import { TransferDetails } from "@js/types/interfaces";
 import { formatDate } from "@js/helpers/helpers";
-import Categories from "@js/enums/Categories";
 
 const props = defineProps<{
     data: TransferDetails;
@@ -37,7 +36,7 @@ const getStatus = () => {
         class="w-[20rem]"
     >
         <TransferDetailsDialogCell title="Target" :content="data.fullName" />
-        <TransferDetailsDialogCell title="Card number" :content="`**** ${data.cardNumber}`" />
+        <TransferDetailsDialogCell title="Account" :content="data.accountNumber" />
         <TransferDetailsDialogCell title="Description" :content="data.message" />
         <TransferDetailsDialogCell title="Amount" :content="data.amount" />
         <TransferDetailsDialogCell title="Currency" :content="data.currency" />

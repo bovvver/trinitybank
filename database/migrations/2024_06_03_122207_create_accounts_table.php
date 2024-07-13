@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('card_number')->unique();
             $table->string('card_last_digits', 4);
+            $table->string('account_number', 11)->unique();
             $table->date('expiry_date');
             $table->decimal('balance');
             $table->string('currency', 3);

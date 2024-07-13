@@ -7,7 +7,7 @@ import { useForm } from "@inertiajs/vue3";
 import Dropdown from "primevue/dropdown";
 import Divider from "primevue/divider";
 import { Currency } from "@js/enums/Currency";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { NewCardDetails } from "@js/types/interfaces";
 import { NewCardDropdownOptions } from "@js/types/interfaces";
 
@@ -37,8 +37,7 @@ const options = ref([BankingProduct.Personal, BankingProduct.Company]);
 const selectedCurrency = ref<NewCardDropdownOptions | null>(null);
 
 watch(
-    () => selectedCurrency.value,
-    (newValue) => {
+    () => selectedCurrency.value, (newValue) => {
         if (newValue != null) form.currency = newValue.value;
     }
 );

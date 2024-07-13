@@ -5,6 +5,6 @@ const { setSelectedAccountPath } = sessionPaths;
 
 export const setSelectedAccount = async (accountId: number) => {
     return await axios
-        .post(setSelectedAccountPath, { accountId },)
+        .post(setSelectedAccountPath, { accountId })
         .catch((error) => console.log(error)); // TODO: create error popup
 };
