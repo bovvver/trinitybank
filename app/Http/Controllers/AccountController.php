@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CreditCardResource;
-use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Http\Requests\StoreAccountRequest;
@@ -25,25 +24,13 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        $accounts = auth()->user()->accounts;
-
-        $data = $accounts->map(function ($account) {
-            return [
-                'id' => $account->id,
-                'cardNumber' => $account->card_last_digits,
-                'transfers' => TransferResource::collection($this->profileDataService->getLastTransfers($account->id))->resolve(),
-                'favourites' => FavouritesResource::collection($this->profileDataService->getFavouriteAccounts($account->id))->resolve(),
-                'incomes' => $this->profileDataService->getIncome($account->id),
-                'spendsByCategories' => $this->profileDataService->getSpendsPerCategory($account->id),
-                'statistics' => $this->profileDataService->getStatistics($account->id),
-            ];
-        });
-
-        $cards = $this->profileDataService->getCreditCards(auth()->user()->id);
+        $userId = auth()->user()->id;
+        $accountsData = $this->profileDataService->getAccountsData($userId);
+        $cards = $this->profileDataService->getCreditCards($userId);
         $selectedCard = $request->session()->get("selectedAccount");
 
         return Inertia::render('Dashboard', [
-            'accountsData' => $data,
+            'accountsData' => $accountsData,
             'cards' => CreditCardResource::collection($cards),
             'selectedCard' => $selectedCard
         ]);
