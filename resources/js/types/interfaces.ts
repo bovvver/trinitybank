@@ -19,7 +19,7 @@ export type RegistrationForm = InertiaForm<{
 
 export interface DashboardFavourites {
     fullName: string;
-    accountNumber: string
+    accountNumber: string;
 }
 
 export interface TransferData {
@@ -75,6 +75,11 @@ export interface DashboardProps {
     accountsData: DashboardData[];
     cards: DashboardCards[];
     selectedCard: number;
+}
+
+export interface TransferFormProps {
+    cards: DashboardCards[];
+    favourites: DashboardFavourites[];
 }
 
 export interface HistoryProps {

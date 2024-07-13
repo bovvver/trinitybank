@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
 import AuthenticatedLayout from "@js/Layouts/AuthenticatedLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import InputMask from "primevue/inputmask";
 import InputNumber from "primevue/inputnumber";
 import Button from "primevue/button";
@@ -14,14 +14,11 @@ import Avatar from "primevue/avatar";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
 import CardListDropdown from "@js/Components/organisms/CardListDropdown.vue";
-import { DashboardFavourites } from "@js/types/interfaces";
-import { useDashboardStore } from "@js/stores/dashboard";
-import { storeToRefs } from "pinia";
+import { DashboardCards, DashboardFavourites, TransferFormProps } from "@js/types/interfaces";
 
-const dashboardStore = useDashboardStore();
-const { favourites } = storeToRefs(dashboardStore);
+const { favourites, cards } = usePage().props as Partial<TransferFormProps>;
 
-const selectedCard = ref(null);
+const selectedCard = ref<DashboardCards | null>(null);
 
 const selectedReceiver = ref<DashboardFavourites | string>("");
 
@@ -36,7 +33,9 @@ const form = useForm({
     date: "",
 });
 
-watch(() => selectedReceiver.value, (newValue) => {
+watch(
+    () => selectedReceiver.value,
+    (newValue) => {
         if (typeof newValue === "string") form.receiver = newValue;
         else if (newValue && typeof newValue === "object") {
             form.receiver = newValue.fullName;
@@ -55,6 +54,11 @@ const receiverAvatar = computed(() => {
         return selectedReceiver.value.fullName.charAt(0);
     return "";
 });
+
+const formCurrency = computed(()=>{
+    if(selectedCard.value) return selectedCard.value?.currency;
+    return "USD";
+})
 
 const submit = () => {
     form.post(route(""), {
@@ -160,7 +164,7 @@ const submit = () => {
                                     label="From card"
                                     :modelError="form.errors.sender_card"
                                 >
-                                    <CardListDropdown v-model="selectedCard" />
+                                    <CardListDropdown v-model="selectedCard" :cards="cards ?? []"/>
                                 </TransferInput>
 
                                 <TransferInput
@@ -186,7 +190,7 @@ const submit = () => {
                                         v-model="form.amount"
                                         inputId="amount"
                                         mode="currency"
-                                        currency="USD"
+                                        :currency="formCurrency"
                                         locale="en-US"
                                         required
                                     />
