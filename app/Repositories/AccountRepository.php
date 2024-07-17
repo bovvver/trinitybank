@@ -25,7 +25,7 @@ class AccountRepository
             ->join('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy('users.name', 'users.surname', 'accounts.account_number')
             ->where('transfers.sender_id', $accountId)
-            ->whereDate('transfers.created_at', '>=', Carbon::now()->subMonth())
+            ->whereDate('transfers.dispatch_date', '>=', Carbon::now()->subMonth())
             ->orderBy('receiver_count', 'desc')
             ->limit($limit)
             ->get();
@@ -41,14 +41,14 @@ class AccountRepository
 
         $results = DB::table('Transfers')
             ->selectRaw(
-                "MONTHNAME(created_at) as month,
+                "MONTHNAME(dispatch_date) as month,
                 SUM(CASE WHEN sender_id = ? THEN amount ELSE 0 END) as spends,
                 SUM(CASE WHEN receiver_id = ? THEN amount ELSE 0 END) as incomes",
                 [$accountId, $accountId]
             )
-            ->where('created_at', '>=', now()->subMonths(6))
+            ->where('dispatch_date', '>=', now()->subMonths(6))
             ->groupBy('month')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('dispatch_date', 'desc')
             ->get()
             ->keyBy('month');
 

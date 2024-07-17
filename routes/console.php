@@ -8,3 +8,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('app:fetch-exchange-rates')->daily();
+
+Schedule::command('app:make-today-transfers')->daily();

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Account;
 
-class SessionService
+class SessionService extends Service
 {
     public function setSelectedAccount(SetAccountIdRequest $request)
     {
