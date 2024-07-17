@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->decimal('amount');
             $table->string('currency', 3);
             $table->enum('category', ['Education', 'Food', 'Hygiene', 'Transport', 'Work', 'Investments', 'Others']);
+            $table->dateTime('dispatch_date');
             $table->timestamps();
         });
     }

@@ -14,18 +14,27 @@ import Avatar from "primevue/avatar";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
 import CardListDropdown from "@js/Components/organisms/CardListDropdown.vue";
-import { DashboardCards, DashboardFavourites, TransferFormProps } from "@js/types/interfaces";
+import CategoriesDropdown from "@js/Components/organisms/CategoriesDropdown.vue";
+import {
+    DashboardCards,
+    DashboardFavourites,
+    TransferFormProps,
+} from "@js/types/interfaces";
+import TextInput from "@js/Components/molecules/TextInput.vue";
+import axios from "axios";
 
 const { favourites, cards } = usePage().props as Partial<TransferFormProps>;
 
 const selectedCard = ref<DashboardCards | null>(null);
-
 const selectedReceiver = ref<DashboardFavourites | string>("");
+const selectedCategory = ref("Others");
 
 const width = useWindowWidth();
 
 const form = useForm({
     receiver: "",
+    message: "",
+    category: "",
     sender_card: "",
     account_number: "",
     amount: 0,
@@ -44,6 +53,14 @@ watch(
     }
 );
 
+watch(
+    [() => selectedCategory.value, () => selectedCard.value],
+    ([newCategoryValue, newCardValue]) => {
+        if (newCategoryValue) form.category = newCategoryValue;
+        if (newCardValue) form.sender_card = newCardValue.cardLastDigits;
+    }
+);
+
 const receiverAvatar = computed(() => {
     if (typeof selectedReceiver.value === "string")
         return selectedReceiver.value.charAt(0);
@@ -55,13 +72,15 @@ const receiverAvatar = computed(() => {
     return "";
 });
 
-const formCurrency = computed(()=>{
-    if(selectedCard.value) return selectedCard.value?.currency;
-    return "USD";
-})
+const formCurrency = computed(() => {
+    const currency = selectedCard.value ? selectedCard.value.currency : "USD";
+    form.currency = currency;
+
+    return currency;
+});
 
 const submit = () => {
-    form.post(route(""), {
+    form.post(route("make-transfer"), {
         onFinish: () => {},
     });
 };
@@ -132,9 +151,9 @@ const submit = () => {
                                                     }}
                                                 </div>
                                             </div>
-                                            <span v-else>
-                                                {{ slotProps.placeholder }}
-                                            </span>
+                                            <span v-else>{{
+                                                slotProps.placeholder
+                                            }}</span>
                                         </template>
 
                                         <template #option="slotProps">
@@ -159,12 +178,32 @@ const submit = () => {
                                     </Dropdown>
                                 </TransferInput>
 
+                                <TextInput
+                                    name="message"
+                                    v-model="form.message"
+                                    :modelError="form.errors.message"
+                                    :required="false"
+                                    autocomplete="message"
+                                />
+
+                                <TransferInput
+                                    name="category"
+                                    :modelError="form.errors.category"
+                                >
+                                    <CategoriesDropdown
+                                        v-model="selectedCategory"
+                                    />
+                                </TransferInput>
+
                                 <TransferInput
                                     name="sender_card"
                                     label="From card"
                                     :modelError="form.errors.sender_card"
                                 >
-                                    <CardListDropdown v-model="selectedCard" :cards="cards ?? []"/>
+                                    <CardListDropdown
+                                        v-model="selectedCard"
+                                        :cards="cards ?? []"
+                                    />
                                 </TransferInput>
 
                                 <TransferInput
@@ -175,8 +214,8 @@ const submit = () => {
                                     <InputMask
                                         id="account_number"
                                         v-model="form.account_number"
-                                        mask="999999999"
-                                        placeholder="999999999"
+                                        mask="99999999999"
+                                        placeholder="99999999999"
                                         required
                                         :invalid="!!form.errors.account_number"
                                     />

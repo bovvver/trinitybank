@@ -21,6 +21,7 @@ class Transfer extends Model
         'amount',
         'currency',
         'category',
+        'dispatch_date',
     ];
 
     public function sender()

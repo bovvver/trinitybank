@@ -21,6 +21,7 @@ class TransferFactory extends Factory
             'amount' => fake()->randomFloat(2, 1, 15000),
             'currency' => fake()->currencyCode(),
             'category' => fake()->randomElement(['Education', 'Food', 'Hygiene', 'Transport', 'Work', 'Investments', 'Others']),
+            'dispatch_date' => fake()->date(),
         ];
     }
 }

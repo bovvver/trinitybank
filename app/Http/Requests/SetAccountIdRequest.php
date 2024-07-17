@@ -19,7 +19,7 @@ class SetAccountIdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'accountId' => 'required|integer|exists:accounts,id',
+            'accountId' => ['required', 'integer', 'exists:accounts,id'],
         ];
     }
 }

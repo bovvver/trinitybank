@@ -7,7 +7,7 @@ use App\Http\Resources\TransferResource;
 use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
 
-class ProfileDataService
+class ProfileDataService extends Service
 {
     protected $transferRepository;
     protected $accountRepository;

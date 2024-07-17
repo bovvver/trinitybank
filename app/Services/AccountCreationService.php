@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\StrongPassword;
 
-class AccountCreationService
+class AccountCreationService extends Service
 {
     // CREATION
 

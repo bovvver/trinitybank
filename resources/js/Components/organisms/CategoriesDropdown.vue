@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { DashboardCards } from "@js/types/interfaces";
 import Dropdown, { DropdownChangeEvent } from "primevue/dropdown";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
-    modelValue: DashboardCards | null;
-    cards: DashboardCards[];
+    modelValue: string;
 }>();
+
+const categories = [
+    "Education",
+    "Food",
+    "Hygiene",
+    "Transport",
+    "Work",
+    "Investments",
+    "Others",
+];
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -16,11 +24,8 @@ const updateValue = (event: DropdownChangeEvent) => {
     if (event) emit("update:modelValue", event.value);
 };
 
-watch(
-    () => props.modelValue,
-    (newValue) => {
-        dropdownValue.value = newValue;
-    }
+watch(() => props.modelValue,
+    (newValue) => {dropdownValue.value = newValue;}
 );
 </script>
 
@@ -28,26 +33,20 @@ watch(
     <div>
         <Dropdown
             v-model="dropdownValue"
-            :options="cards"
-            optionLabel="number"
-            placeholder="Select a Card"
+            :options="categories"
             class="w-full"
             @change="updateValue"
         >
             <template #value="slotProps">
-                <div v-if="slotProps.value" class="flex items-center">
-                    <i class="mr-2 pi pi-credit-card" />
-                    <div>**** {{ slotProps.value.cardLastDigits }}</div>
+                <div v-if="slotProps.value">
+                    <div>{{ slotProps.value }}</div>
                 </div>
                 <span v-else>
                     {{ slotProps.placeholder }}
                 </span>
             </template>
             <template #option="slotProps">
-                <div class="flex items-center">
-                    <i class="mr-2 pi pi-credit-card" />
-                    <div>**** {{ slotProps.option.cardLastDigits }}</div>
-                </div>
+                <div>{{ slotProps.option }}</div>
             </template>
         </Dropdown>
     </div>
