@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
 import AuthenticatedLayout from "@js/Layouts/AuthenticatedLayout.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { router, useForm, usePage } from "@inertiajs/vue3";
+import { useToast } from "primevue/usetoast";
 import InputMask from "primevue/inputmask";
 import InputNumber from "primevue/inputnumber";
 import Button from "primevue/button";
@@ -9,18 +10,15 @@ import Calendar from "primevue/calendar";
 import Dropdown from "primevue/dropdown";
 import TransferInput from "@js/Components/molecules/TransferInput.vue";
 import TransferInfo from "@js/Components/atoms/TransferInfo.vue";
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import Avatar from "primevue/avatar";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
 import CardListDropdown from "@js/Components/organisms/CardListDropdown.vue";
 import CategoriesDropdown from "@js/Components/organisms/CategoriesDropdown.vue";
-import {
-    DashboardCards,
-    DashboardFavourites,
-    TransferFormProps,
-} from "@js/types/interfaces";
+import {DashboardCards, DashboardFavourites, Errors, ToastProps, TransferFormProps } from "@js/types/interfaces";
 import TextInput from "@js/Components/molecules/TextInput.vue";
+import { showToast } from "@js/helpers/helpers";
 import axios from "axios";
 
 const { favourites, cards } = usePage().props as Partial<TransferFormProps>;
@@ -29,8 +27,8 @@ const selectedCard = ref<DashboardCards | null>(null);
 const selectedReceiver = ref<DashboardFavourites | string>("");
 const selectedCategory = ref("Others");
 
+const toast = useToast();
 const width = useWindowWidth();
-
 const form = useForm({
     receiver: "",
     message: "",
@@ -42,9 +40,18 @@ const form = useForm({
     date: "",
 });
 
-watch(
-    () => selectedReceiver.value,
-    (newValue) => {
+const errors: Errors = reactive({
+    receiver: "",
+    message: "",
+    category: "",
+    sender_card: "",
+    account_number: "",
+    amount: "",
+    currency: "",
+    date: "",
+});
+
+watch(() => selectedReceiver.value, (newValue) => {
         if (typeof newValue === "string") form.receiver = newValue;
         else if (newValue && typeof newValue === "object") {
             form.receiver = newValue.fullName;
@@ -53,9 +60,7 @@ watch(
     }
 );
 
-watch(
-    [() => selectedCategory.value, () => selectedCard.value],
-    ([newCategoryValue, newCardValue]) => {
+watch([() => selectedCategory.value, () => selectedCard.value], ([newCategoryValue, newCardValue]) => {
         if (newCategoryValue) form.category = newCategoryValue;
         if (newCardValue) form.sender_card = newCardValue.cardLastDigits;
     }
@@ -79,10 +84,45 @@ const formCurrency = computed(() => {
     return currency;
 });
 
-const submit = () => {
-    form.post(route("make-transfer"), {
-        onFinish: () => {},
-    });
+const submit = async () => {
+    await axios
+        .post(route("make-transfer"), form)
+        .then((res) => {
+            router.visit(route("dashboard"), {
+                onSuccess: () => {
+                    const toastProps: ToastProps = {
+                        toast,
+                        severity: "success",
+                        summary: "Transfer sent",
+                        detail: res.data.message,
+                    };
+
+                    showToast(toastProps);
+                },
+            });
+        })
+        .catch((err) => {
+            const error = err.response.data.errors;
+
+            if (error) {
+                for (const property in error) {
+                    if (property in errors) {
+                        const key = property as keyof Errors;
+                        errors[key] = error[property][0];
+                    }
+                }
+                return;
+            }
+
+            const toastProps: ToastProps = {
+                toast,
+                severity: "error",
+                summary: "The transfer has not been sent",
+                detail: err.response.data.message,
+            };
+
+            showToast(toastProps);
+        });
 };
 </script>
 
@@ -96,10 +136,7 @@ const submit = () => {
                         <template #title>
                             <div class="flex justify-evenly">
                                 <Avatar
-                                    :label="
-                                        $page.props.auth.user.name.charAt(0) ??
-                                        ''
-                                    "
+                                    :label="$page.props.auth.user.name.charAt(0) ?? ''"
                                     shape="circle"
                                     size="xlarge"
                                     class="transfer-page__avatar"
@@ -114,14 +151,8 @@ const submit = () => {
                             </div>
                         </template>
                         <template #content>
-                            <form
-                                @submit.prevent="submit"
-                                class="transfer-page__form"
-                            >
-                                <TransferInput
-                                    name="receiver"
-                                    :modelError="form.errors.receiver"
-                                >
+                            <form @submit.prevent="submit" class="transfer-page__form">
+                                <TransferInput name="receiver" :modelError="errors.receiver">
                                     <Dropdown
                                         v-model="selectedReceiver"
                                         :options="favourites"
@@ -132,47 +163,25 @@ const submit = () => {
                                         editable
                                     >
                                         <template #value="slotProps">
-                                            <div
-                                                v-if="slotProps.value"
-                                                class="flex items-center"
-                                            >
+                                            <div v-if="slotProps.value" class="flex items-center">
                                                 <Avatar
-                                                    :label="
-                                                        slotProps.value.fullName.charAt(
-                                                            0
-                                                        ) ?? ''
-                                                    "
+                                                    :label="slotProps.value.fullName.charAt(0) ?? ''"
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
-                                                <div>
-                                                    {{
-                                                        slotProps.value.fullName
-                                                    }}
-                                                </div>
+                                                <div>{{slotProps.value.fullName}}</div>
                                             </div>
-                                            <span v-else>{{
-                                                slotProps.placeholder
-                                            }}</span>
+                                            <span v-else>{{slotProps.placeholder}}</span>
                                         </template>
 
                                         <template #option="slotProps">
                                             <div class="flex items-center">
                                                 <Avatar
-                                                    :label="
-                                                        slotProps.option.fullName.charAt(
-                                                            0
-                                                        ) ?? ''
-                                                    "
+                                                    :label="slotProps.option.fullName.charAt(0) ?? ''"
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
-                                                <div>
-                                                    {{
-                                                        slotProps.option
-                                                            .fullName
-                                                    }}
-                                                </div>
+                                                <div>{{ slotProps.option.fullName}}</div>
                                             </div>
                                         </template>
                                     </Dropdown>
@@ -181,50 +190,30 @@ const submit = () => {
                                 <TextInput
                                     name="message"
                                     v-model="form.message"
-                                    :modelError="form.errors.message"
+                                    :modelError="errors.message"
                                     :required="false"
                                     autocomplete="message"
                                 />
 
-                                <TransferInput
-                                    name="category"
-                                    :modelError="form.errors.category"
-                                >
-                                    <CategoriesDropdown
-                                        v-model="selectedCategory"
-                                    />
+                                <TransferInput name="category" :modelError="errors.category">
+                                    <CategoriesDropdown v-model="selectedCategory" />
                                 </TransferInput>
 
-                                <TransferInput
-                                    name="sender_card"
-                                    label="From card"
-                                    :modelError="form.errors.sender_card"
-                                >
-                                    <CardListDropdown
-                                        v-model="selectedCard"
-                                        :cards="cards ?? []"
-                                    />
+                                <TransferInput name="sender_card" label="From card" :modelError="errors.sender_card">
+                                    <CardListDropdown v-model="selectedCard" :cards="cards ?? []" />
                                 </TransferInput>
 
-                                <TransferInput
-                                    name="account_number"
-                                    label="Account number"
-                                    :modelError="form.errors.account_number"
-                                >
+                                <TransferInput name="account_number" label="Account number" :modelError="errors.account_number">
                                     <InputMask
                                         id="account_number"
                                         v-model="form.account_number"
                                         mask="99999999999"
                                         placeholder="99999999999"
                                         required
-                                        :invalid="!!form.errors.account_number"
                                     />
                                 </TransferInput>
 
-                                <TransferInput
-                                    name="amount"
-                                    :modelError="form.errors.amount"
-                                >
+                                <TransferInput name="amount" :modelError="errors.amount">
                                     <InputNumber
                                         v-model="form.amount"
                                         inputId="amount"
@@ -235,15 +224,8 @@ const submit = () => {
                                     />
                                 </TransferInput>
 
-                                <TransferInput
-                                    name="date"
-                                    :modelError="form.errors.date"
-                                >
-                                    <Calendar
-                                        v-model="form.date"
-                                        showIcon
-                                        :minDate="new Date()"
-                                    />
+                                <TransferInput name="date" :modelError="errors.date">
+                                    <Calendar v-model="form.date" showIcon :minDate="new Date()" />
                                 </TransferInput>
 
                                 <Button type="submit" label="Send" />

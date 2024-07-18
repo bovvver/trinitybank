@@ -22,4 +22,5 @@ const currentLayout = computed(() => {
     <component :is="currentLayout">
         <slot />
     </component>
+    <Toast />
 </template>
