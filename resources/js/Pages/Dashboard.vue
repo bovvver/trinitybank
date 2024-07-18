@@ -8,6 +8,7 @@ import { usePage } from "@inertiajs/vue3";
 import { DashboardProps } from "@js/types/interfaces";
 import { useDashboardStore } from "@js/stores/dashboard";
 import { onMounted } from "vue";
+import Toast from "primevue/toast";
 
 const { accountsData, cards, selectedCard } = usePage().props as Partial<DashboardProps>;
 
@@ -31,5 +32,6 @@ const width = useWindowWidth();
     <AuthenticatedLayout title="Dashboard">
         <HomePage :selectedCard="selectedCard" />
         <SecondaryHomePage v-if="width >= 1024" />
+        <Toast />
     </AuthenticatedLayout>
 </template>

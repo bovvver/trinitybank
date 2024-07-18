@@ -1,3 +1,5 @@
+import { ToastProps } from "@js/types/interfaces";
+
 // DATE HELPERS
 
 export const formatDate = (date: Date) => {
@@ -29,4 +31,10 @@ export const displayCorrectAmount = (
 ) => {
     if (isPositive) return `${amount}`;
     return `-${amount}`;
+};
+
+// TOAST
+
+export const showToast = ({toast, severity, summary, detail}: ToastProps) => {
+    toast.add({ severity, summary, detail, life: 5000 });
 };

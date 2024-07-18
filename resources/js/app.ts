@@ -10,10 +10,10 @@ import Ripple from "primevue/ripple";
 import CustomPreset from "../css/presets/customPreset/customPreset";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
-import { faArrowTrendUp } from "@fortawesome/free-solid-svg-icons";
-import { faArrowTrendDown } from "@fortawesome/free-solid-svg-icons";
-import { createPinia } from 'pinia'
+import { faPiggyBank, faArrowTrendUp, faArrowTrendDown } from "@fortawesome/free-solid-svg-icons";
+import { createPinia } from 'pinia';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 
 library.add(faPiggyBank);
 library.add(faArrowTrendUp);
@@ -27,7 +27,7 @@ const primeVueOptions = {
     pt: CustomPreset,
 };
 
-const pinia = createPinia()
+const pinia = createPinia();
 
 createInertiaApp({
     title: (title) => `${title} | ${appName}`,
@@ -42,7 +42,9 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(PrimeVue, primeVueOptions)
             .use(pinia)
+            .use(ToastService)
             .component("font-awesome-icon", FontAwesomeIcon)
+            .component('Toast', Toast)
             .directive("ripple", Ripple)
             .mount(el);
     },

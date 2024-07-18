@@ -1,6 +1,7 @@
 import { InertiaForm } from "@inertiajs/vue3";
 import BankingProduct from "@js/enums/BankingProduct";
 import { Currency } from "@js/enums/Currency";
+import { ToastServiceMethods } from "primevue/toastservice";
 
 export type RegistrationForm = InertiaForm<{
     name: string;
@@ -125,4 +126,24 @@ export interface HistoryTransfer {
         per_page?: number;
         to?: number;
     };
+}
+
+export interface Errors {
+    receiver: string;
+    message: string;
+    category: string;
+    sender_card: string;
+    account_number: string;
+    amount: string;
+    currency: string;
+    date: string;
+}
+
+type ToastSeverity = "success" | "info" | "warn" | "error" | "secondary" | "contrast" | undefined;
+
+export interface ToastProps {
+    toast: ToastServiceMethods;
+    severity: ToastSeverity;
+    summary: string;
+    detail: string;
 }
