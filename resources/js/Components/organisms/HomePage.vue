@@ -61,6 +61,7 @@ onMounted(() => {
                 :balance="card.balance"
                 :currency="card.currency"
                 :grabable="true"
+                :cardColor="card.cardColor"
                 class="mx-6"
             />
         </Slider>

@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import CreditCard from "@js/Components/molecules/CreditCard.vue";
 import useWindowWidth from "@js/hooks/useScreenWidth";
+import { DashboardCards } from "@js/types/interfaces";
+import { ref } from "vue";
+
+const props = defineProps<{
+    cards: DashboardCards[];
+}>();
+
+const activeCard = ref<DashboardCards>(props.cards[0]);
 
 const width = useWindowWidth();
 </script>
@@ -8,12 +16,12 @@ const width = useWindowWidth();
 <template>
     <div class="card-customizer">
         <CreditCard
-            cardNumber="9999"
-            balance="9999.99"
-            currency="XXX"
+            :cardNumber="activeCard.cardLastDigits"
+            :balance="activeCard.balance"
+            :currency="activeCard.currency"
             :large="width >= 1024"
             button="Disable"
-            secondButton="Change currency"
+            secondButton="Save"
         />
         <div class="flex gap-2">
             <button class="card-customizer__button blue-card" />

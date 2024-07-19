@@ -48,7 +48,9 @@ class AccountController extends Controller
 
     public function cards()
     {
-        return Inertia::render('CardsManager');
+        return Inertia::render('CardsManager', [
+            'cards' => CreditCardResource::collection($this->profileDataService->getCreditCards(auth()->user()->id)),
+        ]);
     }
 
     public function profile()

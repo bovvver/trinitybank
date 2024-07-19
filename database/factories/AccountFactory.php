@@ -26,6 +26,7 @@ class AccountFactory extends Factory
             'balance' => fake()->randomFloat(2, 0, 30000),
             'currency' => fake()->currencyCode(),
             'banking_product' => fake()->randomElement(['Personal', 'Company']),
+            'card_color' => fake()->randomElement(['Blue', 'Yellow', 'Green', 'Purple']),
         ];
     }
 }

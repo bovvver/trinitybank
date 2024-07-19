@@ -8,6 +8,10 @@ import CardListDesktop from "@js/Components/organisms/CardListDesktop.vue";
 import NewCardDialog from "@js/Components/molecules/NewCardDialog.vue";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import { ref } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import { CardsManagerProps } from "@js/types/interfaces";
+
+const { cards } = usePage().props as Partial<CardsManagerProps>;
 
 const width = useWindowWidth();
 const selectedCard = ref(null);
@@ -31,10 +35,11 @@ const updateVisible = (value: boolean) => {
                 />
             </div>
             <div class="cards-manager__content">
-                <CardListDesktop v-if="width >= 1280" />
-                <CardCustomizer class="w-[70%]" />
+                <CardListDesktop :cards="cards ?? []" v-if="width >= 1280" />
+                <CardCustomizer :cards="cards ?? []" class="w-[70%]" />
                 <CardListDropdown
                     v-model="selectedCard"
+                    :cards="cards ?? []"
                     v-if="width < 1280"
                     class="cards-manager__dropdown"
                 />

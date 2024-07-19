@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->decimal('balance');
             $table->string('currency', 3);
             $table->enum('banking_product', ['Personal', 'Company']);
+            $table->enum('card_color', ['Blue', 'Yellow', 'Green', 'Purple']);
             $table->timestamps();
         });
     }

@@ -17,7 +17,8 @@ class CreditCardResource extends JsonResource
         return [
             "cardLastDigits" => $this->card_last_digits,
             "balance" => $this->balance,
-            "currency" => $this->currency
+            "currency" => $this->currency,
+            "cardColor" => $this->card_color
         ];
     }
 }

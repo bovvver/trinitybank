@@ -66,7 +66,7 @@ class AccountRepository
     public function getCreditCards($userId)
     {
         return DB::table('Accounts')
-            ->select('account_number', 'card_last_digits', 'balance', 'currency')
+            ->select('account_number', 'card_last_digits', 'balance', 'currency', 'card_color')
             ->where('user_id', $userId)
             ->get();
     }

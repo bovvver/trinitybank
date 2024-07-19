@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import CreditCard from "../molecules/CreditCard.vue";
+import { DashboardCards } from "@js/types/interfaces";
 
-const cards = ref([
-    { number: "1234" },
-    { number: "5678" },
-    { number: "9012" },
-    { number: "3456" },
-]);
+defineProps<{
+    cards: DashboardCards[];
+}>();
+
 </script>
 
 <template>
@@ -15,11 +13,12 @@ const cards = ref([
         <div class="card-list-desktop__scroll">
             <CreditCard
                 v-for="card in cards"
-                :key="card.number"
-                :cardNumber="card.number"
-                balance="9999.99"
-                currency="XXX"
+                :key="card.cardLastDigits"
+                :cardNumber="card.cardLastDigits"
+                :balance="card.balance"
+                :currency="card.currency"
                 button="Select"
+                :cardColor="card.cardColor"
             />
         </div>
     </div>
