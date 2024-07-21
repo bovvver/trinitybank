@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { CardColors } from "@js/types/types";
+import { reactive, ref, watch } from "vue";
 
 const props = defineProps<{
     cardNumber: string;
@@ -9,9 +10,10 @@ const props = defineProps<{
     large?: boolean;
     button?: string;
     secondButton?: string;
+    cardColor?: CardColors;
 }>();
 
-const isGrabbing = ref(false);
+const emit = defineEmits(["primaryClick", "secondaryClick"]);
 
 const handleMouseDown = () => {
     if (props.grabable) isGrabbing.value = true;
@@ -20,12 +22,37 @@ const handleMouseDown = () => {
 const handleMouseUp = () => {
     if (props.grabable) isGrabbing.value = false;
 };
+
+const setCardColor = (color: CardColors | undefined) => {
+    switch (color) {
+        case "Purple":
+            return { cardColor: "purple-card", buttonColor: "purple-button" };
+        case "Yellow":
+            return { cardColor: "yellow-card", buttonColor: "yellow-button" };
+        case "Green":
+            return { cardColor: "green-card", buttonColor: "green-button" };
+        default:
+            return { cardColor: "blue-card", buttonColor: "blue-button" };
+    }
+};
+
+watch(
+    () => props.cardColor, () => {
+        cardColors = setCardColor(props.cardColor);
+    }
+);
+
+let cardColors = reactive(setCardColor(props.cardColor));
+const isGrabbing = ref(false);
 </script>
 
 <template>
     <div
         class="credit-card"
-        :class="{ grabbing: isGrabbing, grabable: grabable, large: large }"
+        :class="[
+            cardColors.cardColor,
+            { grabbing: isGrabbing, grabable: grabable, large: large },
+        ]"
         @mousedown="handleMouseDown"
         @mouseup="handleMouseUp"
         @mouseleave="handleMouseUp"
@@ -43,16 +70,26 @@ const handleMouseUp = () => {
             {{ balance }}
         </p>
         <div class="credit-card__buttons">
-            <button>{{ button ?? "Transfer" }}</button>
-            <button v-if="secondButton">{{ secondButton }}</button>
+            <button
+                @click="emit('primaryClick')"
+                :class="cardColors.buttonColor"
+            >
+                {{ button ?? "Transfer" }}
+            </button>
+            <button
+                @click="emit('secondaryClick')"
+                :class="cardColors.buttonColor"
+                v-if="secondButton"
+            >
+                {{ secondButton }}
+            </button>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 .credit-card {
-    @apply relative bg-primary rounded-lg p-6 text-white min-w-[400px] w-[400px] min-h-[250px] bg-[#3d87ff] bg-cover bg-card-blue
-    shadow-lg shadow-gray-600;
+    @apply relative rounded-lg p-6 text-white min-w-[400px] w-[400px] min-h-[250px] bg-cover shadow-lg shadow-gray-600;
 
     &.grabbing {
         @apply cursor-grabbing;
@@ -86,7 +123,7 @@ const handleMouseUp = () => {
         @apply absolute bottom-0 right-0 mr-6 mb-6 flex flex-row-reverse gap-2;
 
         button {
-            @apply bg-white text-primary px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:bg-primary hover:text-white transition-colors;
+            @apply px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:text-white transition-colors;
         }
     }
 }

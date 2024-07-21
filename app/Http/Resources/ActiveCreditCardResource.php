@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreditCardResource extends JsonResource
+class ActiveCreditCardResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,8 @@ class CreditCardResource extends JsonResource
             "cardLastDigits" => $this->card_last_digits,
             "balance" => $this->balance,
             "currency" => $this->currency,
-            "cardColor" => $this->card_color
+            "cardColor" => $this->card_color,
+            "active" => $this->active,
         ];
     }
 }

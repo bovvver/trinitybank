@@ -2,6 +2,7 @@ import { InertiaForm } from "@inertiajs/vue3";
 import BankingProduct from "@js/enums/BankingProduct";
 import { Currency } from "@js/enums/Currency";
 import { ToastServiceMethods } from "primevue/toastservice";
+import { CardColors, ToastSeverity } from "./types";
 
 export type RegistrationForm = InertiaForm<{
     name: string;
@@ -60,6 +61,8 @@ export interface DashboardCards {
     cardLastDigits: string;
     balance: string;
     currency: string;
+    cardColor: CardColors;
+    active?: boolean;
 }
 
 export interface DashboardData {
@@ -81,6 +84,10 @@ export interface DashboardProps {
 export interface TransferFormProps {
     cards: DashboardCards[];
     favourites: DashboardFavourites[];
+}
+
+export interface CardsManagerProps {
+    cards: DashboardCards[];
 }
 
 export interface HistoryProps {
@@ -128,6 +135,17 @@ export interface HistoryTransfer {
     };
 }
 
+export interface TransferProps {
+    receiver: string;
+    message: string;
+    category: string;
+    sender_card: string;
+    account_number: string;
+    amount: number;
+    currency: string;
+    date: string;
+}
+
 export interface Errors {
     receiver: string;
     message: string;
@@ -137,13 +155,4 @@ export interface Errors {
     amount: string;
     currency: string;
     date: string;
-}
-
-type ToastSeverity = "success" | "info" | "warn" | "error" | "secondary" | "contrast" | undefined;
-
-export interface ToastProps {
-    toast: ToastServiceMethods;
-    severity: ToastSeverity;
-    summary: string;
-    detail: string;
 }

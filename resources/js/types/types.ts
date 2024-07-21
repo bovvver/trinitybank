@@ -42,3 +42,14 @@ export type MenuItems = {
     stats: SubItem[];
     profile: SubItem[];
 };
+
+export type ToastSeverity =
+    | "success"
+    | "info"
+    | "warn"
+    | "error"
+    | "secondary"
+    | "contrast"
+    | undefined;
+
+export type CardColors = "Blue" | "Yellow" | "Purple" | "Green";

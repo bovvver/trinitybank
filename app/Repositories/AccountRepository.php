@@ -12,6 +12,29 @@ class AccountRepository
         return Account::where('user_id', $userId)->get();
     }
 
+    public function getAllFavouriteAccounts($userId, $limit = 4)
+    {
+        $accountIds = Account::select('id')
+            ->from('accounts')
+            ->where('user_id', $userId);
+
+        return DB::table('transfers')
+            ->select(
+                DB::raw('COUNT(transfers.receiver_id) as receiver_count'),
+                'users.name',
+                'users.surname',
+                'accounts.account_number'
+            )
+            ->join('accounts', 'transfers.receiver_id', '=', 'accounts.id')
+            ->join('users', 'accounts.user_id', '=', 'users.id')
+            ->whereIn('transfers.sender_id', $accountIds)
+            ->whereDate('transfers.dispatch_date', '>=', Carbon::now()->subMonth())
+            ->groupBy('users.name', 'users.surname', 'accounts.account_number')
+            ->orderBy('receiver_count', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
     public function getFavouriteAccounts($accountId, $limit = 4)
     {
         return DB::table('transfers')
@@ -63,11 +86,26 @@ class AccountRepository
         return $statistics;
     }
 
-    public function getCreditCards($userId)
+    public function getAllCreditCards($userId)
     {
         return DB::table('Accounts')
-            ->select('account_number', 'card_last_digits', 'balance', 'currency')
+            ->select('account_number', 'card_last_digits', 'balance', 'currency', 'card_color', 'active')
             ->where('user_id', $userId)
             ->get();
+    }
+
+    public function getActiveCreditCards($userId)
+    {
+        return DB::table('Accounts')
+            ->select('account_number', 'card_last_digits', 'balance', 'currency', 'card_color')
+            ->where('user_id', $userId)->where('active', true)
+            ->get();
+    }
+
+    public function updateCard($userId, $cardDigits, $newColor, $newStatus)
+    {
+        Account::where('user_id', $userId)
+            ->where('card_last_digits', $cardDigits)
+            ->update(['card_color' => $newColor, 'active' => $newStatus]);
     }
 }

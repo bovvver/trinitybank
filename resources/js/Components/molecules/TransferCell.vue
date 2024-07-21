@@ -2,8 +2,9 @@
 import Avatar from "primevue/avatar";
 import { formatDate, displayCorrectAmount } from "@js/helpers/helpers";
 import { Currency } from "@js/enums/Currency";
+import { computed } from "vue";
 
-defineProps<{
+const props = defineProps<{
     name: string;
     message: string;
     amount: string;
@@ -11,6 +12,11 @@ defineProps<{
     date: string;
     isSender: boolean;
 }>();
+
+const transferMessage = computed(() => {
+    if(props.message.length > 30) return `${props.message.substring(0, 30)}...`;
+    return props.message;
+})
 </script>
 
 <template>
@@ -18,7 +24,7 @@ defineProps<{
         <Avatar size="large" :label="name.charAt(0)" shape="circle" />
         <div>
             <p class="transfer-cell__name">{{ name }}</p>
-            <p class="transfer-cell__description">{{ message }}</p>
+            <p class="transfer-cell__description">{{ transferMessage }}</p>
             <p
                 class="transfer-cell__amount"
                 :class="{ positive: !isSender, negative: isSender }"

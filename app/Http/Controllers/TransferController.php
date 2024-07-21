@@ -29,8 +29,8 @@ class TransferController extends Controller
     {
         $userId = auth()->user()->id;
 
-        $cards = $this->profileDataService->getCreditCards($userId);
-        $favourites = $this->profileDataService->getFavouriteAccounts($userId);
+        $cards = $this->profileDataService->getAllCreditCards($userId);
+        $favourites = $this->profileDataService->getAllFavouriteAccounts($userId);
 
         return Inertia::render('TransferForm', [
             'cards' => CreditCardResource::collection($cards),
