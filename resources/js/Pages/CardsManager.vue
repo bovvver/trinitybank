@@ -11,7 +11,7 @@ import { ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { CardsManagerProps, DashboardCards } from "@js/types/interfaces";
 
-const { cards } = usePage().props as Partial<CardsManagerProps>;
+const { cards, personalData } = usePage().props as Partial<CardsManagerProps>;
 
 const width = useWindowWidth();
 const visible = ref(false);
@@ -46,6 +46,7 @@ const updateVisible = (value: boolean) => {
             </div>
         </div>
         <NewCardDialog
+            :data="personalData"
             :visible="visible"
             @close="updateVisible(false)"
             @update:visible="updateVisible"

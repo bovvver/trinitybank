@@ -3,22 +3,23 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import BankingProduct from "@js/enums/BankingProduct";
 import SelectButton from "primevue/selectbutton";
-import { useForm } from "@inertiajs/vue3";
 import Dropdown from "primevue/dropdown";
 import Divider from "primevue/divider";
 import { Currency } from "@js/enums/Currency";
-import { computed, ref, watch } from "vue";
-import { NewCardDetails } from "@js/types/interfaces";
+import { ref } from "vue";
+import { PersonalData } from "@js/types/interfaces";
 import { NewCardDropdownOptions } from "@js/types/interfaces";
+import { createNewCard } from "@js/api/DataService";
+import { router } from "@inertiajs/vue3";
+import { showToast } from "@js/helpers/helpers";
+import { useToast } from "primevue/usetoast";
 
 defineProps<{
     visible: boolean;
+    data?: PersonalData;
 }>();
 
-const form = useForm<NewCardDetails>({
-    currency: null,
-    banking_product: BankingProduct.Personal,
-});
+const toast = useToast();
 
 const emit = defineEmits(["update:visible"]);
 
@@ -33,19 +34,25 @@ const updateVisible = (value: boolean) => {
     emit("update:visible", value);
 };
 
-const options = ref([BankingProduct.Personal, BankingProduct.Company]);
+const options = ref<BankingProduct>(BankingProduct.Personal);
 const selectedCurrency = ref<NewCardDropdownOptions | null>(null);
 
-watch(
-    () => selectedCurrency.value, (newValue) => {
-        if (newValue != null) form.currency = newValue.value;
+const submit = async () => {
+    if (selectedCurrency.value) {
+        await createNewCard(options.value, selectedCurrency.value.value).then(
+            (res) =>
+                router.visit(route("dashboard"), {
+                    onSuccess: () => {
+                        showToast(
+                            toast,
+                            "success",
+                            "Success",
+                            res.data.message
+                        );
+                    },
+                })
+        );
     }
-);
-
-const submit = () => {
-    form.post(route(""), {
-        onFinish: () => {},
-    });
 };
 </script>
 
@@ -59,23 +66,26 @@ const submit = () => {
     >
         <form @submit.prevent="submit">
             <div class="new-card-dialog__wrapper">
-                <div>
+                <div v-if="data">
                     <h2 class="new-card-dialog__subtitle">Your data</h2>
-                    <p>Andreane King</p>
-                    <p>760-21-0047</p>
-                    <p>Cummerata Drives 247</p>
-                    <p>North Viviennemouth</p>
-                    <p>71821-5003</p>
+                    <p>{{ data.fullName }}</p>
+                    <p>{{ data.ssnNumber }}</p>
+                    <p>{{ data.street }}</p>
+                    <p>{{ data.city }}</p>
+                    <p>{{ data.zipCode }}</p>
                     <h2 class="new-card-dialog__subtitle mt-6">Contact</h2>
-                    <p>louie.gleason@example.com</p>
-                    <p>(038) 326-7103</p>
+                    <p>{{ data.email }}</p>
+                    <p>{{ data.phoneNumber }}</p>
                 </div>
-                <Divider layout="vertical" />
+                <Divider v-if="data" layout="vertical" />
                 <div>
                     <h2 class="new-card-dialog__subtitle">Card Details</h2>
                     <SelectButton
-                        v-model="form.banking_product"
-                        :options="options"
+                        v-model="options"
+                        :options="[
+                            BankingProduct.Personal,
+                            BankingProduct.Company,
+                        ]"
                         aria-labelledby="basic"
                         class="my-5 text-center"
                     />

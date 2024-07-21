@@ -86,8 +86,19 @@ export interface TransferFormProps {
     favourites: DashboardFavourites[];
 }
 
+export interface PersonalData {
+    fullName: string;
+    email: string;
+    ssnNumber: string;
+    phoneNumber: string;
+    street: string;
+    city: string;
+    zipCode: string;
+}
+
 export interface CardsManagerProps {
     cards: DashboardCards[];
+    personalData: PersonalData;
 }
 
 export interface HistoryProps {
@@ -105,10 +116,7 @@ export interface TransferDetails {
     isSender: boolean;
 }
 
-export interface NewCardDetails {
-    currency: string | null;
-    banking_product: BankingProduct;
-}
+
 
 export interface NewCardDropdownOptions {
     name: string;

@@ -27,20 +27,24 @@ class AccountCreationService extends Service
             'house_number' => $request->house_number,
         ]);
 
+        $this->createAccount($user->id, $request->banking_product, 'USD');
+        return $user;
+    }
+
+    public function createAccount($userId, $bankingProduct, $currency) {
         $cardNumber = $this->generateUniqueNumber(13, 'card_number', true);
 
         Account::create([
-            'user_id' => $user->id,
-            'banking_product' => $request->banking_product,
+            'user_id' => $userId,
+            'banking_product' => $bankingProduct,
             'card_number' => $cardNumber,
             'card_last_digits' => substr($cardNumber, -4),
             'account_number' => $this->generateUniqueNumber(11, 'account_number'),
             'expiry_date' => Carbon::now()->addYears(3),
             'balance' => 0,
-            'currency' => 'USD',
+            'currency' => $currency,
+            'active' => 1,
         ]);
-
-        return $user;
     }
 
     // VALIDATIONS 

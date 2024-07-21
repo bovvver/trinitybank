@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
+use App\Models\User;
 use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
 use Illuminate\Support\Facades\Gate;
@@ -15,11 +17,13 @@ class ProfileDataService extends Service
 {
     protected $transferRepository;
     protected $accountRepository;
+    protected $accountCreationService;
 
-    public function __construct(TransferRepository $transferRepository, AccountRepository $accountRepository)
+    public function __construct(TransferRepository $transferRepository, AccountRepository $accountRepository, AccountCreationService $accountCreationService)
     {
         $this->transferRepository = $transferRepository;
         $this->accountRepository = $accountRepository;
+        $this->accountCreationService = $accountCreationService;
     }
 
     public function getAccountsData($userId)
@@ -53,6 +57,23 @@ class ProfileDataService extends Service
         $this->accountRepository->updateCard($userId, $cardDigits, $newColor, $newStatus);
 
         return $this->successResponse("Card updated.");
+    }
+
+    public function createCard(CardCreationRequest $request)
+    {
+        $userId = auth()->user()->id;
+        $bankingProduct = $request->bankingProduct;
+        $currency = $request->currency;
+
+        $this->accountCreationService->createAccount($userId, $bankingProduct, $currency);
+
+        return $this->successResponse("Card created.");
+    }
+
+    public function getPersonalData()
+    {
+        $userId = auth()->user()->id;
+        return $this->accountRepository->getPersonalData($userId);
     }
 
     public function getLastTransfers($accountId)
