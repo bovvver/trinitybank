@@ -4,8 +4,14 @@ import { DashboardCards } from "@js/types/interfaces";
 
 defineProps<{
     cards: DashboardCards[];
+    modelValue: DashboardCards | null;
 }>();
 
+const emit = defineEmits(["update:modelValue"]);
+
+const selectCard = (card: DashboardCards) => {
+    emit("update:modelValue", card);
+};
 </script>
 
 <template>
@@ -19,6 +25,7 @@ defineProps<{
                 :currency="card.currency"
                 button="Select"
                 :cardColor="card.cardColor"
+                @primaryClick="() => selectCard(card)"
             />
         </div>
     </div>

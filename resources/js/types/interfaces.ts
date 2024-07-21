@@ -62,6 +62,7 @@ export interface DashboardCards {
     balance: string;
     currency: string;
     cardColor: CardColors;
+    active?: boolean;
 }
 
 export interface DashboardData {
@@ -134,6 +135,17 @@ export interface HistoryTransfer {
     };
 }
 
+export interface TransferProps {
+    receiver: string;
+    message: string;
+    category: string;
+    sender_card: string;
+    account_number: string;
+    amount: number;
+    currency: string;
+    date: string;
+}
+
 export interface Errors {
     receiver: string;
     message: string;
@@ -143,11 +155,4 @@ export interface Errors {
     amount: string;
     currency: string;
     date: string;
-}
-
-export interface ToastProps {
-    toast: ToastServiceMethods;
-    severity: ToastSeverity;
-    summary: string;
-    detail: string;
 }

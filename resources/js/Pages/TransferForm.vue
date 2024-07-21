@@ -16,10 +16,16 @@ import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
 import CardListDropdown from "@js/Components/organisms/CardListDropdown.vue";
 import CategoriesDropdown from "@js/Components/organisms/CategoriesDropdown.vue";
-import {DashboardCards, DashboardFavourites, Errors, ToastProps, TransferFormProps } from "@js/types/interfaces";
+import {
+    DashboardCards,
+    DashboardFavourites,
+    Errors,
+    TransferProps,
+    TransferFormProps,
+} from "@js/types/interfaces";
 import TextInput from "@js/Components/molecules/TextInput.vue";
 import { showToast } from "@js/helpers/helpers";
-import axios from "axios";
+import { makeTransfer } from "@js/api/DataService";
 
 const { favourites, cards } = usePage().props as Partial<TransferFormProps>;
 
@@ -29,7 +35,7 @@ const selectedCategory = ref("Others");
 
 const toast = useToast();
 const width = useWindowWidth();
-const form = useForm({
+const form = useForm<TransferProps>({
     receiver: "",
     message: "",
     category: "",
@@ -51,7 +57,9 @@ const errors: Errors = reactive({
     date: "",
 });
 
-watch(() => selectedReceiver.value, (newValue) => {
+watch(
+    () => selectedReceiver.value,
+    (newValue) => {
         if (typeof newValue === "string") form.receiver = newValue;
         else if (newValue && typeof newValue === "object") {
             form.receiver = newValue.fullName;
@@ -60,7 +68,9 @@ watch(() => selectedReceiver.value, (newValue) => {
     }
 );
 
-watch([() => selectedCategory.value, () => selectedCard.value], ([newCategoryValue, newCardValue]) => {
+watch(
+    [() => selectedCategory.value, () => selectedCard.value],
+    ([newCategoryValue, newCardValue]) => {
         if (newCategoryValue) form.category = newCategoryValue;
         if (newCardValue) form.sender_card = newCardValue.cardLastDigits;
     }
@@ -85,19 +95,11 @@ const formCurrency = computed(() => {
 });
 
 const submit = async () => {
-    await axios
-        .post(route("make-transfer"), form)
+    await makeTransfer(form)
         .then((res) => {
             router.visit(route("dashboard"), {
                 onSuccess: () => {
-                    const toastProps: ToastProps = {
-                        toast,
-                        severity: "success",
-                        summary: "Transfer sent",
-                        detail: res.data.message,
-                    };
-
-                    showToast(toastProps);
+                    showToast(toast, "success", "Transfer sent", res.data.message);
                 },
             });
         })
@@ -114,14 +116,7 @@ const submit = async () => {
                 return;
             }
 
-            const toastProps: ToastProps = {
-                toast,
-                severity: "error",
-                summary: "The transfer has not been sent",
-                detail: err.response.data.message,
-            };
-
-            showToast(toastProps);
+            showToast(toast, "error", "The transfer has not been sent", err.response.data.message);
         });
 };
 </script>
@@ -136,7 +131,10 @@ const submit = async () => {
                         <template #title>
                             <div class="flex justify-evenly">
                                 <Avatar
-                                    :label="$page.props.auth.user.name.charAt(0) ?? ''"
+                                    :label="
+                                        $page.props.auth.user.name.charAt(0) ??
+                                        ''
+                                    "
                                     shape="circle"
                                     size="xlarge"
                                     class="transfer-page__avatar"
@@ -151,8 +149,14 @@ const submit = async () => {
                             </div>
                         </template>
                         <template #content>
-                            <form @submit.prevent="submit" class="transfer-page__form">
-                                <TransferInput name="receiver" :modelError="errors.receiver">
+                            <form
+                                @submit.prevent="submit"
+                                class="transfer-page__form"
+                            >
+                                <TransferInput
+                                    name="receiver"
+                                    :modelError="errors.receiver"
+                                >
                                     <Dropdown
                                         v-model="selectedReceiver"
                                         :options="favourites"
@@ -163,25 +167,47 @@ const submit = async () => {
                                         editable
                                     >
                                         <template #value="slotProps">
-                                            <div v-if="slotProps.value" class="flex items-center">
+                                            <div
+                                                v-if="slotProps.value"
+                                                class="flex items-center"
+                                            >
                                                 <Avatar
-                                                    :label="slotProps.value.fullName.charAt(0) ?? ''"
+                                                    :label="
+                                                        slotProps.value.fullName.charAt(
+                                                            0
+                                                        ) ?? ''
+                                                    "
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
-                                                <div>{{slotProps.value.fullName}}</div>
+                                                <div>
+                                                    {{
+                                                        slotProps.value.fullName
+                                                    }}
+                                                </div>
                                             </div>
-                                            <span v-else>{{slotProps.placeholder}}</span>
+                                            <span v-else>{{
+                                                slotProps.placeholder
+                                            }}</span>
                                         </template>
 
                                         <template #option="slotProps">
                                             <div class="flex items-center">
                                                 <Avatar
-                                                    :label="slotProps.option.fullName.charAt(0) ?? ''"
+                                                    :label="
+                                                        slotProps.option.fullName.charAt(
+                                                            0
+                                                        ) ?? ''
+                                                    "
                                                     shape="circle"
                                                     class="mr-3"
                                                 />
-                                                <div>{{ slotProps.option.fullName}}</div>
+                                                <div>
+                                                    {{
+                                                        slotProps.option
+                                                            .fullName
+                                                    }}
+                                                </div>
                                             </div>
                                         </template>
                                     </Dropdown>
@@ -195,15 +221,31 @@ const submit = async () => {
                                     autocomplete="message"
                                 />
 
-                                <TransferInput name="category" :modelError="errors.category">
-                                    <CategoriesDropdown v-model="selectedCategory" />
+                                <TransferInput
+                                    name="category"
+                                    :modelError="errors.category"
+                                >
+                                    <CategoriesDropdown
+                                        v-model="selectedCategory"
+                                    />
                                 </TransferInput>
 
-                                <TransferInput name="sender_card" label="From card" :modelError="errors.sender_card">
-                                    <CardListDropdown v-model="selectedCard" :cards="cards ?? []" />
+                                <TransferInput
+                                    name="sender_card"
+                                    label="From card"
+                                    :modelError="errors.sender_card"
+                                >
+                                    <CardListDropdown
+                                        v-model="selectedCard"
+                                        :cards="cards ?? []"
+                                    />
                                 </TransferInput>
 
-                                <TransferInput name="account_number" label="Account number" :modelError="errors.account_number">
+                                <TransferInput
+                                    name="account_number"
+                                    label="Account number"
+                                    :modelError="errors.account_number"
+                                >
                                     <InputMask
                                         id="account_number"
                                         v-model="form.account_number"
@@ -213,7 +255,10 @@ const submit = async () => {
                                     />
                                 </TransferInput>
 
-                                <TransferInput name="amount" :modelError="errors.amount">
+                                <TransferInput
+                                    name="amount"
+                                    :modelError="errors.amount"
+                                >
                                     <InputNumber
                                         v-model="form.amount"
                                         inputId="amount"
@@ -224,8 +269,15 @@ const submit = async () => {
                                     />
                                 </TransferInput>
 
-                                <TransferInput name="date" :modelError="errors.date">
-                                    <Calendar v-model="form.date" showIcon :minDate="new Date()" />
+                                <TransferInput
+                                    name="date"
+                                    :modelError="errors.date"
+                                >
+                                    <Calendar
+                                        v-model="form.date"
+                                        showIcon
+                                        :minDate="new Date()"
+                                    />
                                 </TransferInput>
 
                                 <Button type="submit" label="Send" />

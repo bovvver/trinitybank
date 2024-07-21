@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('currency', 3);
             $table->enum('banking_product', ['Personal', 'Company']);
             $table->enum('card_color', ['Blue', 'Yellow', 'Green', 'Purple']);
+            $table->boolean('active');
             $table->timestamps();
         });
     }

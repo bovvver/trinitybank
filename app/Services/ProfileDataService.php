@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Requests\CardUpdateRequest;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
+use App\Models\Account;
 use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
+use Illuminate\Support\Facades\Gate;
+
 
 class ProfileDataService extends Service
 {
@@ -35,9 +39,30 @@ class ProfileDataService extends Service
         });
     }
 
+    public function updateCard(CardUpdateRequest $request)
+    {
+        $userId = auth()->user()->id;
+        $newColor = $request->newColor;
+        $cardDigits = $request->cardDigits;
+        $newStatus = $request->newStatus === true ? 1 : 0;
+
+        $account = Account::where('card_last_digits', $cardDigits)->first();
+
+        Gate::authorize('access', $account);
+
+        $this->accountRepository->updateCard($userId, $cardDigits, $newColor, $newStatus);
+
+        return $this->successResponse("Card updated.");
+    }
+
     public function getLastTransfers($accountId)
     {
         return $this->transferRepository->getLastTransfers($accountId);
+    }
+
+    public function getAllFavouriteAccounts($userId)
+    {
+        return $this->accountRepository->getAllFavouriteAccounts($userId);
     }
 
     public function getFavouriteAccounts($accountId)
@@ -60,9 +85,14 @@ class ProfileDataService extends Service
         return $this->accountRepository->getStatistics($accountId);
     }
 
-    public function getCreditCards($userId)
+    public function getAllCreditCards($userId)
     {
-        return $this->accountRepository->getCreditCards($userId);
+        return $this->accountRepository->getAllCreditCards($userId);
+    }
+
+    public function getActiveCreditCards($userId)
+    {
+        return $this->accountRepository->getActiveCreditCards($userId);
     }
 
     public function getTransfersHistory($accountId)

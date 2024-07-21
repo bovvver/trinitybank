@@ -1,33 +1,92 @@
 <script setup lang="ts">
+import { router } from "@inertiajs/vue3";
+import { setSelectedAccount } from "@js/api/DataService";
 import CreditCard from "@js/Components/molecules/CreditCard.vue";
+import { showToast } from "@js/helpers/helpers";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import { DashboardCards } from "@js/types/interfaces";
-import { ref } from "vue";
+import { useToast } from "primevue/usetoast";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
     cards: DashboardCards[];
+    modelValue: DashboardCards | null;
 }>();
 
-const activeCard = ref<DashboardCards>(props.cards[0]);
-
 const width = useWindowWidth();
+const toast = useToast();
+const customizerColor = ref(props.modelValue?.cardColor);
+const cardStatus = ref<boolean>(!!props.modelValue?.active);
+
+const isCardActive = computed(() => {
+    return cardStatus.value ? "Disable" : "Enable";
+});
+
+const reverseCardStatus = () => {
+    cardStatus.value = !cardStatus.value;
+};
+
+const submitChanges = async () => {
+    if (customizerColor.value && props.modelValue?.cardLastDigits) {
+        await setSelectedAccount(
+            customizerColor.value,
+            cardStatus.value,
+            props.modelValue.cardLastDigits
+        ).then((res) =>
+            router.visit(route("dashboard"), {
+                onSuccess: () => {
+                    showToast(toast, "success", "Success", res.data.message);
+                },
+            })
+        );
+    }
+};
+
+watch(
+    () => props.modelValue?.cardColor,
+    () => {
+        customizerColor.value = props.modelValue?.cardColor;
+    }
+);
+
+watch(
+    () => props.modelValue?.active,
+    () => {
+        cardStatus.value = !!props.modelValue?.active;
+    }
+);
 </script>
 
 <template>
-    <div class="card-customizer">
+    <div v-if="modelValue" class="card-customizer">
         <CreditCard
-            :cardNumber="activeCard.cardLastDigits"
-            :balance="activeCard.balance"
-            :currency="activeCard.currency"
+            :cardNumber="modelValue.cardLastDigits"
+            :balance="modelValue.balance"
+            :currency="modelValue.currency"
             :large="width >= 1024"
-            button="Disable"
+            :button="isCardActive"
             secondButton="Save"
+            :cardColor="customizerColor"
+            @primaryClick="reverseCardStatus"
+            @secondaryClick="submitChanges"
         />
         <div class="flex gap-2">
-            <button class="card-customizer__button blue-card" />
-            <button class="card-customizer__button yellow-card" />
-            <button class="card-customizer__button green-card" />
-            <button class="card-customizer__button black-card" />
+            <button
+                @click="customizerColor = 'Blue'"
+                class="card-customizer__button blue-card"
+            />
+            <button
+                @click="customizerColor = 'Yellow'"
+                class="card-customizer__button yellow-card"
+            />
+            <button
+                @click="customizerColor = 'Green'"
+                class="card-customizer__button green-card"
+            />
+            <button
+                @click="customizerColor = 'Purple'"
+                class="card-customizer__button black-card"
+            />
         </div>
     </div>
 </template>

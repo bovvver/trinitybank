@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CardColors } from "@js/types/types";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 
 const props = defineProps<{
     cardNumber: string;
@@ -13,6 +13,8 @@ const props = defineProps<{
     cardColor?: CardColors;
 }>();
 
+const emit = defineEmits(["primaryClick", "secondaryClick"]);
+
 const handleMouseDown = () => {
     if (props.grabable) isGrabbing.value = true;
 };
@@ -24,18 +26,24 @@ const handleMouseUp = () => {
 const setCardColor = (color: CardColors | undefined) => {
     switch (color) {
         case "Purple":
-            return {cardColor: "purple-card", buttonColor: "purple-button"};
+            return { cardColor: "purple-card", buttonColor: "purple-button" };
         case "Yellow":
-            return {cardColor: "yellow-card", buttonColor: "yellow-button"};;
+            return { cardColor: "yellow-card", buttonColor: "yellow-button" };
         case "Green":
-            return {cardColor: "green-card", buttonColor: "green-button"};;
+            return { cardColor: "green-card", buttonColor: "green-button" };
         default:
-            return {cardColor: "blue-card", buttonColor: "blue-button"};;
+            return { cardColor: "blue-card", buttonColor: "blue-button" };
     }
 };
 
+watch(
+    () => props.cardColor, () => {
+        cardColors = setCardColor(props.cardColor);
+    }
+);
+
+let cardColors = reactive(setCardColor(props.cardColor));
 const isGrabbing = ref(false);
-const cardColors = reactive(setCardColor(props.cardColor));
 </script>
 
 <template>
@@ -62,8 +70,19 @@ const cardColors = reactive(setCardColor(props.cardColor));
             {{ balance }}
         </p>
         <div class="credit-card__buttons">
-            <button :class="cardColors.buttonColor">{{ button ?? "Transfer" }}</button>
-            <button :class="cardColors.buttonColor" v-if="secondButton">{{ secondButton }}</button>
+            <button
+                @click="emit('primaryClick')"
+                :class="cardColors.buttonColor"
+            >
+                {{ button ?? "Transfer" }}
+            </button>
+            <button
+                @click="emit('secondaryClick')"
+                :class="cardColors.buttonColor"
+                v-if="secondButton"
+            >
+                {{ secondButton }}
+            </button>
         </div>
     </div>
 </template>
@@ -104,7 +123,7 @@ const cardColors = reactive(setCardColor(props.cardColor));
         @apply absolute bottom-0 right-0 mr-6 mb-6 flex flex-row-reverse gap-2;
 
         button {
-            @apply  px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:text-white transition-colors;
+            @apply px-4 py-1 rounded font-bold shadow-sm shadow-gray-500 hover:text-white transition-colors;
         }
     }
 }

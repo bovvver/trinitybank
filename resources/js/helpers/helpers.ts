@@ -1,4 +1,5 @@
-import { ToastProps } from "@js/types/interfaces";
+import { ToastSeverity } from "@js/types/types";
+import { ToastServiceMethods } from "primevue/toastservice";
 
 // DATE HELPERS
 
@@ -25,16 +26,18 @@ export const getDateDaysAgo = (days: number) => {
 
 // MONEY HELPERS
 
-export const displayCorrectAmount = (
-    amount: number,
-    isPositive: boolean
-) => {
+export const displayCorrectAmount = (amount: number, isPositive: boolean) => {
     if (isPositive) return `${amount}`;
     return `-${amount}`;
 };
 
 // TOAST
 
-export const showToast = ({toast, severity, summary, detail}: ToastProps) => {
+export const showToast = (
+    toast: ToastServiceMethods,
+    severity: ToastSeverity,
+    summary: string,
+    detail: string
+) => {
     toast.add({ severity, summary, detail, life: 5000 });
 };

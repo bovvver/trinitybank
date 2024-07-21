@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CardUpdateRequest;
+use App\Http\Resources\ActiveCreditCardResource;
 use App\Http\Resources\CreditCardResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
@@ -26,7 +28,7 @@ class AccountController extends Controller
     {
         $userId = auth()->user()->id;
         $accountsData = $this->profileDataService->getAccountsData($userId);
-        $cards = $this->profileDataService->getCreditCards($userId);
+        $cards = $this->profileDataService->getActiveCreditCards($userId);
         $selectedCard = $request->session()->get("selectedAccount");
 
         return Inertia::render('Dashboard', [
@@ -49,8 +51,13 @@ class AccountController extends Controller
     public function cards()
     {
         return Inertia::render('CardsManager', [
-            'cards' => CreditCardResource::collection($this->profileDataService->getCreditCards(auth()->user()->id)),
+            'cards' => ActiveCreditCardResource::collection($this->profileDataService->getAllCreditCards(auth()->user()->id)),
         ]);
+    }
+
+    public function updateCard(CardUpdateRequest $request)
+    {
+        return $this->profileDataService->updateCard($request);
     }
 
     public function profile()
