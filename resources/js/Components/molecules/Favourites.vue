@@ -2,9 +2,16 @@
 import { useDashboardStore } from "@js/stores/dashboard";
 import { storeToRefs } from "pinia";
 import Avatar from "primevue/avatar";
+import { router } from "@inertiajs/vue3";
 
 const dashboardStore = useDashboardStore();
 const { favourites } = storeToRefs(dashboardStore);
+
+const routeToTransfer = (accountNumber: string) => {
+    router.visit(route("transfer", {
+        target: accountNumber
+    }));
+};
 </script>
 
 <template>
@@ -15,6 +22,7 @@ const { favourites } = storeToRefs(dashboardStore);
             class="favourites__avatar"
             size="xlarge"
             shape="circle"
+            @click="routeToTransfer(favourite.accountNumber)"
         />
     </div>
 </template>

@@ -33,7 +33,7 @@ const submitChanges = async () => {
             cardStatus.value,
             props.modelValue.cardLastDigits
         ).then((res) =>
-            router.visit(route("dashboard"), {
+            router.visit(route("cards"), {
                 onSuccess: () => {
                     showToast(toast, "success", "Success", res.data.message);
                 },

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\ActiveCreditCardResource;
 use App\Http\Resources\CreditCardResource;
+use App\Http\Resources\PersonalDataResource;
 use App\Http\Resources\TransferResource;
-use App\Models\Account;
-use App\Http\Requests\StoreAccountRequest;
-use App\Http\Requests\UpdateAccountRequest;
 use App\Services\ProfileDataService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -52,6 +52,7 @@ class AccountController extends Controller
     {
         return Inertia::render('CardsManager', [
             'cards' => ActiveCreditCardResource::collection($this->profileDataService->getAllCreditCards(auth()->user()->id)),
+            'personalData' => new PersonalDataResource($this->profileDataService->getPersonalData())
         ]);
     }
 
@@ -60,56 +61,21 @@ class AccountController extends Controller
         return $this->profileDataService->updateCard($request);
     }
 
+    public function createCard(CardCreationRequest $request)
+    {
+        return $this->profileDataService->createCard($request);
+    }
+
+    public function updateContact(UpdateContactRequest $request)
+    {
+        return $this->profileDataService->updateContact($request);
+    }
+
     public function profile()
     {
-        return Inertia::render('Profile');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAccountRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Account $account)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Account $account)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAccountRequest $request, Account $account)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Account $account)
-    {
-        //
+        return Inertia::render('Profile', [
+            'cardsCount' => $this->profileDataService->getCardsCount(),
+            'personalData' => new PersonalDataResource($this->profileDataService->getPersonalData())
+        ]);
     }
 }

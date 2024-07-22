@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
@@ -10,16 +12,17 @@ use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
 use Illuminate\Support\Facades\Gate;
 
-
 class ProfileDataService extends Service
 {
     protected $transferRepository;
     protected $accountRepository;
+    protected $accountCreationService;
 
-    public function __construct(TransferRepository $transferRepository, AccountRepository $accountRepository)
+    public function __construct(TransferRepository $transferRepository, AccountRepository $accountRepository, AccountCreationService $accountCreationService)
     {
         $this->transferRepository = $transferRepository;
         $this->accountRepository = $accountRepository;
+        $this->accountCreationService = $accountCreationService;
     }
 
     public function getAccountsData($userId)
@@ -53,6 +56,38 @@ class ProfileDataService extends Service
         $this->accountRepository->updateCard($userId, $cardDigits, $newColor, $newStatus);
 
         return $this->successResponse("Card updated.");
+    }
+
+    public function createCard(CardCreationRequest $request)
+    {
+        $userId = auth()->user()->id;
+        $bankingProduct = $request->bankingProduct;
+        $currency = $request->currency;
+
+        $this->accountCreationService->createAccount($userId, $bankingProduct, $currency);
+
+        return $this->successResponse("Card created.");
+    }
+
+    public function updateContact(UpdateContactRequest $request)
+    {
+        $userId = auth()->user()->id;
+        $phoneNumber = $request->phoneNumber;
+        $email = $request->email;
+
+        $this->accountRepository->updateContact($userId, $phoneNumber, $email);
+
+        return $this->successResponse("Contact updated.");
+    }
+
+    public function getPersonalData()
+    {
+        return $this->accountRepository->getPersonalData(auth()->user()->id);
+    }
+
+    public function getCardsCount()
+    {
+        return $this->accountRepository->getCardsCount(auth()->user()->id);
     }
 
     public function getLastTransfers($accountId)

@@ -3,64 +3,97 @@ import Dialog from "primevue/dialog";
 import Avatar from "primevue/avatar";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import { useForm } from "@inertiajs/vue3";
+import { reactive } from "vue";
+import { updateContact } from "@js/api/DataService";
+import { useToast } from "primevue/usetoast";
+import { showToast } from "@js/helpers/helpers";
+import { router } from "@inertiajs/vue3";
 
-defineProps<{
+const props = defineProps<{
     visible: boolean;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
 }>();
 
-const form = useForm({
-    phone_number: "",
+const toast = useToast();
+const form = reactive({
+    phoneNumber: props.phoneNumber,
+    email: props.email,
+});
+const errors = reactive({
+    phoneNumber: "",
     email: "",
 });
 
 const emit = defineEmits(["update:visible"]);
 
-const closeDialog = (isSubmitted: boolean) => {
-    emit("update:visible", isSubmitted);
+const resetErrors = () => {
+    errors.email = "";
+    errors.phoneNumber = "";
 };
 
-const submit = () => {
-    console.log(form);
+const closeDialog = (isSubmitted: boolean) => {
+    emit("update:visible", isSubmitted);
+    resetErrors();
+};
 
-    // form.post(route(""), {
-    //     onFinish: () => {},
-    // });
-    closeDialog(true);
+const submitContact = async () => {
+    await updateContact(form.phoneNumber, form.email)
+        .then((res) => {
+            resetErrors();
+
+            router.visit(route("profile"), {
+                onSuccess: () => {
+                    showToast(toast, "success", "Success", res.data.message);
+                },
+            });
+            closeDialog(true);
+        })
+        .catch((err) => {
+            const responseErrors = err.response.data.errors;
+            errors.phoneNumber = responseErrors.phoneNumber[0];
+            errors.email = responseErrors.email[0];
+        });
 };
 </script>
 
 <template>
-    <form @submit.prevent="submit">
-        <Dialog
-            :visible="visible"
-            @update:visible="closeDialog"
-            modal
-            header="Edit Profile"
-            class="update-dialog"
-        >
-            <template #header>
-                <div class="update-dialog__header">
-                    <Avatar label="J" shape="circle" />
-                    <span class="update-dialog__name white-space-nowrap"
-                        >John Doe</span
-                    >
-                </div>
-            </template>
-            <span class="update-dialog__title">Update your contact data.</span>
-            <div class="flex items-center gap-3 mb-3">
-                <label for="phoneNumber" class="font-semibold w-[6rem]"
-                    >Phone number</label
-                >
+    <Dialog
+        :visible="visible"
+        @update:visible="closeDialog"
+        modal
+        header="Edit Profile"
+        class="update-dialog"
+    >
+        <template #header>
+            <div class="update-dialog__header">
+                <Avatar label="J" shape="circle" />
+                <span class="update-dialog__name white-space-nowrap">{{
+                    fullName
+                }}</span>
+            </div>
+        </template>
+        <span class="update-dialog__title">Update your contact data.</span>
+        <div class="flex items-center gap-3 mb-3">
+            <label for="phoneNumber" class="font-semibold w-[6rem]"
+                >Phone number</label
+            >
+            <div class="flex flex-col">
                 <InputText
-                    v-model="form.phone_number"
+                    v-model="form.phoneNumber"
                     id="phoneNumber"
                     class="flex-auto"
                     autocomplete="off"
                 />
+                <small v-if="errors.phoneNumber" class="text-red-600">{{
+                    errors.phoneNumber
+                }}</small>
             </div>
-            <div class="flex items-center gap-3 mb-2">
-                <label for="email" class="font-semibold w-[6rem]">Email</label>
+        </div>
+        <div class="flex items-center gap-3 mb-2">
+            <label for="email" class="font-semibold w-[6rem]">Email</label>
+            <div class="flex flex-col">
                 <InputText
                     v-model="form.email"
                     type="email"
@@ -68,18 +101,21 @@ const submit = () => {
                     class="flex-auto"
                     autocomplete="off"
                 />
+                <small v-if="errors.email" class="text-red-600">{{
+                    errors.email
+                }}</small>
             </div>
-            <template #footer>
-                <Button
-                    label="Cancel"
-                    severity="secondary"
-                    @click="closeDialog(false)"
-                    autofocus
-                />
-                <Button label="Save" type="submit" autofocus />
-            </template>
-        </Dialog>
-    </form>
+        </div>
+        <template #footer>
+            <Button
+                label="Cancel"
+                severity="secondary"
+                @click="closeDialog(false)"
+                autofocus
+            />
+            <Button label="Save" @click="submitContact" autofocus />
+        </template>
+    </Dialog>
 </template>
 
 <style setup lang="scss">
