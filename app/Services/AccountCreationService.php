@@ -27,7 +27,7 @@ class AccountCreationService extends Service
             'house_number' => $request->house_number,
         ]);
 
-        $this->createAccount($user->id, $request->banking_product, 'USD');
+        $this->createAccount($user->id, $request->banking_product, $request->currency);
         return $user;
     }
 

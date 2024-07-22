@@ -5,7 +5,6 @@ import BankingProduct from "@js/enums/BankingProduct";
 import SelectButton from "primevue/selectbutton";
 import Dropdown from "primevue/dropdown";
 import Divider from "primevue/divider";
-import { Currency } from "@js/enums/Currency";
 import { ref } from "vue";
 import { PersonalData } from "@js/types/interfaces";
 import { NewCardDropdownOptions } from "@js/types/interfaces";
@@ -13,6 +12,7 @@ import { createNewCard } from "@js/api/DataService";
 import { router } from "@inertiajs/vue3";
 import { showToast } from "@js/helpers/helpers";
 import { useToast } from "primevue/usetoast";
+import { currencyOptions } from "@js/helpers/helpers";
 
 defineProps<{
     visible: boolean;
@@ -22,13 +22,6 @@ defineProps<{
 const toast = useToast();
 
 const emit = defineEmits(["update:visible"]);
-
-const currencyOptions: NewCardDropdownOptions[] = Object.entries(Currency).map(
-    ([name, sign]) => ({
-        name: `${name} (${sign})`,
-        value: name,
-    })
-);
 
 const updateVisible = (value: boolean) => {
     emit("update:visible", value);

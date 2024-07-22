@@ -12,6 +12,7 @@ import Flicking from "@egjs/vue3-flicking";
 import { setSelectedAccount } from "@js/api/SessionService";
 import { useToast } from "primevue/usetoast";
 import { showToast } from "@js/helpers/helpers";
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps<{
     selectedCard?: number;
@@ -49,7 +50,12 @@ onMounted(async () => {
         try {
             await flickingRef.value.moveTo(findCreditCard());
         } catch (e) {
-            showToast(toast, "info", "Card changed", "Active card is now disabled. Changing to another card.");
+            showToast(
+                toast,
+                "info",
+                "Card changed",
+                "Active card is now disabled. Changing to another card."
+            );
         }
         onReady();
     }
@@ -58,6 +64,12 @@ onMounted(async () => {
 const shouldRenderCards = computed(() => {
     return creditCards.value && creditCards.value.length > 0;
 });
+
+const routeToTransfer = (cardDigits: string) => {
+    router.visit(route("transfer", {
+        card: cardDigits
+    }));
+};
 </script>
 
 <template>
@@ -73,6 +85,7 @@ const shouldRenderCards = computed(() => {
                 :grabable="true"
                 :cardColor="card.cardColor"
                 class="mx-6"
+                @primaryClick="routeToTransfer(card.cardLastDigits)"
             />
         </Slider>
         <div v-else class="home-wrapper__no-cards-active">

@@ -4,66 +4,69 @@ import Avatar from "primevue/avatar";
 import ProfileDataList from "@js/Components/molecules/ProfileDataList.vue";
 import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
 import UpdateContactDialog from "@js/Components/molecules/UpdateContactDialog.vue";
-import { ProfileDataOption } from "@js/types/interfaces";
+import { ProfileDataOption, ProfileProps } from "@js/types/interfaces";
 import { formatDate } from "@js/helpers/helpers";
 import { ref } from "vue";
+import { usePage } from "@inertiajs/vue3";
+
+const { cardsCount, personalData } = usePage().props as Partial<ProfileProps>;
 
 const dialogVisible = ref(false);
 
-const personalData = ref<ProfileDataOption[]>([
+const personalDataList = ref<ProfileDataOption[]>([
     {
         key: "Full name",
-        value: "John Doe",
+        value: personalData!.fullName,
         hidden: false,
         isVisible: true,
     },
     {
         key: "SSN number",
-        value: "23863-7485",
+        value: personalData!.ssnNumber,
         hidden: true,
         isVisible: false,
     },
     {
         key: "City",
-        value: "Jessiechester, 23863-7485",
+        value: personalData!.city,
         hidden: true,
         isVisible: false,
     },
     {
         key: "Street",
-        value: "Schmidt Key 25564",
+        value: personalData!.street,
         hidden: true,
         isVisible: false,
     },
 ]);
 
-const contactData = ref<ProfileDataOption[]>([
+const contactDataList = ref<ProfileDataOption[]>([
     {
         key: "Email",
-        value: "john.doe@example.com",
+        value: personalData!.email,
         hidden: false,
         isVisible: true,
         editable: true,
     },
     {
         key: "Phone number",
-        value: "(437) 432-7217",
+        value: personalData!.phoneNumber,
         hidden: true,
         isVisible: false,
         editable: true,
     },
 ]);
 
-const statsData = ref<ProfileDataOption[]>([
+const statsDataList = ref<ProfileDataOption[]>([
     {
         key: "Cards owned",
-        value: 2,
+        value: cardsCount!,
         hidden: false,
         isVisible: true,
     },
     {
         key: "Joined",
-        value: formatDate(new Date("2024-06-14")),
+        value: formatDate(new Date(personalData!.joined)),
         hidden: false,
         isVisible: true,
     },
@@ -89,25 +92,31 @@ const updateVisible = (_value: boolean) => {
                         />
                         <button class="profile__edit-button pi pi-pencil" />
                     </div>
-                    <p class="profile__name">John <span>Doe</span></p>
+                    <p class="profile__name">{{ personalData?.fullName }}</p>
                 </div>
                 <div class="flex flex-row gap-10 my-2 md:ml-[10em]">
                     <ProfileDataList
                         title="Personal data"
-                        :items="personalData"
+                        :items="personalDataList"
                     />
                     <ProfileDataList
                         title="Contact"
-                        :items="contactData"
+                        :items="contactDataList"
                         :dialogVisible="dialogVisible"
                         @openDialog="dialogVisible = true"
                     />
-                    <ProfileDataList title="Statistics" :items="statsData" />
+                    <ProfileDataList
+                        title="Statistics"
+                        :items="statsDataList"
+                    />
                 </div>
             </div>
         </div>
         <UpdateContactDialog
             :visible="dialogVisible"
+            :fullName="personalData?.fullName ?? ''"
+            :email="personalData?.email ?? ''"
+            :phoneNumber="personalData?.phoneNumber ?? ''"
             @update:visible="updateVisible"
         />
     </AuthenticatedLayout>

@@ -36,6 +36,7 @@ const form: RegistrationForm = useForm({
     street: "",
     house_number: "",
     banking_product: BankingProduct.Personal,
+    currency: "USD",
 });
 
 const stepsComponents = [

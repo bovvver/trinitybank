@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\ActiveCreditCardResource;
 use App\Http\Resources\CreditCardResource;
 use App\Http\Resources\PersonalDataResource;
@@ -65,8 +66,16 @@ class AccountController extends Controller
         return $this->profileDataService->createCard($request);
     }
 
+    public function updateContact(UpdateContactRequest $request)
+    {
+        return $this->profileDataService->updateContact($request);
+    }
+
     public function profile()
     {
-        return Inertia::render('Profile');
+        return Inertia::render('Profile', [
+            'cardsCount' => $this->profileDataService->getCardsCount(),
+            'personalData' => new PersonalDataResource($this->profileDataService->getPersonalData())
+        ]);
     }
 }

@@ -22,6 +22,7 @@ class PersonalDataResource extends JsonResource
             'street' => "{$this->street} {$this->house_number}",
             'city' => $this->city,
             'zipCode' => $this->zip_code,
+            'joined' => $this->created_at
         ];
     }
 }

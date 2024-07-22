@@ -4,14 +4,13 @@ namespace App\Services;
 
 use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
-use App\Models\User;
 use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
 use Illuminate\Support\Facades\Gate;
-
 
 class ProfileDataService extends Service
 {
@@ -70,10 +69,25 @@ class ProfileDataService extends Service
         return $this->successResponse("Card created.");
     }
 
-    public function getPersonalData()
+    public function updateContact(UpdateContactRequest $request)
     {
         $userId = auth()->user()->id;
-        return $this->accountRepository->getPersonalData($userId);
+        $phoneNumber = $request->phoneNumber;
+        $email = $request->email;
+
+        $this->accountRepository->updateContact($userId, $phoneNumber, $email);
+
+        return $this->successResponse("Contact updated.");
+    }
+
+    public function getPersonalData()
+    {
+        return $this->accountRepository->getPersonalData(auth()->user()->id);
+    }
+
+    public function getCardsCount()
+    {
+        return $this->accountRepository->getCardsCount(auth()->user()->id);
     }
 
     public function getLastTransfers($accountId)

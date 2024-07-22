@@ -10,7 +10,7 @@ import Calendar from "primevue/calendar";
 import Dropdown from "primevue/dropdown";
 import TransferInput from "@js/Components/molecules/TransferInput.vue";
 import TransferInfo from "@js/Components/atoms/TransferInfo.vue";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import Avatar from "primevue/avatar";
 import useWindowWidth from "@js/hooks/useScreenWidth";
 import Card from "@js/Components/atoms/Card.vue";
@@ -27,7 +27,8 @@ import TextInput from "@js/Components/molecules/TextInput.vue";
 import { showToast } from "@js/helpers/helpers";
 import { makeTransfer } from "@js/api/DataService";
 
-const { favourites, cards } = usePage().props as Partial<TransferFormProps>;
+const page = usePage();
+const { favourites, cards } = page.props as Partial<TransferFormProps>;
 
 const selectedCard = ref<DashboardCards | null>(null);
 const selectedReceiver = ref<DashboardFavourites | string>("");
@@ -76,6 +77,15 @@ watch(
     }
 );
 
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const newCard = cards?.find(card => card.cardLastDigits === urlParams.get('card'));
+  const newReceiver = favourites?.find(receiver => receiver.accountNumber === urlParams.get('target'));
+
+  if(cards && newCard) selectedCard.value = newCard;
+  if(favourites && newReceiver) selectedReceiver.value = newReceiver;
+});
+
 const receiverAvatar = computed(() => {
     if (typeof selectedReceiver.value === "string")
         return selectedReceiver.value.charAt(0);
@@ -99,7 +109,12 @@ const submit = async () => {
         .then((res) => {
             router.visit(route("dashboard"), {
                 onSuccess: () => {
-                    showToast(toast, "success", "Transfer sent", res.data.message);
+                    showToast(
+                        toast,
+                        "success",
+                        "Transfer sent",
+                        res.data.message
+                    );
                 },
             });
         })
@@ -116,7 +131,12 @@ const submit = async () => {
                 return;
             }
 
-            showToast(toast, "error", "The transfer has not been sent", err.response.data.message);
+            showToast(
+                toast,
+                "error",
+                "The transfer has not been sent",
+                err.response.data.message
+            );
         });
 };
 </script>

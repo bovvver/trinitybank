@@ -1,8 +1,7 @@
 import { InertiaForm } from "@inertiajs/vue3";
 import BankingProduct from "@js/enums/BankingProduct";
 import { Currency } from "@js/enums/Currency";
-import { ToastServiceMethods } from "primevue/toastservice";
-import { CardColors, ToastSeverity } from "./types";
+import { CardColors } from "./types";
 
 export type RegistrationForm = InertiaForm<{
     name: string;
@@ -17,6 +16,7 @@ export type RegistrationForm = InertiaForm<{
     street: string;
     house_number: string;
     banking_product: BankingProduct;
+    currency: string;
 }>;
 
 export interface DashboardFavourites {
@@ -94,6 +94,7 @@ export interface PersonalData {
     street: string;
     city: string;
     zipCode: string;
+    joined: string;
 }
 
 export interface CardsManagerProps {
@@ -115,8 +116,6 @@ export interface TransferDetails {
     category: string;
     isSender: boolean;
 }
-
-
 
 export interface NewCardDropdownOptions {
     name: string;
@@ -152,6 +151,11 @@ export interface TransferProps {
     amount: number;
     currency: string;
     date: string;
+}
+
+export interface ProfileProps {
+    personalData: PersonalData;
+    cardsCount: number;
 }
 
 export interface Errors {

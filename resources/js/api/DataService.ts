@@ -13,5 +13,9 @@ export const setSelectedAccount = async (newColor: CardColors, newStatus: boolea
 };
 
 export const createNewCard = async (bankingProduct: BankingProduct, currency: string) => {
-    return await axios.post(route("create-card"), {bankingProduct, currency});
+    return await axios.post(route("create-card"), { bankingProduct, currency });
+};
+
+export const updateContact = async (phoneNumber: string, email: string) => {
+    return await axios.patch(route("update-contact"), { phoneNumber, email });
 };

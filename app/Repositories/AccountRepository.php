@@ -5,6 +5,7 @@ use App\Models\Account;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AccountRepository
 {
@@ -112,6 +113,18 @@ class AccountRepository
 
     public function getPersonalData($userId)
     {
-        return User::select('name', 'surname', 'email', 'ssn_number', 'phone_number', 'city', 'street', 'zip_code', 'house_number')->where('id', $userId)->first();
+        return User::select('name', 'surname', 'email', 'ssn_number', 'phone_number', 'city', 'street', 'zip_code', 'house_number', 'created_at')->where('id', $userId)->first();
+    }
+
+    public function getCardsCount($userId)
+    {
+        Log::info("getCardsCount in");
+
+        return Account::where('user_id', $userId)->count();
+    }
+
+    public function updateContact($userId, $phoneNumber, $email)
+    {
+        User::findOrFail($userId)->update(['phone_number' => $phoneNumber, 'email' => $email]);
     }
 }
