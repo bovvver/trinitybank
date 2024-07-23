@@ -11,6 +11,7 @@ const props = defineProps<{
     currency: keyof typeof Currency;
     date: string;
     isSender: boolean;
+    avatarPath?: string;
 }>();
 
 const transferMessage = computed(() => {
@@ -21,7 +22,7 @@ const transferMessage = computed(() => {
 
 <template>
     <div class="transfer-cell">
-        <Avatar size="large" :label="name.charAt(0)" shape="circle" />
+        <Avatar size="large" :image="avatarPath" :label="!avatarPath ? name.charAt(0) : ''" shape="circle" />
         <div>
             <p class="transfer-cell__name">{{ name }}</p>
             <p class="transfer-cell__description">{{ transferMessage }}</p>

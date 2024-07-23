@@ -20,6 +20,7 @@ class TransferRepository
                 'accounts.account_number',
                 'users.name',
                 'users.surname',
+                'users.avatar_path',
                 DB::raw("$isSender as is_sender")
             )
             ->join('accounts', "transfers.$from", '=', 'accounts.id')

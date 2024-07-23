@@ -3,14 +3,17 @@ import { useDashboardStore } from "@js/stores/dashboard";
 import { storeToRefs } from "pinia";
 import Avatar from "primevue/avatar";
 import { router } from "@inertiajs/vue3";
+import { getFinalAvatarUrl } from "@js/helpers/helpers";
 
 const dashboardStore = useDashboardStore();
 const { favourites } = storeToRefs(dashboardStore);
 
 const routeToTransfer = (accountNumber: string) => {
-    router.visit(route("transfer", {
-        target: accountNumber
-    }));
+    router.visit(
+        route("transfer", {
+            target: accountNumber,
+        })
+    );
 };
 </script>
 
@@ -18,7 +21,8 @@ const routeToTransfer = (accountNumber: string) => {
     <div class="favourites">
         <Avatar
             v-for="favourite in favourites"
-            :label="favourite.fullName.charAt(0)"
+            :image="getFinalAvatarUrl(favourite.avatarPath)"
+            :label="!favourite.avatarPath ? favourite.fullName.charAt(0) : ''"
             class="favourites__avatar"
             size="xlarge"
             shape="circle"

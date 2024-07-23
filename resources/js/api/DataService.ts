@@ -19,3 +19,11 @@ export const createNewCard = async (bankingProduct: BankingProduct, currency: st
 export const updateContact = async (phoneNumber: string, email: string) => {
     return await axios.patch(route("update-contact"), { phoneNumber, email });
 };
+
+export const uploadAvatar = async (formData: FormData) => {
+    return await axios.post(route("upload-avatar"), formData, {
+        headers: {
+            "Content-Type": 'multipart/form-data'
+        }
+    });
+};

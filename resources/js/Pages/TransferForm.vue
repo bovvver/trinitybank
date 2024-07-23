@@ -34,6 +34,8 @@ const selectedCard = ref<DashboardCards | null>(null);
 const selectedReceiver = ref<DashboardFavourites | string>("");
 const selectedCategory = ref("Others");
 
+const today = new Date();
+
 const toast = useToast();
 const width = useWindowWidth();
 const form = useForm<TransferProps>({
@@ -44,7 +46,7 @@ const form = useForm<TransferProps>({
     account_number: "",
     amount: 0,
     currency: "",
-    date: "",
+    date: today,
 });
 
 const errors: Errors = reactive({
@@ -109,12 +111,7 @@ const submit = async () => {
         .then((res) => {
             router.visit(route("dashboard"), {
                 onSuccess: () => {
-                    showToast(
-                        toast,
-                        "success",
-                        "Transfer sent",
-                        res.data.message
-                    );
+                    showToast(toast, "success", "Transfer sent", res.data.message);
                 },
             });
         })
@@ -130,13 +127,7 @@ const submit = async () => {
                 }
                 return;
             }
-
-            showToast(
-                toast,
-                "error",
-                "The transfer has not been sent",
-                err.response.data.message
-            );
+            showToast(toast, "error", "The transfer has not been sent", err.response.data.message );
         });
 };
 </script>
@@ -296,7 +287,7 @@ const submit = async () => {
                                     <Calendar
                                         v-model="form.date"
                                         showIcon
-                                        :minDate="new Date()"
+                                        :minDate="today"
                                     />
                                 </TransferInput>
 

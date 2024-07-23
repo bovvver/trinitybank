@@ -52,8 +52,9 @@ const submitContact = async () => {
         })
         .catch((err) => {
             const responseErrors = err.response.data.errors;
-            errors.phoneNumber = responseErrors.phoneNumber[0];
-            errors.email = responseErrors.email[0];
+
+            errors.phoneNumber = responseErrors.phoneNumber ? responseErrors.phoneNumber[0] : "";
+            errors.email = responseErrors.email ? responseErrors.email[0] : "";
         });
 };
 </script>

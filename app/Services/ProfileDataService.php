@@ -5,12 +5,14 @@ namespace App\Services;
 use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
 use App\Http\Requests\UpdateContactRequest;
+use App\Http\Requests\UploadFileRequest;
 use App\Http\Resources\FavouritesResource;
 use App\Http\Resources\TransferResource;
 use App\Models\Account;
 use App\Repositories\AccountRepository;
 use App\Repositories\TransferRepository;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileDataService extends Service
 {
@@ -80,6 +82,24 @@ class ProfileDataService extends Service
         return $this->successResponse("Contact updated.");
     }
 
+    public function uploadAvatar(UploadFileRequest $request)
+    {
+        if ($request->hasFile("file")) {
+            $file = $request->file("file");
+
+            $path = "uploads/" . auth()->user()->email;
+
+            Storage::disk("public")->deleteDirectory($path);
+            Storage::disk("public")->makeDirectory($path);
+
+            $avatarPath = $file->store($path, "public");
+            $this->accountRepository->uploadAvatar(auth()->user()->id, $avatarPath);
+
+            return $this->successResponse("File uploaded successfully.");
+        }
+        return $this->errorResponse("No file uploaded.");
+    }
+
     public function getPersonalData()
     {
         return $this->accountRepository->getPersonalData(auth()->user()->id);
@@ -133,5 +153,10 @@ class ProfileDataService extends Service
     public function getTransfersHistory($accountId)
     {
         return $this->transferRepository->getTransfersHistory($accountId);
+    }
+
+    public function getAvatar()
+    {
+        return $this->accountRepository->getAvatar(auth()->user()->id);
     }
 }

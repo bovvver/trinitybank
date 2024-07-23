@@ -38,7 +38,9 @@ const submitChanges = async () => {
                     showToast(toast, "success", "Success", res.data.message);
                 },
             })
-        );
+        ).catch(_err => {
+            showToast(toast, "error", "Error", "We couldn't apply your changes. Please try again later.");
+        });
     }
 };
 

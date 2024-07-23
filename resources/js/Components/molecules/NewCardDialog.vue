@@ -36,12 +36,7 @@ const submit = async () => {
             (res) =>
                 router.visit(route("dashboard"), {
                     onSuccess: () => {
-                        showToast(
-                            toast,
-                            "success",
-                            "Success",
-                            res.data.message
-                        );
+                        showToast( toast, "success", "Success", res.data.message);
                     },
                 })
         );

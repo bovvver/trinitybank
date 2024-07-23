@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'zip_code' => fake()->numerify('#####-####'),
             'street' => fake()->streetName(),
             'house_number' => fake()->buildingNumber(),
+            'avatar_path' => "",
         ];
     }
 

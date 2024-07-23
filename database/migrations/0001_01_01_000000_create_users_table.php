@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('zip_code', 10);
             $table->string('street', 30);
             $table->string('house_number', 7);
+            $table->string('avatar_path', 100);
             $table->timestamps();
         });
 
