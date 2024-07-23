@@ -5,6 +5,7 @@ import ApplicationLogo from "@js/Components/atoms/ApplicationLogo.vue";
 import Avatar from "primevue/avatar";
 import { Link } from "@inertiajs/vue3";
 import Method from "@js/enums/HttpMethods";
+import Tag from "primevue/tag";
 
 const ptStyles = ref({
     root: "sticky bottom-0 top-0 left-0 bg-neutral-950 rounded-r-2xl px-3 w-1/6 h-screen w-[20%] ",
@@ -23,16 +24,19 @@ const items = ref([
                 label: "History",
                 icon: "pi pi-history",
                 route: "history",
+                soon: false,
             },
             {
                 label: "Cards",
                 icon: "pi pi-credit-card",
                 route: "cards",
+                soon: false,
             },
             {
                 label: "Transfer",
                 icon: "pi pi-arrow-right-arrow-left",
                 route: "transfer",
+                soon: false,
             },
         ],
     },
@@ -43,16 +47,19 @@ const items = ref([
                 label: "Current Loans",
                 icon: "pi pi-ticket",
                 route: "dashboard",
+                soon: true,
             },
             {
                 label: "Apply for Loan",
                 icon: "pi pi-briefcase",
                 route: "dashboard",
+                soon: true,
             },
             {
                 label: "Loan Calculators",
                 icon: "pi pi-calculator",
                 route: "dashboard",
+                soon: true,
             },
         ],
     },
@@ -63,6 +70,7 @@ const items = ref([
                 label: "Details",
                 icon: "pi pi-chart-bar",
                 route: "dashboard",
+                soon: true,
             },
         ],
     },
@@ -102,10 +110,16 @@ const items = ref([
                 >
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
+                    <Tag v-if="item.soon" value="SOON" severity="contrast" class="ml-5" />
                 </Link>
             </template>
             <template #end>
-                <Link :href="route('profile')" v-ripple class="flex items-center w-full p-2" as="button">
+                <Link
+                    :href="route('profile')"
+                    v-ripple
+                    class="flex items-center w-full p-2"
+                    as="button"
+                >
                     <Avatar
                         :label="$page.props.auth.user.name.charAt(0)"
                         class="mr-2"

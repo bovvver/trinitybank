@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CardCreationRequest;
 use App\Http\Requests\CardUpdateRequest;
 use App\Http\Requests\UpdateContactRequest;
+use App\Http\Requests\UploadFileRequest;
 use App\Http\Resources\ActiveCreditCardResource;
+use App\Http\Resources\AvatarResource;
 use App\Http\Resources\CreditCardResource;
 use App\Http\Resources\PersonalDataResource;
 use App\Http\Resources\TransferResource;
@@ -56,6 +58,11 @@ class AccountController extends Controller
         ]);
     }
 
+    public function uploadAvatar(UploadFileRequest $request)
+    {
+        return $this->profileDataService->uploadAvatar($request);
+    }
+
     public function updateCard(CardUpdateRequest $request)
     {
         return $this->profileDataService->updateCard($request);
@@ -75,7 +82,8 @@ class AccountController extends Controller
     {
         return Inertia::render('Profile', [
             'cardsCount' => $this->profileDataService->getCardsCount(),
-            'personalData' => new PersonalDataResource($this->profileDataService->getPersonalData())
+            'personalData' => new PersonalDataResource($this->profileDataService->getPersonalData()),
+            'avatarPath' => $this->profileDataService->getAvatar()
         ]);
     }
 }

@@ -16,7 +16,8 @@ class FavouritesResource extends JsonResource
     {
         return [
             "fullName" => "{$this->name} {$this->surname}",
-            "accountNumber" => $this->account_number
+            "accountNumber" => $this->account_number,
+            "avatarPath" => $this->avatar_path
         ];
     }
 }

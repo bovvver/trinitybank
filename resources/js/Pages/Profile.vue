@@ -6,12 +6,26 @@ import SectionHeader from "@js/Components/atoms/SectionHeader.vue";
 import UpdateContactDialog from "@js/Components/molecules/UpdateContactDialog.vue";
 import { ProfileDataOption, ProfileProps } from "@js/types/interfaces";
 import { formatDate } from "@js/helpers/helpers";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import AvatarUpload from "@js/Components/atoms/AvatarUpload.vue";
+import { getFinalAvatarUrl } from "@js/helpers/helpers";
 
-const { cardsCount, personalData } = usePage().props as Partial<ProfileProps>;
+const ptStyles = ref({
+    image: "h-full w-full rounded-full h-full w-full rounded-full object-cover",
+});
+
+const { cardsCount, personalData, avatarPath } = usePage()
+    .props as Partial<ProfileProps>;
+
+const finalAvatarPath = avatarPath ? getFinalAvatarUrl(avatarPath) : '';
 
 const dialogVisible = ref(false);
+
+const showAvatarLabel = computed(() => {
+    if (!avatarPath) return personalData?.fullName.charAt(0);
+    return "";
+});
 
 const personalDataList = ref<ProfileDataOption[]>([
     {
@@ -83,14 +97,16 @@ const updateVisible = (_value: boolean) => {
             <SectionHeader value="Profile" />
             <div class="profile">
                 <div class="profile__header">
-                    <div class="relative overflow-hidden">
+                    <div class="profile__avatar-container">
                         <Avatar
-                            label="J"
+                            :image="finalAvatarPath"
+                            :label="showAvatarLabel"
                             size="xlarge"
                             shape="circle"
                             class="profile__avatar"
+                            :pt="ptStyles"
                         />
-                        <button class="profile__edit-button pi pi-pencil" />
+                        <AvatarUpload />
                     </div>
                     <p class="profile__name">{{ personalData?.fullName }}</p>
                 </div>
@@ -130,15 +146,15 @@ const updateVisible = (_value: boolean) => {
         @apply flex items-center gap-4;
     }
 
-    &__avatar {
-        @apply w-[2em] h-[2em] md:w-[6em] md:h-[6em] overflow-hidden relative;
+    &__avatar-container {
+        @apply relative;
     }
 
-    &__edit-button {
-        @apply absolute top-0 bottom-0 left-0 right-0 bg-neutral-950/75 rounded-full text-gray-400 opacity-0 transition-[opacity];
+    &__avatar {
+        @apply w-[4em] h-[4em] md:w-[6em] md:h-[6em] object-cover;
 
-        &:hover {
-            @apply opacity-100;
+        img {
+            @apply object-cover;
         }
     }
 

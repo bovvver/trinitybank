@@ -3,7 +3,6 @@ import { ToastServiceMethods } from "primevue/toastservice";
 import { NewCardDropdownOptions } from "@js/types/interfaces";
 import { Currency } from "@js/enums/Currency";
 
-
 // DATE HELPERS
 
 export const formatDate = (date: Date) => {
@@ -34,12 +33,12 @@ export const displayCorrectAmount = (amount: number, isPositive: boolean) => {
     return `-${amount}`;
 };
 
-export const currencyOptions: NewCardDropdownOptions[] = Object.entries(Currency).map(
-    ([name, sign]) => ({
-        name: `${name} (${sign})`,
-        value: name,
-    })
-);
+export const currencyOptions: NewCardDropdownOptions[] = Object.entries(
+    Currency
+).map(([name, sign]) => ({
+    name: `${name} (${sign})`,
+    value: name,
+}));
 
 // TOAST
 
@@ -52,3 +51,9 @@ export const showToast = (
     toast.add({ severity, summary, detail, life: 5000 });
 };
 
+// AVATAR
+
+export const getFinalAvatarUrl = (avatarUrl: string) => {
+    if (!avatarUrl) return "";
+    return `storage/${avatarUrl}`;
+};

@@ -4,27 +4,42 @@ import { useDashboardStore } from "@js/stores/dashboard";
 import { storeToRefs } from "pinia";
 import { Link } from "@inertiajs/vue3";
 import { computed } from "vue";
+import { getFinalAvatarUrl } from "@js/helpers/helpers";
 
 const dashboardStore = useDashboardStore();
 const { transfers } = storeToRefs(dashboardStore);
-const transfersButtonMessage = computed(()=> {
-    return transfers.value.length === 0 ? "No transfers recently" : "More transfers";
-})
+
+const transfersButtonMessage = computed(() => {
+    return transfers.value.length === 0
+        ? "No transfers recently"
+        : "More transfers";
+});
+
+const avatarUrls = computed(() => {
+    return transfers.value.map((transfer) => {
+        if (transfer.avatarPath !== "") return getFinalAvatarUrl(transfer.avatarPath);
+        return ""
+    });
+});
 </script>
 
 <template>
     <div class="transfers-wrapper">
         <TransferCell
-            v-for="transfer in transfers"
+            v-for="(transfer, index) in transfers"
+            :key="index"
             :amount="transfer.amount"
             :currency="transfer.currency"
             :message="transfer.message"
             :name="transfer.fullName"
             :date="transfer.transactionDate"
             :isSender="transfer.isSender"
+            :avatarPath="avatarUrls[index]"
         />
         <Link :href="route('history')">
-            <button class="transfers-wrapper__button">{{ transfersButtonMessage }}</button>
+            <button class="transfers-wrapper__button">
+                {{ transfersButtonMessage }}
+            </button>
         </Link>
     </div>
 </template>

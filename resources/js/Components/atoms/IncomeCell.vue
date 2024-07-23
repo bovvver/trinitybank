@@ -5,6 +5,7 @@ defineProps<{
     title: string;
     icon: string;
     isPositive: boolean;
+    currency: string;
     amount?: string;
 }>();
 </script>
@@ -15,7 +16,7 @@ defineProps<{
         :class="{ positive: isPositive, negative: !isPositive }"
     >
         <p class="cell-wrapper__amount">{{ displayCorrectAmount(parseFloat(amount ?? "0"), isPositive) }}</p>
-        <p class="cell-wrapper__title">{{ title }}</p>
+        <p class="cell-wrapper__title">{{ title }} <span v-if="currency">({{ currency }})</span></p>
         <font-awesome-icon :icon="['fas', icon]" class="cell-wrapper__icon" />
     </div>
 </template>
@@ -29,7 +30,7 @@ defineProps<{
     }
 
     &__title {
-        @apply text-sm;
+        @apply text-sm text-center;
     }
 
     &__icon {

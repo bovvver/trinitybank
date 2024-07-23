@@ -27,6 +27,7 @@ class TransferResource extends JsonResource
             "isSender" => $isSender,
             "category" => $this->category,
             "accountNumber" => $this->account_number,
+            "avatarPath" => $this->avatar_path
         ];
     }
 }

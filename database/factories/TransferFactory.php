@@ -18,6 +18,7 @@ class TransferFactory extends Factory
     {
         return [
             'message' => fake()->realText(40),
+            'input_amount' => fake()->randomFloat(2, 1, 15000),
             'amount' => fake()->randomFloat(2, 1, 15000),
             'currency' => fake()->currencyCode(),
             'category' => fake()->randomElement(['Education', 'Food', 'Hygiene', 'Transport', 'Work', 'Investments', 'Others']),

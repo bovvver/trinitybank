@@ -25,13 +25,14 @@ class AccountRepository
                 DB::raw('COUNT(transfers.receiver_id) as receiver_count'),
                 'users.name',
                 'users.surname',
+                'users.avatar_path',
                 'accounts.account_number'
             )
             ->join('accounts', 'transfers.receiver_id', '=', 'accounts.id')
             ->join('users', 'accounts.user_id', '=', 'users.id')
             ->whereIn('transfers.sender_id', $accountIds)
             ->whereDate('transfers.dispatch_date', '>=', Carbon::now()->subMonth())
-            ->groupBy('users.name', 'users.surname', 'accounts.account_number')
+            ->groupBy('users.name', 'users.surname', 'accounts.account_number', 'users.avatar_path')
             ->orderBy('receiver_count', 'desc')
             ->limit($limit)
             ->get();
@@ -44,11 +45,12 @@ class AccountRepository
                 DB::raw('COUNT(transfers.receiver_id) as receiver_count'),
                 'users.name',
                 'users.surname',
+                'users.avatar_path',
                 'accounts.account_number',
             )
             ->join('accounts', 'transfers.receiver_id', '=', 'accounts.id')
             ->join('users', 'accounts.user_id', '=', 'users.id')
-            ->groupBy('users.name', 'users.surname', 'accounts.account_number')
+            ->groupBy('users.name', 'users.surname', 'accounts.account_number', 'users.avatar_path')
             ->where('transfers.sender_id', $accountId)
             ->whereDate('transfers.dispatch_date', '>=', Carbon::now()->subMonth())
             ->orderBy('receiver_count', 'desc')
@@ -67,7 +69,7 @@ class AccountRepository
         $results = DB::table('Transfers')
             ->selectRaw(
                 "MONTHNAME(dispatch_date) as month,
-                SUM(CASE WHEN sender_id = ? THEN amount ELSE 0 END) as spends,
+                SUM(CASE WHEN sender_id = ? THEN input_amount ELSE 0 END) as spends,
                 SUM(CASE WHEN receiver_id = ? THEN amount ELSE 0 END) as incomes",
                 [$accountId, $accountId]
             )
@@ -118,13 +120,21 @@ class AccountRepository
 
     public function getCardsCount($userId)
     {
-        Log::info("getCardsCount in");
-
         return Account::where('user_id', $userId)->count();
     }
 
     public function updateContact($userId, $phoneNumber, $email)
     {
         User::findOrFail($userId)->update(['phone_number' => $phoneNumber, 'email' => $email]);
+    }
+
+    public function uploadAvatar($userId, $avatarPath)
+    {
+        User::findOrFail($userId)->update(['avatar_path' => $avatarPath]);
+    }
+
+    public function getAvatar($userId)
+    {
+        return User::where('id', $userId)->value('avatar_path');
     }
 }

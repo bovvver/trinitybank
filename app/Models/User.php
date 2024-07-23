@@ -27,7 +27,8 @@ class User extends Authenticatable // implements MustVerifyEmail // PRODUCTION O
         'city',
         'zip_code',
         'street',
-        'house_number'
+        'house_number',
+        'avatar_path'
     ];
 
     /**
