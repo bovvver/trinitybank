@@ -33,6 +33,7 @@ class TransferController extends Controller
         return Inertia::render('TransferForm', [
             'cards' => CreditCardResource::collection($cards),
             'favourites' => FavouritesResource::collection($favourites),
+            'avatarPath' => $this->profileDataService->getAvatar()
         ]);
     }
 

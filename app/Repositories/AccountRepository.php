@@ -69,7 +69,7 @@ class AccountRepository
         $results = DB::table('Transfers')
             ->selectRaw(
                 "MONTHNAME(dispatch_date) as month,
-                SUM(CASE WHEN sender_id = ? THEN amount ELSE 0 END) as spends,
+                SUM(CASE WHEN sender_id = ? THEN input_amount ELSE 0 END) as spends,
                 SUM(CASE WHEN receiver_id = ? THEN amount ELSE 0 END) as incomes",
                 [$accountId, $accountId]
             )

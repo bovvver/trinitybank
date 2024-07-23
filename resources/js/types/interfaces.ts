@@ -86,6 +86,7 @@ export interface DashboardProps {
 export interface TransferFormProps {
     cards: DashboardCards[];
     favourites: DashboardFavourites[];
+    avatarPath: string;
 }
 
 export interface PersonalData {

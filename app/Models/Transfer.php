@@ -18,6 +18,7 @@ class Transfer extends Model
         'sender_id',
         'receiver_id',
         'message',
+        'input_amount',
         'amount',
         'currency',
         'category',

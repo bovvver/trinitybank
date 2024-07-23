@@ -8,7 +8,29 @@ use Illuminate\Support\Facades\DB;
 
 class TransferRepository
 {
-    private function getTransfersQuery($accountId, $from, $to, $isSender)
+    private function getLatestSpends($accountId, $isSender)
+    {
+        return DB::table('transfers')
+            ->select(
+                'transfers.message',
+                'transfers.input_amount as amount',
+                'sender_accounts.currency',
+                'transfers.dispatch_date as transaction_date',
+                'transfers.category',
+                'receiver_accounts.account_number',
+                'receiver_users.name',
+                'receiver_users.surname',
+                'receiver_users.avatar_path',
+                DB::raw("$isSender as is_sender")
+            )
+            ->join('accounts as sender_accounts', 'transfers.sender_id', '=', 'sender_accounts.id')
+            ->join('accounts as receiver_accounts', 'transfers.receiver_id', '=', 'receiver_accounts.id')
+            ->join('users as receiver_users', 'receiver_accounts.user_id', '=', 'receiver_users.id')
+            ->where('transfers.sender_id', '=', $accountId);
+    }
+    
+
+    private function getLatestIncomes($accountId, $isSender)
     {
         return DB::table('transfers')
             ->select(
@@ -23,18 +45,15 @@ class TransferRepository
                 'users.avatar_path',
                 DB::raw("$isSender as is_sender")
             )
-            ->join('accounts', "transfers.$from", '=', 'accounts.id')
+            ->join('accounts', "transfers.sender_id", '=', 'accounts.id')
             ->join('users', 'accounts.user_id', '=', 'users.id')
-            ->where("transfers.$to", '=', $accountId);
+            ->where("transfers.receiver_id", '=', $accountId);
     }
 
     public function getLastTransfers($accountId, $limit = 4)
     {
-        $receiver = "receiver_id";
-        $sender = "sender_id";
-
-        $sentTransfers = $this->getTransfersQuery($accountId, $receiver, $sender, 1);
-        $receivedTransfers = $this->getTransfersQuery($accountId, $sender, $receiver, 0);
+        $sentTransfers = $this->getLatestSpends($accountId, 1);
+        $receivedTransfers = $this->getLatestIncomes($accountId, 0);
 
         return $sentTransfers
             ->union($receivedTransfers)
@@ -49,7 +68,7 @@ class TransferRepository
         return DB::table('transfers')
             ->selectRaw("SUM(CASE WHEN receiver_id = ? AND DATE(dispatch_date) = CURDATE() THEN amount ELSE 0 END) as todayIncome,
             SUM(CASE WHEN receiver_id = ? AND dispatch_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) THEN amount ELSE 0 END) as monthIncome,
-            SUM(CASE WHEN sender_id = ? AND dispatch_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) THEN amount ELSE 0 END) as monthSpend
+            SUM(CASE WHEN sender_id = ? AND dispatch_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) THEN input_amount ELSE 0 END) as monthSpend
             ", [$accountId, $accountId, $accountId])->first();
     }
 
@@ -69,7 +88,7 @@ class TransferRepository
         $bindings = [];
 
         foreach ($categories as $alias => $category) {
-            $selectRaw .= "SUM(CASE WHEN sender_id = ? AND dispatch_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND category = ? THEN amount ELSE 0 END) as $alias,";
+            $selectRaw .= "SUM(CASE WHEN sender_id = ? AND dispatch_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND category = ? THEN input_amount ELSE 0 END) as $alias,";
             array_push($bindings, $accountId, $category);
         }
 
@@ -82,11 +101,8 @@ class TransferRepository
 
     public function getTransfersHistory($accountId)
     {
-        $receiver = "receiver_id";
-        $sender = "sender_id";
-
-        $sentTransfers = $this->getTransfersQuery($accountId, $receiver, $sender, 1);
-        $receivedTransfers = $this->getTransfersQuery($accountId, $sender, $receiver, 0);
+        $sentTransfers = $this->getLatestSpends($accountId, 1);
+        $receivedTransfers = $this->getLatestIncomes($accountId, 0);
 
         return $sentTransfers
             ->union($receivedTransfers)
@@ -127,12 +143,13 @@ class TransferRepository
             ->pluck('rate', 'code');
     }
 
-    public function makeTransfer($sender, $receiver, $message, $category, $amount, $date)
+    public function makeTransfer($sender, $receiver, $message, $category, $baseAmount, $amount, $date)
     {
         Transfer::create([
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,
             'message' => $message,
+            'input_amount' => $baseAmount,
             'amount' => $amount,
             'currency' => $receiver->currency,
             'category' => $category,

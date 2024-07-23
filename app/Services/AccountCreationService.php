@@ -25,6 +25,7 @@ class AccountCreationService extends Service
             'zip_code' => $request->zip_code,
             'street' => $request->street,
             'house_number' => $request->house_number,
+            'avatar_path' => "",
         ]);
 
         $this->createAccount($user->id, $request->banking_product, $request->currency);

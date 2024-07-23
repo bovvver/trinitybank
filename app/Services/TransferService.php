@@ -68,11 +68,11 @@ class TransferService extends Service
             $finalAmount = $amount / $baseExchangeRate * $targetExchangeRate;
         }
 
-        $this->transferRepository->makeTransfer($sender, $receiver, $request->message, $request->category, $finalAmount, $date);
+        $this->transferRepository->makeTransfer($sender, $receiver, $request->message, $request->category, $amount, $finalAmount, $date);
 
         $this->transferRepository->removeFromBalance($sender->id, $amount);
 
         if ($date->isToday())
-            $this->transferRepository->addToBalance($receiver->id, $amount);
+            $this->transferRepository->addToBalance($receiver->id, $finalAmount);
     }
 }

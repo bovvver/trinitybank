@@ -66,9 +66,11 @@ const shouldRenderCards = computed(() => {
 });
 
 const routeToTransfer = (cardDigits: string) => {
-    router.visit(route("transfer", {
-        card: cardDigits
-    }));
+    router.visit(
+        route("transfer", {
+            card: cardDigits,
+        })
+    );
 };
 </script>
 
@@ -88,9 +90,11 @@ const routeToTransfer = (cardDigits: string) => {
                 @primaryClick="routeToTransfer(card.cardLastDigits)"
             />
         </Slider>
-        <div v-else class="home-wrapper__no-cards-active">
-            <h3>No cards are active</h3>
-            <p>Please activate a card or create a new one</p>
+        <div class="flex justify-center" v-else>
+            <div class="home-wrapper__no-cards-active">
+                <h3>No cards are active</h3>
+                <p>Please activate a card or create a new one</p>
+            </div>
         </div>
         <Favourites />
         <LatestTransfers />

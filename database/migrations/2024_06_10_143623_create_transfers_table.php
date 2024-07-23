@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('sender_id')->constrained('accounts')->onDelete('cascade');
             $table->foreignId('receiver_id')->constrained('accounts')->onDelete('cascade');
             $table->string('message', 40);
+            $table->decimal('input_amount');
             $table->decimal('amount');
             $table->string('currency', 3);
             $table->enum('category', ['Education', 'Food', 'Hygiene', 'Transport', 'Work', 'Investments', 'Others']);

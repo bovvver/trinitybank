@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 const transferMessage = computed(() => {
-    if(props.message.length > 30) return `${props.message.substring(0, 30)}...`;
+    if(props.message.length > 30) return `${props.message.substring(0, 25)}...`;
     return props.message;
 })
 </script>
