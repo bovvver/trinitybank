@@ -9,6 +9,11 @@ const CustomPreset = usePassThrough(
                 class: ["bg-transparent"],
             },
         },
+        avatar: {
+            image: [
+                "h-full w-full rounded-full h-full w-full rounded-full object-cover",
+            ],
+        },
     },
     {
         mergeSections: true,

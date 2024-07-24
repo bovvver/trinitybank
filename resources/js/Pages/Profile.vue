@@ -11,10 +11,6 @@ import { usePage } from "@inertiajs/vue3";
 import AvatarUpload from "@js/Components/atoms/AvatarUpload.vue";
 import { getFinalAvatarUrl } from "@js/helpers/helpers";
 
-const ptStyles = ref({
-    image: "h-full w-full rounded-full h-full w-full rounded-full object-cover",
-});
-
 const { cardsCount, personalData, avatarPath } = usePage()
     .props as Partial<ProfileProps>;
 
@@ -104,7 +100,6 @@ const updateVisible = (_value: boolean) => {
                             size="xlarge"
                             shape="circle"
                             class="profile__avatar"
-                            :pt="ptStyles"
                         />
                         <AvatarUpload />
                     </div>
