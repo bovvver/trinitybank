@@ -5,6 +5,12 @@
     <h2>Trinity Bank 1.0</h2>
     <p>Full-stack <strong>educational</strong> banking page.</p><br/></div>
 
+## Preview
+
+https://github.com/user-attachments/assets/fa5414d4-6a0d-41e6-bfe4-c75ee3aca0f6
+
+https://github.com/user-attachments/assets/6429bdaf-29c2-4271-be5b-41ac2b667ca0
+
 ## Gallery
 
 <img src="https://github.com/user-attachments/assets/034fa66b-724e-4f4e-8ce1-89a0a7041f3e" width="24%"></img><img src="https://github.com/user-attachments/assets/0e580a7d-2482-403d-84d9-1acac7e0379f" width="24%"></img><img src="https://github.com/user-attachments/assets/40638ba9-c454-4f1a-8027-f7dc5dd9ef5b" width="24%"></img>
