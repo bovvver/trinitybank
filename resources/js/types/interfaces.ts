@@ -133,7 +133,7 @@ export interface ProfileDataOption {
     editable?: boolean;
 }
 
-export interface HistoryTransfer {
+interface HistoryTransfer {
     data: TransferData[];
     meta: {
         current_page: number;

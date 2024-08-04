@@ -5,7 +5,6 @@ use App\Models\Account;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class AccountRepository
 {
