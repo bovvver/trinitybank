@@ -80,7 +80,7 @@ Back-end created in **Laravel :art:**
 - Sanctum
 
 ## Planned updates
-- Support based on microservices,
+- Support based on websockets,
 - Loans,
 - Full statistics page
 
