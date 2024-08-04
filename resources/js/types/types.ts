@@ -1,11 +1,4 @@
-import { InertiaForm } from "@inertiajs/vue3";
 import Method from "@js/enums/HttpMethods";
-
-export type CardLoginForm = InertiaForm<{
-    card_number: string;
-    cvv_number: number;
-    expiry_date: string;
-}>;
 
 export type UserDataErrors = Partial<
     Record<
